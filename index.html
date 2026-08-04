@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mayur Uniquoters</title>
+
+    <!-- Favicons (SVG switches light/dark via prefers-color-scheme) -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#BD9568" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                tan: '#BD9568',
+                red: '#8B2332',
+                'red-active': '#84000C',
+              },
+            },
+            fontFamily: {
+              sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+              display: ['SF Pro Display', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              canela: ['Canela', 'Georgia', 'Times New Roman', 'serif'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts & custom styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="min-h-screen bg-gray-50 font-sans text-gray-900">
+    <header class="site-header bg-brand-tan">
+      <div class="site-header__inner">
+        <a href="./" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
+          <img src="assets/logo.svg" alt="Mayur Uniquoters Limited" width="184" height="76" />
+        </a>
+        <button
+          type="button"
+          class="site-header__toggle"
+          aria-expanded="false"
+          aria-controls="site-header-nav"
+          aria-label="Open menu"
+        >
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <nav id="site-header-nav" class="site-header__nav" aria-label="Main navigation">
+          <ul class="site-header__nav-list">
+            <li><a href="#" class="site-header__nav-link is-active" aria-current="page">About</a></li>
+            <li><a href="#" class="site-header__nav-link">Market Segment</a></li>
+            <li><a href="#" class="site-header__nav-link">Plants</a></li>
+            <li><a href="#" class="site-header__nav-link">Sustainability</a></li>
+            <li><a href="#" class="site-header__nav-link">Global Presence</a></li>
+            <li><a href="#" class="site-header__nav-link">News &amp; Media</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- About hero carousel -->
+      <section
+        id="about-hero-slider"
+        class="about-hero-slider relative w-full overflow-hidden"
+        aria-label="About us gallery"
+        aria-roledescription="carousel"
+      >
+        <div class="about-hero-slider__track relative h-full w-full">
+          <div class="about-hero-slider__slide is-active" data-slide="0" aria-hidden="false">
+            <img
+              src="assets/images/about/carousel/image1.webp"
+              alt="Premium leather upholstery craftsmanship"
+              class="about-hero-slider__image"
+              width="1920"
+              height="823"
+              fetchpriority="high"
+            />
+          </div>
+          <div class="about-hero-slider__slide" data-slide="1" aria-hidden="true">
+            <img
+              src="assets/images/about/carousel/image2.webp"
+              alt="Premium automotive interior materials"
+              class="about-hero-slider__image"
+              width="1920"
+              height="823"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <nav
+          class="about-hero-slider__dots absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-2.5"
+          aria-label="Slide navigation"
+        >
+          <button
+            type="button"
+            class="about-hero-slider__dot is-active"
+            data-slide-to="0"
+            aria-label="Go to slide 1"
+            aria-current="true"
+          ></button>
+          <button
+            type="button"
+            class="about-hero-slider__dot"
+            data-slide-to="1"
+            aria-label="Go to slide 2"
+          ></button>
+        </nav>
+      </section>
+
+      <!-- About Us content -->
+      <section class="about-section" aria-labelledby="about-section-title">
+        <h2 id="about-section-title" class="about-section__title">About Us</h2>
+
+        <div class="about-section__stage">
+          <!-- DOM order matches reading order; desktop collage is absolute-positioned in CSS -->
+          <figure class="about-section__figure about-section__figure--1" data-parallax data-parallax-speed="0.08">
+            <img
+              src="assets/images/about/section2/image1.webp"
+              alt="Premium leather materials in cream, tan, and burgundy"
+              class="about-section__image"
+              width="423"
+              height="585"
+              loading="lazy"
+            />
+          </figure>
+
+          <p class="about-section__text about-section__text--1">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+            tincidunt ut laoreet dolore magna aliquam erat volutpat.
+          </p>
+
+          <figure class="about-section__figure about-section__figure--2" data-parallax data-parallax-speed="0.06">
+            <img
+              src="assets/images/about/section2/image2.webp"
+              alt="Finished leather goods including a burgundy handbag and belts"
+              class="about-section__image"
+              width="435"
+              height="601"
+              loading="lazy"
+            />
+          </figure>
+
+          <figure class="about-section__figure about-section__figure--3" data-parallax data-parallax-speed="0.1">
+            <img
+              src="assets/images/about/section2/image3.webp"
+              alt="Leather rolls prepared for export at an industrial facility"
+              class="about-section__image"
+              width="380"
+              height="525"
+              loading="lazy"
+            />
+          </figure>
+
+          <p class="about-section__text about-section__text--2">
+            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+            tincidunt ut laoreet dolore magna aliquam erat volutpat.
+          </p>
+
+          <figure class="about-section__figure about-section__figure--4" data-parallax data-parallax-speed="0.07">
+            <img
+              src="assets/images/about/section2/image4.webp"
+              alt="Curved leather sheets in beige and burgundy tones"
+              class="about-section__image"
+              width="414"
+              height="572"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+
+      <!-- Vision -->
+      <section class="vision-section" aria-labelledby="vision-section-title">
+        <div class="vision-section__inner">
+          <figure class="vision-section__figure">
+            <img
+              src="assets/images/about/vision.webp"
+              alt="Industrial leather manufacturing facility with coating machinery"
+              class="vision-section__image"
+              width="804"
+              height="419"
+              loading="lazy"
+            />
+          </figure>
+
+          <div class="vision-section__divider" aria-hidden="true"></div>
+
+          <div class="vision-section__content">
+            <h2 id="vision-section-title" class="vision-section__title">Vision</h2>
+            <p class="vision-section__text">
+              Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
+              tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis
+              nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mission -->
+      <section class="mission-section" aria-labelledby="mission-section-title">
+        <div class="mission-section__inner">
+          <div class="mission-section__content">
+            <h2 id="mission-section-title" class="mission-section__title">Mission</h2>
+            <p class="mission-section__text">Lorem ipsum dolor sit amet consectetur.</p>
+          </div>
+
+          <figure class="mission-section__figure">
+            <img
+              src="assets/images/about/mission.webp"
+              alt="Leather rolls in a warehouse with shipping containers and cargo ship at port"
+              class="mission-section__image"
+              width="1273"
+              height="664"
+              loading="lazy"
+            />
+          </figure>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer bg-brand-tan">
+      <div class="site-footer__inner">
+        <div class="site-footer__top">
+          <nav class="site-footer__links" aria-label="Footer navigation">
+            <div class="site-footer__group">
+              <a href="#" class="site-footer__link site-footer__link--heading">Career</a>
+              <ul class="site-footer__sublist">
+                <li><a href="#" class="site-footer__link">Life at Mayur</a></li>
+                <li><a href="#" class="site-footer__link">Student Programmes</a></li>
+                <li><a href="#" class="site-footer__link">Vacancies</a></li>
+              </ul>
+            </div>
+            <a href="#" class="site-footer__link site-footer__link--heading">FAQ</a>
+            <a href="#" class="site-footer__link site-footer__link--heading">Contact Us</a>
+          </nav>
+
+          <div class="site-footer__contact">
+            <a href="tel:+911423224001" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"
+                  fill="currentColor"
+                />
+              </svg>
+              +91-1423-224001
+            </a>
+            <a href="mailto:info@mayur.biz" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M2 2a2 2 0 0 0-2 2v.01l8 4.667 8-4.667V4a2 2 0 0 0-2-2H2zm14 5.333L8.667 11.5 2 7.333V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.333z"
+                  fill="currentColor"
+                />
+              </svg>
+              info@mayur.biz
+            </a>
+          </div>
+        </div>
+
+        <hr class="site-footer__divider" />
+
+        <p class="site-footer__copyright">
+          Copyright &copy; <span id="copyright-year"></span> Mayur Uniquoters Limited, All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Custom scripts -->
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
