@@ -19,6 +19,17 @@
     <script>
       tailwind.config = {
         theme: {
+          /* 1720px @ 1920 design — site content max width */
+          container: {
+            center: true,
+            screens: {
+              sm: '107.5rem',
+              md: '107.5rem',
+              lg: '107.5rem',
+              xl: '107.5rem',
+              '2xl': '107.5rem',
+            },
+          },
           extend: {
             colors: {
               brand: {
@@ -39,12 +50,16 @@
 
     <!-- Fonts & custom styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body class="min-h-screen bg-gray-50 font-sans text-gray-900">
+  <body class="min-h-screen font-sans text-gray-900">
     <header class="site-header bg-brand-tan">
-      <div class="site-header__inner">
+      <div class="site-header__inner container">
         <a href="./" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
           <img src="assets/logo.svg" alt="Mayur Uniquoters Limited" width="184" height="76" />
         </a>
@@ -187,7 +202,7 @@
 
       <!-- Vision -->
       <section class="vision-section" aria-labelledby="vision-section-title">
-        <div class="vision-section__inner">
+        <div class="vision-section__inner container">
           <figure class="vision-section__figure">
             <img
               src="assets/images/about/vision.webp"
@@ -214,7 +229,7 @@
 
       <!-- Mission -->
       <section class="mission-section" aria-labelledby="mission-section-title">
-        <div class="mission-section__inner">
+        <div class="mission-section__inner container">
           <div class="mission-section__content">
             <h2 id="mission-section-title" class="mission-section__title">Mission</h2>
             <p class="mission-section__text">Lorem ipsum dolor sit amet consectetur.</p>
@@ -232,10 +247,618 @@
           </figure>
         </div>
       </section>
+
+      <!-- Values -->
+      <section class="values-section" aria-labelledby="values-section-title">
+        <div class="values-section__inner container">
+          <h2 id="values-section-title" class="values-section__title">Values</h2>
+          <p class="values-section__text">
+            Lorem ipsum dolor sit amet consectetur. Nisl metus lorem lacus scelerisque enim.
+          </p>
+
+          <ul class="values-section__list">
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon1.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon2.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon3.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon4.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon5.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon6.svg"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+            <li class="values-section__item">
+              <img
+                src="assets/images/about/values/icon7.png"
+                alt=""
+                class="values-section__icon"
+                width="150"
+                height="150"
+                loading="lazy"
+              />
+              <span class="values-section__label">Icon</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section class="history-section" aria-labelledby="history-section-title">
+        <div class="history-section__inner container">
+          <h2 id="history-section-title" class="history-section__title">History</h2>
+
+          <ol class="history-section__timeline">
+            <li class="history-section__item">
+              <figure class="history-section__figure">
+                <img
+                  src="assets/images/about/history/image1.png"
+                  alt="Textile factory interior with rolls of fabric"
+                  class="history-section__image"
+                  width="300"
+                  height="276"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="history-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt
+              </p>
+              <h3 class="history-section__year">2022</h3>
+            </li>
+
+            <li class="history-section__item history-section__item--alt">
+              <h3 class="history-section__year">2023</h3>
+              <p class="history-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt
+              </p>
+              <figure class="history-section__figure">
+                <img
+                  src="assets/images/about/history/image2.png"
+                  alt="Fabric processing machinery on the factory floor"
+                  class="history-section__image"
+                  width="300"
+                  height="276"
+                  loading="lazy"
+                />
+              </figure>
+            </li>
+
+            <li class="history-section__item">
+              <figure class="history-section__figure">
+                <img
+                  src="assets/images/about/history/image3.png"
+                  alt="Long view of a textile manufacturing floor"
+                  class="history-section__image"
+                  width="300"
+                  height="276"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="history-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt
+              </p>
+              <h3 class="history-section__year">2024</h3>
+            </li>
+
+            <li class="history-section__item history-section__item--alt">
+              <h3 class="history-section__year">2025</h3>
+              <p class="history-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt
+              </p>
+              <figure class="history-section__figure">
+                <img
+                  src="assets/images/about/history/image4.png"
+                  alt="Close-up of textile machine with red fabric"
+                  class="history-section__image"
+                  width="300"
+                  height="276"
+                  loading="lazy"
+                />
+              </figure>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Founder -->
+      <section class="founder-section" aria-labelledby="founder-section-title">
+        <div class="founder-section__inner container">
+          <div class="founder-section__frame">
+            <figure class="founder-section__figure">
+              <img
+                src="assets/images/about/founder.png"
+                alt="Founder of Mayur Uniquoters"
+                class="founder-section__image"
+                width="590"
+                height="693"
+                loading="lazy"
+              />
+            </figure>
+
+            <div class="founder-section__content">
+              <h2 id="founder-section-title" class="founder-section__title">Founder</h2>
+              <p class="founder-section__subtitle">(Lorem ipsum dolor sit amet consectetur)</p>
+              <p class="founder-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut
+                aliquip ex ea commodo consequat.
+              </p>
+              <a href="#" class="founder-section__button">Read More</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Board Members -->
+      <section class="board-section" aria-labelledby="board-section-title">
+        <h2 id="board-section-title" class="board-section__title">Board Members</h2>
+
+        <div class="board-slider" id="board-slider">
+          <button
+            type="button"
+            class="board-slider__arrow board-slider__arrow--prev"
+            data-board-prev
+            aria-label="Previous board member"
+          >
+            <svg viewBox="0 0 24 48" width="24" height="48" fill="none" aria-hidden="true">
+              <path d="M20 3 L5 24 L20 45" stroke="currentColor" stroke-width="5" />
+            </svg>
+          </button>
+
+          <div class="board-slider__viewport">
+            <ul class="board-slider__track">
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image1.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image2.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image1.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image2.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image1.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+
+              <li class="board-slider__slide">
+                <figure class="board-slider__figure">
+                  <img
+                    src="assets/images/about/board-memebers/image2.png"
+                    alt="Board member portrait"
+                    class="board-slider__image"
+                    width="424"
+                    height="493"
+                    loading="lazy"
+                  />
+                </figure>
+                <div class="board-slider__caption">
+                  <p class="board-slider__name">Full Name</p>
+                  <p class="board-slider__role">Designation Of The Person</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <button
+            type="button"
+            class="board-slider__arrow board-slider__arrow--next"
+            data-board-next
+            aria-label="Next board member"
+          >
+            <svg viewBox="0 0 24 48" width="24" height="48" fill="none" aria-hidden="true">
+              <path d="M4 3 L19 24 L4 45" stroke="currentColor" stroke-width="5" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Policy & Certificates -->
+      <section class="policy-section" aria-labelledby="policy-section-title">
+        <div class="policy-section__intro container">
+          <h2 id="policy-section-title" class="policy-section__title">Policy &amp; Certificates</h2>
+          <p class="policy-section__text">
+            Lorem ipsum dolor sit amet consectetur. Nisl metus lorem lacus scelerisque enim. Lorem
+            ipsum dolor sit amet consectetur. Nisl metus lorem lacus scelerisque enim.
+          </p>
+          <a href="#policy-certificates" class="policy-section__button">Show Certificates</a>
+        </div>
+
+        <div class="policy-section__gallery" id="policy-certificates">
+          <ul class="policy-section__list container">
+            <li class="policy-section__item">
+              <figure class="policy-section__figure">
+                <img
+                  src="assets/images/about/certificates/image1.png"
+                  alt="Certificate"
+                  class="policy-section__image"
+                  width="220"
+                  height="274"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="policy-section__label">Certificate Name</p>
+            </li>
+            <li class="policy-section__item">
+              <figure class="policy-section__figure">
+                <img
+                  src="assets/images/about/certificates/image1.png"
+                  alt="Certificate"
+                  class="policy-section__image"
+                  width="220"
+                  height="274"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="policy-section__label">Certificate Name</p>
+            </li>
+            <li class="policy-section__item">
+              <figure class="policy-section__figure">
+                <img
+                  src="assets/images/about/certificates/image1.png"
+                  alt="Certificate"
+                  class="policy-section__image"
+                  width="220"
+                  height="274"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="policy-section__label">Certificate Name</p>
+            </li>
+            <li class="policy-section__item">
+              <figure class="policy-section__figure">
+                <img
+                  src="assets/images/about/certificates/image1.png"
+                  alt="Certificate"
+                  class="policy-section__image"
+                  width="220"
+                  height="274"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="policy-section__label">Certificate Name</p>
+            </li>
+            <li class="policy-section__item">
+              <figure class="policy-section__figure">
+                <img
+                  src="assets/images/about/certificates/image1.png"
+                  alt="Certificate"
+                  class="policy-section__image"
+                  width="220"
+                  height="274"
+                  loading="lazy"
+                />
+              </figure>
+              <p class="policy-section__label">Certificate Name</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Investors -->
+      <section class="investors-section" aria-labelledby="investors-section-title">
+        <div class="investors-section__inner container">
+          <h2 id="investors-section-title" class="investors-section__title">Investors</h2>
+
+          <div class="investors-section__layout">
+            <figure class="investors-section__figure">
+              <img
+                src="assets/images/about/investor.png"
+                alt="Investor representative"
+                class="investors-section__image"
+                width="769"
+                height="802"
+                loading="lazy"
+              />
+            </figure>
+
+            <div class="investors-section__content">
+              <p class="investors-section__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud exerci tation ullamcorper suscipit
+              </p>
+              <a href="#" class="investors-section__button">Know More About Investors</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Customer Testimonials -->
+      <section class="testimonials-section" aria-labelledby="testimonials-section-title">
+        <h2 id="testimonials-section-title" class="testimonials-section__title">
+          Customer Testimonial
+        </h2>
+
+        <div class="testimonials-slider swiper" id="testimonials-slider">
+          <div class="swiper-wrapper">
+            <article class="testimonials-slider__slide swiper-slide">
+              <img
+                src="assets/images/about/quotes-icon.svg"
+                alt=""
+                class="testimonials-slider__quote"
+                width="142"
+                height="104"
+                aria-hidden="true"
+              />
+              <p class="testimonials-slider__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud
+              </p>
+              <div class="testimonials-slider__author">
+                <img
+                  src="assets/images/about/person-icon.svg"
+                  alt=""
+                  class="testimonials-slider__avatar"
+                  width="84"
+                  height="84"
+                  aria-hidden="true"
+                />
+                <div class="testimonials-slider__meta">
+                  <p class="testimonials-slider__name">Full Name</p>
+                  <p class="testimonials-slider__company">Company Name</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonials-slider__slide swiper-slide">
+              <img
+                src="assets/images/about/quotes-icon.svg"
+                alt=""
+                class="testimonials-slider__quote"
+                width="142"
+                height="104"
+                aria-hidden="true"
+              />
+              <p class="testimonials-slider__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud
+              </p>
+              <div class="testimonials-slider__author">
+                <img
+                  src="assets/images/about/person-icon.svg"
+                  alt=""
+                  class="testimonials-slider__avatar"
+                  width="84"
+                  height="84"
+                  aria-hidden="true"
+                />
+                <div class="testimonials-slider__meta">
+                  <p class="testimonials-slider__name">Full Name</p>
+                  <p class="testimonials-slider__company">Company Name</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonials-slider__slide swiper-slide">
+              <img
+                src="assets/images/about/quotes-icon.svg"
+                alt=""
+                class="testimonials-slider__quote"
+                width="142"
+                height="104"
+                aria-hidden="true"
+              />
+              <p class="testimonials-slider__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud
+              </p>
+              <div class="testimonials-slider__author">
+                <img
+                  src="assets/images/about/person-icon.svg"
+                  alt=""
+                  class="testimonials-slider__avatar"
+                  width="84"
+                  height="84"
+                  aria-hidden="true"
+                />
+                <div class="testimonials-slider__meta">
+                  <p class="testimonials-slider__name">Full Name</p>
+                  <p class="testimonials-slider__company">Company Name</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonials-slider__slide swiper-slide">
+              <img
+                src="assets/images/about/quotes-icon.svg"
+                alt=""
+                class="testimonials-slider__quote"
+                width="142"
+                height="104"
+                aria-hidden="true"
+              />
+              <p class="testimonials-slider__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud
+              </p>
+              <div class="testimonials-slider__author">
+                <img
+                  src="assets/images/about/person-icon.svg"
+                  alt=""
+                  class="testimonials-slider__avatar"
+                  width="84"
+                  height="84"
+                  aria-hidden="true"
+                />
+                <div class="testimonials-slider__meta">
+                  <p class="testimonials-slider__name">Full Name</p>
+                  <p class="testimonials-slider__company">Company Name</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="testimonials-slider__slide swiper-slide">
+              <img
+                src="assets/images/about/quotes-icon.svg"
+                alt=""
+                class="testimonials-slider__quote"
+                width="142"
+                height="104"
+                aria-hidden="true"
+              />
+              <p class="testimonials-slider__text">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
+                euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad
+                minim veniam, quis nostrud
+              </p>
+              <div class="testimonials-slider__author">
+                <img
+                  src="assets/images/about/person-icon.svg"
+                  alt=""
+                  class="testimonials-slider__avatar"
+                  width="84"
+                  height="84"
+                  aria-hidden="true"
+                />
+                <div class="testimonials-slider__meta">
+                  <p class="testimonials-slider__name">Full Name</p>
+                  <p class="testimonials-slider__company">Company Name</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer bg-brand-tan">
-      <div class="site-footer__inner">
+      <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">
             <div class="site-footer__group">

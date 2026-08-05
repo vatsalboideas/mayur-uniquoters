@@ -3,12 +3,15 @@
  */
 
 import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/+esm';
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
 
 document.addEventListener('DOMContentLoaded', () => {
   const lenis = initLenis();
   initCopyrightYear();
   initSiteHeader();
   initAboutHeroSlider();
+  initBoardSlider();
+  initTestimonialsSlider();
   initAboutParallax(lenis);
 });
 
@@ -31,6 +34,164 @@ function initLenis() {
 
   requestAnimationFrame(raf);
   return lenis;
+}
+
+/**
+ * Customer testimonials — centered coverflow: full-size active card,
+ * neighbours one step smaller, outer pair two steps smaller.
+ */
+function initTestimonialsSlider() {
+  const el = document.getElementById('testimonials-slider');
+  if (!el) return;
+
+  const SCALE = { center: 1, side: 0.82, far: 0.66 };
+  const OPACITY = { center: 1, side: 0.55, far: 0.35 };
+
+  function scaleForProgress(progress) {
+    const d = Math.min(Math.abs(progress), 2);
+    if (d <= 1) {
+      return SCALE.center - d * (SCALE.center - SCALE.side);
+    }
+    return SCALE.side - (d - 1) * (SCALE.side - SCALE.far);
+  }
+
+  function opacityForProgress(progress) {
+    const d = Math.min(Math.abs(progress), 2);
+    if (d <= 1) {
+      return OPACITY.center - d * (OPACITY.center - OPACITY.side);
+    }
+    return OPACITY.side - (d - 1) * (OPACITY.side - OPACITY.far);
+  }
+
+  function applyDepth(swiper) {
+    swiper.slides.forEach((slide) => {
+      const progress = slide.progress;
+      const distance = Math.abs(progress);
+      const scale = scaleForProgress(progress);
+      const opacity = opacityForProgress(progress);
+
+      slide.style.transform = `scale(${scale})`;
+      slide.style.opacity = String(opacity);
+      slide.style.zIndex = String(Math.round(10 - distance * 2));
+
+      slide.classList.toggle('is-active', distance < 0.5);
+      slide.classList.toggle('is-side', distance >= 0.5 && distance < 1.5);
+      slide.classList.toggle('is-far', distance >= 1.5);
+    });
+  }
+
+  new Swiper(el, {
+    slidesPerView: 'auto',
+    centeredSlides: true,
+    loop: true,
+    spaceBetween: 0,
+    speed: 700,
+    grabCursor: true,
+    watchSlidesProgress: true,
+    autoplay: {
+      delay: 4000,
+      disableOnInteraction: false,
+      pauseOnMouseEnter: true,
+    },
+    on: {
+      setTranslate(swiper) {
+        applyDepth(swiper);
+      },
+      setTransition(swiper, duration) {
+        swiper.slides.forEach((slide) => {
+          slide.style.transitionDuration = `${duration}ms`;
+        });
+      },
+    },
+  });
+}
+
+/**
+ * Board members coverflow slider — active portrait centered, neighbours scaled
+ * back and desaturated, outer pair clipped by the section edges.
+ */
+function initBoardSlider() {
+  const slider = document.getElementById('board-slider');
+  if (!slider) return;
+
+  const slides = Array.from(slider.querySelectorAll('.board-slider__slide'));
+  const prevButton = slider.querySelector('[data-board-prev]');
+  const nextButton = slider.querySelector('[data-board-next]');
+  if (slides.length === 0) return;
+
+  /* Depth steps keyed by distance from the active slide; offsets are multiples
+     of the slide width so the layout tracks the responsive slide size. */
+  const DEPTHS = [
+    { offset: 0, scale: 1, opacity: 1 },
+    { offset: 1.148, scale: 0.82, opacity: 0.75 },
+    { offset: 2.122, scale: 0.66, opacity: 0.35 },
+  ];
+
+  const total = slides.length;
+  let activeIndex = 0;
+
+  function relativeOffset(index) {
+    let offset = index - activeIndex;
+    if (offset > total / 2) offset -= total;
+    if (offset < -total / 2) offset += total;
+    return offset;
+  }
+
+  function render() {
+    const slideWidth = slides[0].offsetWidth;
+
+    slides.forEach((slide, index) => {
+      const offset = relativeOffset(index);
+      const distance = Math.abs(offset);
+      const depth = DEPTHS[distance];
+
+      slide.classList.toggle('is-active', distance === 0);
+      slide.classList.toggle('is-side', distance === 1);
+      slide.classList.toggle('is-far', distance === 2);
+      slide.classList.toggle('is-hidden', !depth);
+
+      if (!depth) {
+        /* Park beyond the outer pair so it slides in from the correct side */
+        const parked = Math.sign(offset) * slideWidth * 2.8;
+        slide.style.transform = `translateX(${parked}px) scale(0.6)`;
+        slide.style.opacity = '0';
+        slide.style.zIndex = '0';
+        return;
+      }
+
+      const x = Math.sign(offset) * slideWidth * depth.offset;
+      slide.style.transform = `translateX(${x}px) scale(${depth.scale})`;
+      slide.style.opacity = String(depth.opacity);
+      slide.style.zIndex = String(10 - distance);
+    });
+  }
+
+  function goTo(index) {
+    activeIndex = ((index % total) + total) % total;
+    render();
+  }
+
+  prevButton?.addEventListener('click', () => goTo(activeIndex - 1));
+  nextButton?.addEventListener('click', () => goTo(activeIndex + 1));
+
+  slides.forEach((slide, index) => {
+    slide.addEventListener('click', () => {
+      if (relativeOffset(index) !== 0) goTo(index);
+    });
+  });
+
+  slider.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goTo(activeIndex - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goTo(activeIndex + 1);
+    }
+  });
+
+  window.addEventListener('resize', render, { passive: true });
+  render();
 }
 
 /**
