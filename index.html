@@ -57,7 +57,7 @@
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body class="min-h-screen font-sans text-gray-900">
+  <body class="min-h-screen bg-[#F5F5F5] font-sans text-gray-900">
     <header class="site-header bg-brand-tan">
       <div class="site-header__inner container">
         <a href="./" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
@@ -76,8 +76,8 @@
         </button>
         <nav id="site-header-nav" class="site-header__nav" aria-label="Main navigation">
           <ul class="site-header__nav-list">
-            <li><a href="#" class="site-header__nav-link is-active" aria-current="page">About</a></li>
-            <li><a href="#" class="site-header__nav-link">Market Segment</a></li>
+            <li><a href="./" class="site-header__nav-link is-active" aria-current="page">About</a></li>
+            <li><a href="market-segment.html" class="site-header__nav-link">Market Segment</a></li>
             <li><a href="#" class="site-header__nav-link">Plants</a></li>
             <li><a href="#" class="site-header__nav-link">Sustainability</a></li>
             <li><a href="#" class="site-header__nav-link">Global Presence</a></li>
@@ -96,7 +96,12 @@
         aria-roledescription="carousel"
       >
         <div class="about-hero-slider__track relative h-full w-full">
-          <div class="about-hero-slider__slide is-active" data-slide="0" aria-hidden="false">
+          <div
+            class="about-hero-slider__slide is-active"
+            data-slide="0"
+            data-caption-color="white"
+            aria-hidden="false"
+          >
             <img
               src="assets/images/about/carousel/image1.webp"
               alt="Premium leather upholstery craftsmanship"
@@ -105,8 +110,21 @@
               height="823"
               fetchpriority="high"
             />
+            <div class="about-hero-slider__caption-source" hidden>
+              <p class="about-hero-slider__caption-line">
+                Lorem ipsum dolor sit amet consectetur. Pellentesque accumsan dolor
+                lacus eget dictumst elit dictum feugiat. Et at cras turpis velit
+                commodo. Ut massa nunc magna tortor quis faucibus facilisi eu
+                hendrerit. Erat nisl amet porttitor bibendum amet id.
+              </p>
+            </div>
           </div>
-          <div class="about-hero-slider__slide" data-slide="1" aria-hidden="true">
+          <div
+            class="about-hero-slider__slide"
+            data-slide="1"
+            data-caption-color="white"
+            aria-hidden="true"
+          >
             <img
               src="assets/images/about/carousel/image2.webp"
               alt="Premium automotive interior materials"
@@ -115,8 +133,23 @@
               height="823"
               loading="lazy"
             />
+            <div class="about-hero-slider__caption-source" hidden>
+              <p class="about-hero-slider__caption-line">
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
+                posuere cubilia curae. Sed do eiusmod tempor incididunt ut labore
+                et dolore magna aliqua. Ut enim ad minim veniam quis nostrud
+                exercitation ullamco laboris nisi ut aliquip.
+              </p>
+            </div>
           </div>
         </div>
+
+        <!-- Shared caption — content/color synced to the active slide -->
+        <div
+          class="about-hero-slider__caption about-hero-slider__caption--white is-visible"
+          data-hero-caption
+          aria-live="polite"
+        ></div>
 
         <nav
           class="about-hero-slider__dots absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-2.5"

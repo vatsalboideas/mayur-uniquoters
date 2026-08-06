@@ -4,12 +4,14 @@
 
 import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/+esm';
 import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
+import { SEGMENT_DATA } from './segment-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const lenis = initLenis();
   initCopyrightYear();
   initSiteHeader();
   initAboutHeroSlider();
+  initMarketSegments(lenis);
   initBoardSlider();
   initTestimonialsSlider();
   initAboutParallax(lenis);
@@ -293,11 +295,12 @@ function initSiteHeader() {
  * About page hero slider — subtle crossfade with centered dot navigation
  */
 function initAboutHeroSlider() {
-  const slider = document.getElementById('about-hero-slider');
+  const slider = document.querySelector('.about-hero-slider');
   if (!slider) return;
 
   const slides = Array.from(slider.querySelectorAll('.about-hero-slider__slide'));
   const dots = Array.from(slider.querySelectorAll('.about-hero-slider__dot'));
+  const caption = slider.querySelector('[data-hero-caption]');
 
   if (slides.length === 0) return;
 
@@ -305,6 +308,7 @@ function initAboutHeroSlider() {
   if (activeIndex < 0) activeIndex = 0;
 
   let autoplayTimer = null;
+  let captionTimer = null;
   const AUTOPLAY_MS = 6000;
   const TRANSITION_MS = 900;
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -320,6 +324,43 @@ function initAboutHeroSlider() {
     }
   }
 
+  function applyCaption(index) {
+    if (!caption) return;
+
+    const slide = slides[index];
+    const source = slide.querySelector('.about-hero-slider__caption-source');
+    const color = slide.dataset.captionColor === 'black' ? 'black' : 'white';
+
+    caption.classList.remove(
+      'about-hero-slider__caption--white',
+      'about-hero-slider__caption--black'
+    );
+    caption.classList.add(`about-hero-slider__caption--${color}`);
+    caption.innerHTML = source ? source.innerHTML : '';
+  }
+
+  function syncCaption(index, { animate = true } = {}) {
+    if (!caption) return;
+
+    if (captionTimer !== null) {
+      window.clearTimeout(captionTimer);
+      captionTimer = null;
+    }
+
+    if (!animate || prefersReducedMotion) {
+      applyCaption(index);
+      caption.classList.add('is-visible');
+      return;
+    }
+
+    caption.classList.remove('is-visible');
+    captionTimer = window.setTimeout(() => {
+      applyCaption(index);
+      caption.classList.add('is-visible');
+      captionTimer = null;
+    }, TRANSITION_MS * 0.35);
+  }
+
   function goToSlide(index) {
     const nextIndex = ((index % slides.length) + slides.length) % slides.length;
     if (nextIndex === activeIndex) return;
@@ -333,6 +374,7 @@ function initAboutHeroSlider() {
     setDotState(dots[nextIndex], true);
 
     activeIndex = nextIndex;
+    syncCaption(activeIndex);
   }
 
   function nextSlide() {
@@ -385,6 +427,7 @@ function initAboutHeroSlider() {
     slide.setAttribute('aria-hidden', String(index !== activeIndex));
   });
   dots.forEach((dot, index) => setDotState(dot, index === activeIndex));
+  syncCaption(activeIndex, { animate: false });
 
   slider.setAttribute('tabindex', '0');
 
@@ -395,3 +438,344 @@ function initAboutHeroSlider() {
     startAutoplay();
   }
 }
+
+/**
+ * Market segments — tabs swap panel categories + products (same layout, different data)
+ */
+function initMarketSegments(lenis) {
+  const tabsNav = document.querySelector('[data-segment-tabs]');
+  const panel = document.querySelector('[data-segment-panel]');
+  const productsSection = document.querySelector('[data-segment-products]');
+  if (!tabsNav || !panel || !productsSection) return;
+
+  const titleEl = panel.querySelector('[data-segment-title]');
+  const categoriesEl = panel.querySelector('[data-segment-categories]');
+  const gallery = panel.querySelector('[data-segment-gallery]');
+  const slides = gallery ? Array.from(gallery.querySelectorAll('.segment-panel__slide')) : [];
+  const dots = gallery ? Array.from(gallery.querySelectorAll('.segment-panel__dot')) : [];
+
+  const picker = document.getElementById('product-picker');
+  const wrapper = picker?.querySelector('.swiper-wrapper');
+  const feature = productsSection.querySelector('[data-product-feature]');
+  const imageEl = feature?.querySelector('[data-product-image]');
+  const nameEl = feature?.querySelector('[data-product-name]');
+  const descEl = feature?.querySelector('[data-product-desc]');
+  const traitsEl = feature?.querySelector('[data-product-traits]');
+
+  if (!categoriesEl || !gallery || slides.length === 0 || !picker || !wrapper || !feature) return;
+
+  const tabLinks = Array.from(tabsNav.querySelectorAll('[data-segment]'));
+  const AUTOPLAY_MS = 4000;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let activeIndex = 0;
+  let autoplayTimer = null;
+  let productSwiper = null;
+  let activeSegmentKey = 'furnishing';
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function setDotState(dot, isActive) {
+    if (!dot) return;
+    dot.classList.toggle('is-active', isActive);
+    if (isActive) {
+      dot.setAttribute('aria-current', 'true');
+    } else {
+      dot.removeAttribute('aria-current');
+    }
+  }
+
+  function goToSlide(index) {
+    const nextIndex = ((index % slides.length) + slides.length) % slides.length;
+    if (nextIndex === activeIndex) return;
+
+    slides[activeIndex].classList.remove('is-active');
+    slides[activeIndex].setAttribute('aria-hidden', 'true');
+    setDotState(dots[activeIndex], false);
+
+    slides[nextIndex].classList.add('is-active');
+    slides[nextIndex].setAttribute('aria-hidden', 'false');
+    setDotState(dots[nextIndex], true);
+
+    activeIndex = nextIndex;
+  }
+
+  function nextSlide() {
+    goToSlide(activeIndex + 1);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer !== null) {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  function startAutoplay() {
+    if (prefersReducedMotion || slides.length < 2) return;
+    stopAutoplay();
+    autoplayTimer = window.setInterval(nextSlide, AUTOPLAY_MS);
+  }
+
+  function setGalleryImages(imagePaths, { alt = '' } = {}) {
+    const paths = imagePaths.filter(Boolean);
+    if (paths.length === 0) return;
+
+    slides.forEach((slide, index) => {
+      const img = slide.querySelector('.segment-panel__image');
+      if (!img) return;
+      img.src = paths[index % paths.length];
+      img.alt = alt;
+    });
+
+    if (activeIndex !== 0) {
+      slides[activeIndex].classList.remove('is-active');
+      slides[activeIndex].setAttribute('aria-hidden', 'true');
+      setDotState(dots[activeIndex], false);
+
+      slides[0].classList.add('is-active');
+      slides[0].setAttribute('aria-hidden', 'false');
+      setDotState(dots[0], true);
+      activeIndex = 0;
+    }
+
+    startAutoplay();
+  }
+
+  function renderCategories(segment) {
+    categoriesEl.innerHTML = segment.categories
+      .map((category, index) => {
+        const images = category.images.join('|');
+        const isActive = index === 0;
+        return `
+          <li>
+            <button
+              type="button"
+              class="segment-panel__item${isActive ? ' is-active' : ''}"
+              aria-pressed="${isActive ? 'true' : 'false'}"
+              data-images="${escapeHtml(images)}"
+            >
+              ${escapeHtml(category.label)}
+            </button>
+          </li>
+        `;
+      })
+      .join('');
+
+    categoriesEl.querySelectorAll('.segment-panel__item').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (button.classList.contains('is-active')) return;
+
+        categoriesEl.querySelectorAll('.segment-panel__item').forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-pressed', String(active));
+        });
+
+        const images = (button.dataset.images || '')
+          .split('|')
+          .map((path) => path.trim())
+          .filter(Boolean);
+        setGalleryImages(images, { alt: `${segment.title} — ${button.textContent.trim()}` });
+      });
+    });
+  }
+
+  function applyProduct(slide) {
+    if (!slide) return;
+
+    const name = slide.dataset.name || '';
+    const desc = slide.dataset.desc || '';
+    const image = slide.dataset.image || '';
+    const traits = (slide.dataset.traits || '').split('|').filter(Boolean);
+
+    if (imageEl && image) {
+      imageEl.src = image;
+      imageEl.alt = name || 'Product';
+    }
+    if (nameEl) nameEl.textContent = name;
+    if (descEl) descEl.textContent = desc;
+    if (traitsEl) {
+      traitsEl.innerHTML = traits
+        .map((trait) => `<li class="segment-products__trait">${escapeHtml(trait)}</li>`)
+        .join('');
+    }
+
+    wrapper.querySelectorAll('.segment-products__pick').forEach((pick) => {
+      const isActive = pick === slide;
+      pick.classList.toggle('is-active', isActive);
+      pick.setAttribute('aria-pressed', String(isActive));
+    });
+  }
+
+  function renderProducts(segment) {
+    const products = [...segment.products, ...segment.products, ...segment.products];
+
+    if (productSwiper) {
+      productSwiper.destroy(true, true);
+      productSwiper = null;
+    }
+
+    wrapper.innerHTML = products
+      .map((product, index) => {
+        const traits = product.traits.join('|');
+        return `
+          <button
+            type="button"
+            class="swiper-slide segment-products__pick${index === 0 ? ' is-active' : ''}"
+            data-product-index="${index}"
+            data-name="${escapeHtml(product.name)}"
+            data-desc="${escapeHtml(product.desc)}"
+            data-image="${escapeHtml(product.image)}"
+            data-traits="${escapeHtml(traits)}"
+            aria-label="${escapeHtml(product.name)}"
+            aria-pressed="${index === 0 ? 'true' : 'false'}"
+          >
+            <span class="segment-products__pick-thumb">
+              <img
+                src="${escapeHtml(product.image)}"
+                alt=""
+                class="segment-products__pick-image"
+                width="100"
+                height="100"
+                loading="lazy"
+              />
+            </span>
+            <span class="segment-products__pick-label">${escapeHtml(product.name)}</span>
+          </button>
+        `;
+      })
+      .join('');
+
+    productSwiper = new Swiper(picker, {
+      slidesPerView: 7,
+      slidesPerGroup: 4,
+      spaceBetween: 24,
+      speed: 500,
+      grabCursor: true,
+      watchOverflow: true,
+      pagination: {
+        el: picker.querySelector('.segment-products__pagination'),
+        clickable: true,
+      },
+      breakpoints: {
+        0: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 16 },
+        640: { slidesPerView: 4, slidesPerGroup: 3, spaceBetween: 20 },
+        900: { slidesPerView: 5, slidesPerGroup: 4, spaceBetween: 22 },
+        1200: { slidesPerView: 7, slidesPerGroup: 4, spaceBetween: 24 },
+      },
+    });
+
+    productSwiper.on('slideChangeTransitionEnd', () => {
+      const activeSlide = productSwiper.slides[productSwiper.activeIndex];
+      if (activeSlide) applyProduct(activeSlide);
+    });
+
+    applyProduct(wrapper.querySelector('.segment-products__pick'));
+  }
+
+  function getHeaderOffset() {
+    const header = document.querySelector('.site-header');
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    return headerHeight + 16; /* 16px breathing room below sticky header */
+  }
+
+  function scrollToPanel() {
+    const offset = -getHeaderOffset();
+
+    if (lenis) {
+      lenis.scrollTo(panel, {
+        offset,
+        immediate: prefersReducedMotion,
+      });
+      return;
+    }
+
+    const top = panel.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
+  }
+
+  function setActiveTab(segmentKey) {
+    tabLinks.forEach((link) => {
+      const isActive = link.dataset.segment === segmentKey;
+      link.classList.toggle('is-active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  function showSegment(segmentKey) {
+    const segment = SEGMENT_DATA[segmentKey];
+    if (!segment) return;
+
+    activeSegmentKey = segmentKey;
+    setActiveTab(segmentKey);
+
+    panel.id = segment.id;
+    if (titleEl) titleEl.textContent = segment.title;
+
+    renderCategories(segment);
+    const firstCategory = segment.categories[0];
+    setGalleryImages(firstCategory?.images || [], {
+      alt: `${segment.title} — ${firstCategory?.label || ''}`.trim(),
+    });
+    renderProducts(segment);
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const target = Number(dot.dataset.slideTo);
+      if (Number.isNaN(target) || target >= slides.length) return;
+      goToSlide(target);
+      startAutoplay();
+    });
+  });
+
+  gallery.addEventListener('mouseenter', stopAutoplay);
+  gallery.addEventListener('mouseleave', startAutoplay);
+  gallery.addEventListener('focusin', stopAutoplay);
+  gallery.addEventListener('focusout', (event) => {
+    if (!gallery.contains(event.relatedTarget)) startAutoplay();
+  });
+
+  wrapper.addEventListener('click', (event) => {
+    const slide = event.target.closest('.segment-products__pick');
+    if (!slide || !wrapper.contains(slide)) return;
+    applyProduct(slide);
+  });
+
+  tabLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const key = link.dataset.segment;
+      if (!key || key === activeSegmentKey) {
+        scrollToPanel();
+        return;
+      }
+      showSegment(key);
+      scrollToPanel();
+    });
+  });
+
+  slides.forEach((slide, index) => {
+    slide.setAttribute('aria-hidden', String(index !== 0));
+  });
+  dots.forEach((dot, index) => setDotState(dot, index === 0));
+
+  const initialKey =
+    tabLinks.find((link) => link.classList.contains('is-active'))?.dataset.segment || 'furnishing';
+  showSegment(initialKey);
+}
+
