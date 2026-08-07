@@ -54,6 +54,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -93,7 +94,12 @@
 
     <main>
       <!-- Market Segment hero -->
-      <section class="page-hero relative w-full overflow-hidden" aria-label="Market segment">
+      <section
+        class="page-hero relative w-full overflow-hidden"
+        aria-label="Market segment"
+        data-aos="fade-in"
+        data-aos-duration="1000"
+      >
         <img
           src="assets/images/market-segment/furnishing/carousel/image1.png"
           alt="Market segment — furnishing"
@@ -114,7 +120,7 @@
       </section>
 
       <!-- Market segment category tabs -->
-      <nav class="segment-tabs" aria-label="Market segments" data-segment-tabs>
+      <nav class="segment-tabs" aria-label="Market segments" data-segment-tabs data-aos="fade-up">
         <ul class="segment-tabs__list">
           <li>
             <a
@@ -145,6 +151,7 @@
         class="segment-panel"
         data-segment-panel
         aria-labelledby="segment-panel-title"
+        data-aos="fade-up"
       >
         <div class="segment-panel__inner container">
           <div class="segment-panel__gallery" data-segment-gallery>
@@ -231,7 +238,12 @@
       </section>
 
       <!-- Our Products (content swaps with tabs) -->
-      <section class="segment-products" aria-labelledby="segment-products-title" data-segment-products>
+      <section
+        class="segment-products"
+        aria-labelledby="segment-products-title"
+        data-segment-products
+        data-aos="fade-up"
+      >
         <div class="segment-products__inner container">
           <h2 id="segment-products-title" class="segment-products__heading">Our Products</h2>
 
@@ -273,7 +285,7 @@
       </section>
     </main>
 
-    <footer class="site-footer bg-brand-tan">
+    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">
@@ -321,6 +333,7 @@
     </footer>
 
     <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

@@ -11,10 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyrightYear();
   initSiteHeader();
   initAboutHeroSlider();
-  initMarketSegments(lenis);
+  initMarketSegments();
   initBoardSlider();
-  initTestimonialsSlider();
+  // initTestimonialsSlider();
   initAboutParallax(lenis);
+  initAOS();
 });
 
 /**
@@ -27,6 +28,8 @@ function initLenis() {
     lerp: 0.1,
     smoothWheel: true,
     anchors: true,
+    prevent: (node) =>
+      node?.closest?.('[data-lenis-prevent], [data-lenis-prevent-wheel]') != null,
   });
 
   function raf(time) {
@@ -36,6 +39,24 @@ function initLenis() {
 
   requestAnimationFrame(raf);
   return lenis;
+}
+
+/**
+ * Animate On Scroll (AOS)
+ */
+function initAOS() {
+  const aos = window.AOS;
+  if (!aos) return;
+
+  aos.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    once: true,
+    offset: 80,
+    disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  });
+
+  requestAnimationFrame(() => aos.refresh());
 }
 
 /**
@@ -442,7 +463,7 @@ function initAboutHeroSlider() {
 /**
  * Market segments — tabs swap panel categories + products (same layout, different data)
  */
-function initMarketSegments(lenis) {
+function initMarketSegments() {
   const tabsNav = document.querySelector('[data-segment-tabs]');
   const panel = document.querySelector('[data-segment-panel]');
   const productsSection = document.querySelector('[data-segment-products]');
@@ -462,6 +483,9 @@ function initMarketSegments(lenis) {
   const descEl = feature?.querySelector('[data-product-desc]');
   const traitsEl = feature?.querySelector('[data-product-traits]');
 
+  const panelInner = panel.querySelector('.segment-panel__inner');
+  const panelContent = panel.querySelector('.segment-panel__content');
+
   if (!categoriesEl || !gallery || slides.length === 0 || !picker || !wrapper || !feature) return;
 
   const tabLinks = Array.from(tabsNav.querySelectorAll('[data-segment]'));
@@ -480,6 +504,45 @@ function initMarketSegments(lenis) {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;');
   }
+
+  function syncDropdownListHeight() {
+    if (!panelInner || !panelContent || !gallery || !categoriesEl) return;
+
+    if (!categoriesEl.classList.contains('segment-panel__list--dropdowns')) {
+      panelInner.style.removeProperty('--segment-panel-gallery-height');
+      categoriesEl.style.removeProperty('max-height');
+      categoriesEl.removeAttribute('data-lenis-prevent');
+      panelContent.removeAttribute('data-lenis-prevent');
+      return;
+    }
+
+    categoriesEl.setAttribute('data-lenis-prevent', '');
+    panelContent.setAttribute('data-lenis-prevent', '');
+
+    const galleryHeight = gallery.getBoundingClientRect().height;
+    const titleHeight = titleEl ? titleEl.getBoundingClientRect().height : 0;
+    const stacked = window.matchMedia('(max-width: 64rem)').matches;
+    const cap = stacked ? Math.min(window.innerHeight * 0.55, 420) : galleryHeight;
+
+    if (galleryHeight > 0 || stacked) {
+      panelInner.style.setProperty(
+        '--segment-panel-gallery-height',
+        `${Math.round(stacked ? cap : galleryHeight)}px`
+      );
+      categoriesEl.style.maxHeight = `${Math.max(120, Math.round(cap - titleHeight))}px`;
+    }
+  }
+
+  /* Keep wheel/trackpad scroll on the list — Lenis otherwise steals it */
+  categoriesEl.addEventListener(
+    'wheel',
+    (event) => {
+      if (!categoriesEl.classList.contains('segment-panel__list--dropdowns')) return;
+      if (categoriesEl.scrollHeight <= categoriesEl.clientHeight + 1) return;
+      event.stopPropagation();
+    },
+    { passive: true, capture: true }
+  );
 
   function setDotState(dot, isActive) {
     if (!dot) return;
@@ -548,21 +611,78 @@ function initMarketSegments(lenis) {
     startAutoplay();
   }
 
+  function clearCategoryActiveState() {
+    categoriesEl.querySelectorAll('.segment-panel__item, .segment-panel__option').forEach((item) => {
+      item.classList.remove('is-active');
+      item.setAttribute('aria-pressed', 'false');
+    });
+  }
+
   function renderCategories(segment) {
+    const useDropdowns = segment.id === 'automotive';
+
+    categoriesEl.classList.toggle('segment-panel__list--dropdowns', useDropdowns);
+    if (useDropdowns) {
+      categoriesEl.setAttribute('data-lenis-prevent', '');
+    } else {
+      categoriesEl.removeAttribute('data-lenis-prevent');
+    }
+
     categoriesEl.innerHTML = segment.categories
       .map((category, index) => {
         const images = category.images.join('|');
         const isActive = index === 0;
+        const hasOptions = useDropdowns && Array.isArray(category.options) && category.options.length > 0;
+
+        if (!hasOptions) {
+          return `
+            <li>
+              <button
+                type="button"
+                class="segment-panel__item${isActive ? ' is-active' : ''}"
+                aria-pressed="${isActive ? 'true' : 'false'}"
+                data-images="${escapeHtml(images)}"
+              >
+                ${escapeHtml(category.label)}
+              </button>
+            </li>
+          `;
+        }
+
+        const optionsMarkup = category.options
+          .map((option, optionIndex) => {
+            const optionImages = option.images.join('|');
+            const optionActive = isActive && optionIndex === 0;
+            return `
+              <li>
+                <button
+                  type="button"
+                  class="segment-panel__option${optionActive ? ' is-active' : ''}"
+                  aria-pressed="${optionActive ? 'true' : 'false'}"
+                  data-images="${escapeHtml(optionImages)}"
+                >
+                  ${escapeHtml(option.label)}
+                </button>
+              </li>
+            `;
+          })
+          .join('');
+
         return `
-          <li>
+          <li class="segment-panel__dropdown${isActive ? ' is-open' : ''}">
             <button
               type="button"
-              class="segment-panel__item${isActive ? ' is-active' : ''}"
+              class="segment-panel__item segment-panel__item--trigger${isActive ? ' is-active' : ''}"
+              aria-expanded="${isActive ? 'true' : 'false'}"
               aria-pressed="${isActive ? 'true' : 'false'}"
               data-images="${escapeHtml(images)}"
             >
-              ${escapeHtml(category.label)}
+              <span class="segment-panel__item-label">${escapeHtml(category.label)}</span>
+              <span class="segment-panel__chevron" aria-hidden="true"></span>
             </button>
+            <ul class="segment-panel__submenu" ${isActive ? '' : 'hidden'}>
+              ${optionsMarkup}
+            </ul>
           </li>
         `;
       })
@@ -570,19 +690,70 @@ function initMarketSegments(lenis) {
 
     categoriesEl.querySelectorAll('.segment-panel__item').forEach((button) => {
       button.addEventListener('click', () => {
+        const dropdown = button.closest('.segment-panel__dropdown');
+
+        if (dropdown) {
+          const wasOpen = dropdown.classList.contains('is-open');
+          const submenu = dropdown.querySelector('.segment-panel__submenu');
+
+          categoriesEl.querySelectorAll('.segment-panel__dropdown').forEach((item) => {
+            const trigger = item.querySelector('.segment-panel__item--trigger');
+            const menu = item.querySelector('.segment-panel__submenu');
+            const open = item === dropdown && !wasOpen;
+            item.classList.toggle('is-open', open);
+            if (trigger) trigger.setAttribute('aria-expanded', String(open));
+            if (menu) menu.hidden = !open;
+          });
+
+          clearCategoryActiveState();
+          button.classList.add('is-active');
+          button.setAttribute('aria-pressed', 'true');
+
+          const images = (button.dataset.images || '')
+            .split('|')
+            .map((path) => path.trim())
+            .filter(Boolean);
+          setGalleryImages(images, {
+            alt: `${segment.title} — ${button.querySelector('.segment-panel__item-label')?.textContent.trim() || button.textContent.trim()}`,
+          });
+          syncDropdownListHeight();
+          return;
+        }
+
         if (button.classList.contains('is-active')) return;
 
-        categoriesEl.querySelectorAll('.segment-panel__item').forEach((item) => {
-          const active = item === button;
-          item.classList.toggle('is-active', active);
-          item.setAttribute('aria-pressed', String(active));
-        });
+        clearCategoryActiveState();
+        button.classList.add('is-active');
+        button.setAttribute('aria-pressed', 'true');
 
         const images = (button.dataset.images || '')
           .split('|')
           .map((path) => path.trim())
           .filter(Boolean);
         setGalleryImages(images, { alt: `${segment.title} — ${button.textContent.trim()}` });
+      });
+    });
+
+    categoriesEl.querySelectorAll('.segment-panel__option').forEach((optionButton) => {
+      optionButton.addEventListener('click', () => {
+        const dropdown = optionButton.closest('.segment-panel__dropdown');
+        const trigger = dropdown?.querySelector('.segment-panel__item--trigger');
+
+        clearCategoryActiveState();
+        optionButton.classList.add('is-active');
+        optionButton.setAttribute('aria-pressed', 'true');
+        if (trigger) {
+          trigger.classList.add('is-active');
+          trigger.setAttribute('aria-pressed', 'true');
+        }
+
+        const images = (optionButton.dataset.images || '')
+          .split('|')
+          .map((path) => path.trim())
+          .filter(Boolean);
+        setGalleryImages(images, {
+          alt: `${segment.title} — ${optionButton.textContent.trim()}`,
+        });
       });
     });
   }
@@ -680,30 +851,6 @@ function initMarketSegments(lenis) {
     applyProduct(wrapper.querySelector('.segment-products__pick'));
   }
 
-  function getHeaderOffset() {
-    const header = document.querySelector('.site-header');
-    const headerHeight = header ? header.getBoundingClientRect().height : 0;
-    return headerHeight + 16; /* 16px breathing room below sticky header */
-  }
-
-  function scrollToPanel() {
-    const offset = -getHeaderOffset();
-
-    if (lenis) {
-      lenis.scrollTo(panel, {
-        offset,
-        immediate: prefersReducedMotion,
-      });
-      return;
-    }
-
-    const top = panel.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
-    window.scrollTo({
-      top: Math.max(0, top),
-      behavior: prefersReducedMotion ? 'auto' : 'smooth',
-    });
-  }
-
   function setActiveTab(segmentKey) {
     tabLinks.forEach((link) => {
       const isActive = link.dataset.segment === segmentKey;
@@ -728,10 +875,17 @@ function initMarketSegments(lenis) {
 
     renderCategories(segment);
     const firstCategory = segment.categories[0];
-    setGalleryImages(firstCategory?.images || [], {
-      alt: `${segment.title} — ${firstCategory?.label || ''}`.trim(),
+    const initialImages =
+      firstCategory?.options?.[0]?.images || firstCategory?.images || [];
+    const initialLabel = firstCategory?.options?.[0]?.label || firstCategory?.label || '';
+    setGalleryImages(initialImages, {
+      alt: `${segment.title} — ${initialLabel}`.trim(),
     });
     renderProducts(segment);
+    requestAnimationFrame(() => {
+      syncDropdownListHeight();
+      requestAnimationFrame(syncDropdownListHeight);
+    });
   }
 
   dots.forEach((dot) => {
@@ -760,12 +914,8 @@ function initMarketSegments(lenis) {
     link.addEventListener('click', (event) => {
       event.preventDefault();
       const key = link.dataset.segment;
-      if (!key || key === activeSegmentKey) {
-        scrollToPanel();
-        return;
-      }
+      if (!key || key === activeSegmentKey) return;
       showSegment(key);
-      scrollToPanel();
     });
   });
 
@@ -777,5 +927,7 @@ function initMarketSegments(lenis) {
   const initialKey =
     tabLinks.find((link) => link.classList.contains('is-active'))?.dataset.segment || 'furnishing';
   showSegment(initialKey);
+
+  window.addEventListener('resize', syncDropdownListHeight);
 }
 

@@ -54,6 +54,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -94,6 +95,8 @@
         class="about-hero-slider relative w-full overflow-hidden"
         aria-label="About us gallery"
         aria-roledescription="carousel"
+        data-aos="fade-in"
+        data-aos-duration="1000"
       >
         <div class="about-hero-slider__track relative h-full w-full">
           <div
@@ -172,7 +175,7 @@
       </section>
 
       <!-- About Us content -->
-      <section class="about-section" aria-labelledby="about-section-title">
+      <section class="about-section" aria-labelledby="about-section-title" data-aos="fade-up">
         <h2 id="about-section-title" class="about-section__title">About Us</h2>
 
         <div class="about-section__stage">
@@ -234,7 +237,7 @@
       </section>
 
       <!-- Vision -->
-      <section class="vision-section" aria-labelledby="vision-section-title">
+      <section class="vision-section" aria-labelledby="vision-section-title" data-aos="fade-up">
         <div class="vision-section__inner container">
           <figure class="vision-section__figure">
             <img
@@ -261,7 +264,7 @@
       </section>
 
       <!-- Mission -->
-      <section class="mission-section" aria-labelledby="mission-section-title">
+      <section class="mission-section" aria-labelledby="mission-section-title" data-aos="fade-up">
         <div class="mission-section__inner container">
           <div class="mission-section__content">
             <h2 id="mission-section-title" class="mission-section__title">Mission</h2>
@@ -282,7 +285,7 @@
       </section>
 
       <!-- Values -->
-      <section class="values-section" aria-labelledby="values-section-title">
+      <section class="values-section" aria-labelledby="values-section-title" data-aos="fade-up">
         <div class="values-section__inner container">
           <h2 id="values-section-title" class="values-section__title">Values</h2>
           <p class="values-section__text">
@@ -372,7 +375,7 @@
       </section>
 
       <!-- History -->
-      <section class="history-section" aria-labelledby="history-section-title">
+      <section class="history-section" aria-labelledby="history-section-title" data-aos="fade-up">
         <div class="history-section__inner container">
           <h2 id="history-section-title" class="history-section__title">History</h2>
 
@@ -453,7 +456,7 @@
       </section>
 
       <!-- Founder -->
-      <section class="founder-section" aria-labelledby="founder-section-title">
+      <section class="founder-section" aria-labelledby="founder-section-title" data-aos="fade-up">
         <div class="founder-section__inner container">
           <div class="founder-section__frame">
             <figure class="founder-section__figure">
@@ -483,7 +486,7 @@
       </section>
 
       <!-- Board Members -->
-      <section class="board-section" aria-labelledby="board-section-title">
+      <section class="board-section" aria-labelledby="board-section-title" data-aos="fade-up">
         <h2 id="board-section-title" class="board-section__title">Board Members</h2>
 
         <div class="board-slider" id="board-slider">
@@ -618,7 +621,7 @@
       </section>
 
       <!-- Policy & Certificates -->
-      <section class="policy-section" aria-labelledby="policy-section-title">
+      <section class="policy-section" aria-labelledby="policy-section-title" data-aos="fade-up">
         <div class="policy-section__intro container">
           <h2 id="policy-section-title" class="policy-section__title">Policy &amp; Certificates</h2>
           <p class="policy-section__text">
@@ -700,7 +703,7 @@
       </section>
 
       <!-- Investors -->
-      <section class="investors-section" aria-labelledby="investors-section-title">
+      <section class="investors-section" aria-labelledby="investors-section-title" data-aos="fade-up">
         <div class="investors-section__inner container">
           <h2 id="investors-section-title" class="investors-section__title">Investors</h2>
 
@@ -728,8 +731,8 @@
         </div>
       </section>
 
-      <!-- Customer Testimonials -->
-      <section class="testimonials-section" aria-labelledby="testimonials-section-title">
+      <!-- Customer Testimonials (temporarily hidden)
+      <section class="testimonials-section" aria-labelledby="testimonials-section-title" data-aos="fade-up">
         <h2 id="testimonials-section-title" class="testimonials-section__title">
           Customer Testimonial
         </h2>
@@ -888,9 +891,10 @@
           </div>
         </div>
       </section>
+      -->
     </main>
 
-    <footer class="site-footer bg-brand-tan">
+    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">
@@ -938,6 +942,7 @@
     </footer>
 
     <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

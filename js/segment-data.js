@@ -49,12 +49,63 @@ export const SEGMENT_DATA = {
     id: 'automotive',
     title: 'Automotive',
     categories: [
-      { label: 'Passenger Cars', images: slideSet() },
-      { label: 'SUVs & Crossovers', images: slideSet() },
-      { label: 'Commercial Vehicles', images: slideSet() },
-      { label: 'Two Wheelers', images: slideSet() },
-      { label: 'Aftermarket', images: slideSet() },
-      { label: 'Specialty Interiors', images: slideSet() },
+      {
+        label: 'Passenger Cars',
+        images: slideSet(),
+        options: [
+          { label: 'Sedan', images: slideSet() },
+          { label: 'Hatchback', images: slideSet() },
+          { label: 'Coupe', images: slideSet() },
+          { label: 'Convertible', images: slideSet() },
+        ],
+      },
+      {
+        label: 'SUVs & Crossovers',
+        images: slideSet(),
+        options: [
+          { label: 'Compact SUV', images: slideSet() },
+          { label: 'Mid-size SUV', images: slideSet() },
+          { label: 'Full-size SUV', images: slideSet() },
+          { label: 'Crossover', images: slideSet() },
+        ],
+      },
+      {
+        label: 'Commercial Vehicles',
+        images: slideSet(),
+        options: [
+          { label: 'Light Commercial', images: slideSet() },
+          { label: 'Trucks', images: slideSet() },
+          { label: 'Buses', images: slideSet() },
+          { label: 'Vans', images: slideSet() },
+        ],
+      },
+      {
+        label: 'Two Wheelers',
+        images: slideSet(),
+        options: [
+          { label: 'Motorcycles', images: slideSet() },
+          { label: 'Scooters', images: slideSet() },
+          { label: 'Electric', images: slideSet() },
+        ],
+      },
+      {
+        label: 'Aftermarket',
+        images: slideSet(),
+        options: [
+          { label: 'Seat Covers', images: slideSet() },
+          { label: 'Steering Wraps', images: slideSet() },
+          { label: 'Interior Kits', images: slideSet() },
+        ],
+      },
+      {
+        label: 'Specialty Interiors',
+        images: slideSet(),
+        options: [
+          { label: 'Luxury Trim', images: slideSet() },
+          { label: 'Performance', images: slideSet() },
+          { label: 'Custom Builds', images: slideSet() },
+        ],
+      },
     ],
     products: productSet('Automotive', [
       'Automotive sample copy — premium upholstery engineered for durability, comfort, and refined cabin aesthetics across passenger and commercial platforms.',
