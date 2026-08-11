@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAboutHeroSlider();
   initMarketSegments();
   initBoardSlider();
+  initClientsSlider();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
   initAOS();
@@ -215,6 +216,103 @@ function initBoardSlider() {
 
   window.addEventListener('resize', render, { passive: true });
   render();
+}
+
+/**
+ * Our Clients — seamless infinite marquee (no blank gaps)
+ * Clones logo sets until the row always fills the viewport, then animates
+ * by exactly one set width so the loop never shows empty space.
+ */
+function initClientsSlider() {
+  const slider = document.getElementById('clients-slider');
+  if (!slider) return;
+
+  const track = slider.querySelector('.clients-slider__track');
+  const baseSet = track?.querySelector('.clients-slider__set');
+  if (!track || !baseSet) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function clearClones() {
+    track.querySelectorAll('.clients-slider__set[data-clone]').forEach((node) => node.remove());
+  }
+
+  function build() {
+    clearClones();
+    track.classList.remove('is-ready');
+
+    const setWidth = baseSet.getBoundingClientRect().width;
+    const viewport = slider.getBoundingClientRect().width;
+    if (setWidth <= 0 || viewport <= 0) return;
+
+    /* Enough sets to cover the viewport, then double for a seamless loop */
+    const setsNeeded = Math.max(2, Math.ceil(viewport / setWidth) + 1);
+    for (let i = 1; i < setsNeeded * 2; i += 1) {
+      const clone = baseSet.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      clone.setAttribute('aria-hidden', 'true');
+      clone.querySelectorAll('img').forEach((img) => {
+        img.alt = '';
+        img.removeAttribute('loading');
+      });
+      track.appendChild(clone);
+    }
+
+    /* Measure exact pixel distance of one filled cycle (includes gaps) */
+    const sets = track.querySelectorAll('.clients-slider__set');
+    const cycleStart = sets[0].getBoundingClientRect().left;
+    const cycleEnd = sets[setsNeeded].getBoundingClientRect().left;
+    const cycleWidth = cycleEnd - cycleStart;
+
+    track.style.setProperty('--clients-cycle', `${Math.round(cycleWidth)}px`);
+    track.style.setProperty(
+      '--clients-duration',
+      `${Math.max(20, Math.round(cycleWidth / 40))}s`
+    );
+
+    if (reduceMotion.matches) {
+      track.classList.add('is-paused');
+    } else {
+      track.classList.remove('is-paused');
+    }
+
+    track.classList.add('is-ready');
+  }
+
+  function whenImagesReady() {
+    const images = [...baseSet.querySelectorAll('img')];
+    return Promise.all(
+      images.map((img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.addEventListener('load', resolve, { once: true });
+              img.addEventListener('error', resolve, { once: true });
+            })
+      )
+    );
+  }
+
+  whenImagesReady().then(build);
+
+  let resizeTimer = 0;
+  window.addEventListener(
+    'resize',
+    () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(build, 150);
+    },
+    { passive: true }
+  );
+
+  if (reduceMotion.matches) return;
+
+  slider.addEventListener('mouseenter', () => track.classList.add('is-paused'));
+  slider.addEventListener('mouseleave', () => track.classList.remove('is-paused'));
+  slider.addEventListener('focusin', () => track.classList.add('is-paused'));
+  slider.addEventListener('focusout', (event) => {
+    if (!slider.contains(event.relatedTarget)) track.classList.remove('is-paused');
+  });
 }
 
 /**
