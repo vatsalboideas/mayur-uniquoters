@@ -4,18 +4,25 @@
 
 import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/+esm';
 import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
+import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/index.js';
+import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger.js';
 import { SEGMENT_DATA } from './segment-data.js';
+
+gsap.registerPlugin(ScrollTrigger);
 
 document.addEventListener('DOMContentLoaded', () => {
   const lenis = initLenis();
+  bindLenisToGsap(lenis);
   initCopyrightYear();
   initSiteHeader();
   initAboutHeroSlider();
   initMarketSegments();
   initBoardSlider();
-  initClientsSlider();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
+  initHistoryStack();
+  initFounderReadMore();
+  initPolicyCertificates();
   initAOS();
 });
 
@@ -29,17 +36,25 @@ function initLenis() {
     lerp: 0.1,
     smoothWheel: true,
     anchors: true,
+    autoRaf: false,
     prevent: (node) =>
       node?.closest?.('[data-lenis-prevent], [data-lenis-prevent-wheel]') != null,
   });
 
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-
-  requestAnimationFrame(raf);
   return lenis;
+}
+
+/**
+ * Drive Lenis from GSAP's ticker so ScrollTrigger stays in sync.
+ */
+function bindLenisToGsap(lenis) {
+  if (!lenis) return;
+
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0);
 }
 
 /**
@@ -219,105 +234,8 @@ function initBoardSlider() {
 }
 
 /**
- * Our Clients — seamless infinite marquee (no blank gaps)
- * Clones logo sets until the row always fills the viewport, then animates
- * by exactly one set width so the loop never shows empty space.
- */
-function initClientsSlider() {
-  const slider = document.getElementById('clients-slider');
-  if (!slider) return;
-
-  const track = slider.querySelector('.clients-slider__track');
-  const baseSet = track?.querySelector('.clients-slider__set');
-  if (!track || !baseSet) return;
-
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  function clearClones() {
-    track.querySelectorAll('.clients-slider__set[data-clone]').forEach((node) => node.remove());
-  }
-
-  function build() {
-    clearClones();
-    track.classList.remove('is-ready');
-
-    const setWidth = baseSet.getBoundingClientRect().width;
-    const viewport = slider.getBoundingClientRect().width;
-    if (setWidth <= 0 || viewport <= 0) return;
-
-    /* Enough sets to cover the viewport, then double for a seamless loop */
-    const setsNeeded = Math.max(2, Math.ceil(viewport / setWidth) + 1);
-    for (let i = 1; i < setsNeeded * 2; i += 1) {
-      const clone = baseSet.cloneNode(true);
-      clone.setAttribute('data-clone', 'true');
-      clone.setAttribute('aria-hidden', 'true');
-      clone.querySelectorAll('img').forEach((img) => {
-        img.alt = '';
-        img.removeAttribute('loading');
-      });
-      track.appendChild(clone);
-    }
-
-    /* Measure exact pixel distance of one filled cycle (includes gaps) */
-    const sets = track.querySelectorAll('.clients-slider__set');
-    const cycleStart = sets[0].getBoundingClientRect().left;
-    const cycleEnd = sets[setsNeeded].getBoundingClientRect().left;
-    const cycleWidth = cycleEnd - cycleStart;
-
-    track.style.setProperty('--clients-cycle', `${Math.round(cycleWidth)}px`);
-    track.style.setProperty(
-      '--clients-duration',
-      `${Math.max(20, Math.round(cycleWidth / 40))}s`
-    );
-
-    if (reduceMotion.matches) {
-      track.classList.add('is-paused');
-    } else {
-      track.classList.remove('is-paused');
-    }
-
-    track.classList.add('is-ready');
-  }
-
-  function whenImagesReady() {
-    const images = [...baseSet.querySelectorAll('img')];
-    return Promise.all(
-      images.map((img) =>
-        img.complete
-          ? Promise.resolve()
-          : new Promise((resolve) => {
-              img.addEventListener('load', resolve, { once: true });
-              img.addEventListener('error', resolve, { once: true });
-            })
-      )
-    );
-  }
-
-  whenImagesReady().then(build);
-
-  let resizeTimer = 0;
-  window.addEventListener(
-    'resize',
-    () => {
-      window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(build, 150);
-    },
-    { passive: true }
-  );
-
-  if (reduceMotion.matches) return;
-
-  slider.addEventListener('mouseenter', () => track.classList.add('is-paused'));
-  slider.addEventListener('mouseleave', () => track.classList.remove('is-paused'));
-  slider.addEventListener('focusin', () => track.classList.add('is-paused'));
-  slider.addEventListener('focusout', (event) => {
-    if (!slider.contains(event.relatedTarget)) track.classList.remove('is-paused');
-  });
-}
-
-/**
  * Scroll parallax for About section images.
- * Disabled when the about stage is stacked (max-width: 64rem) so transforms
+ * Disabled when the about stage is stacked (max-width: 75rem) so transforms
  * do not fight the static document-flow layout.
  */
 function initAboutParallax(lenis) {
@@ -326,7 +244,7 @@ function initAboutParallax(lenis) {
   if (!section || figures.length === 0) return;
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const stackedLayout = window.matchMedia('(max-width: 64rem)');
+  const stackedLayout = window.matchMedia('(max-width: 75rem)');
 
   if (prefersReducedMotion.matches) return;
 
@@ -366,6 +284,113 @@ function initAboutParallax(lenis) {
   window.addEventListener('resize', updateParallax, { passive: true });
   stackedLayout.addEventListener('change', updateParallax);
   updateParallax();
+}
+
+/**
+ * History section — GSAP ScrollTrigger pin.
+ * Title + intro stay below the site header; the two card sets live in a
+ * stage underneath so they never sit under the heading. Set 2 slides up
+ * over set 1 while the section is pinned, then the pin releases intact.
+ */
+function initHistoryStack() {
+  const section = document.querySelector('.history-section');
+  const sets = gsap.utils.toArray('.history-section__set');
+  if (!section || sets.length < 2) return;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (prefersReducedMotion.matches) return;
+
+  const header = document.querySelector('.site-header');
+
+  function headerOffset() {
+    return header?.getBoundingClientRect().height ?? 0;
+  }
+
+  const mm = gsap.matchMedia();
+
+  mm.add('(min-width: 40.0625rem)', () => {
+    section.classList.add('is-gsap');
+    gsap.set(sets[1], { yPercent: 100 });
+
+    const tween = gsap.to(sets[1], {
+      yPercent: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: () => `top ${headerOffset()}px`,
+        end: () => `+=${Math.round(window.innerHeight * 1.25)}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.55,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      section.classList.remove('is-gsap');
+      gsap.set(sets[1], { clearProps: 'transform' });
+    };
+  });
+}
+
+/**
+ * Founder message — reveal the second paragraph on Read More / hide on toggle.
+ */
+function initFounderReadMore() {
+  const button = document.querySelector('.founder-section__button');
+  const extra = document.getElementById('founder-message-more');
+  if (!button || !extra) return;
+
+  button.addEventListener('click', () => {
+    const isOpen = extra.classList.toggle('is-open');
+    extra.setAttribute('aria-hidden', String(!isOpen));
+    button.setAttribute('aria-expanded', String(isOpen));
+    button.textContent = isOpen ? 'Read Less' : 'Read More';
+  });
+}
+
+/**
+ * Policy certificates gallery — show / hide on button toggle.
+ */
+function initPolicyCertificates() {
+  const button = document.querySelector('.policy-section__button');
+  const gallery = document.getElementById('policy-certificates');
+  if (!button || !gallery) return;
+
+  button.addEventListener('click', () => {
+    const isOpen = gallery.classList.toggle('is-open');
+    gallery.setAttribute('aria-hidden', String(!isOpen));
+    button.setAttribute('aria-expanded', String(isOpen));
+    button.textContent = isOpen ? 'Hide Certificates' : 'Show Certificates';
+  });
+
+  const tabs = Array.from(gallery.querySelectorAll('[data-policy-tab]'));
+  const panels = Array.from(gallery.querySelectorAll('[data-policy-panel]'));
+  if (tabs.length === 0 || panels.length === 0) return;
+
+  function showPanel(key) {
+    tabs.forEach((tab) => {
+      const isActive = tab.dataset.policyTab === key;
+      tab.classList.toggle('is-active', isActive);
+      tab.setAttribute('aria-selected', String(isActive));
+      tab.tabIndex = isActive ? 0 : -1;
+    });
+
+    panels.forEach((panel) => {
+      const isActive = panel.dataset.policyPanel === key;
+      panel.classList.toggle('is-active', isActive);
+      panel.hidden = !isActive;
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => showPanel(tab.dataset.policyTab));
+  });
 }
 
 /**
