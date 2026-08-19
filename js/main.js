@@ -7,6 +7,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs
 import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/index.js';
 import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger.js';
 import { SEGMENT_DATA } from './segment-data.js';
+import { PLANT_DATA, PLANT_ORDER } from './plant-data.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSiteHeader();
   initAboutHeroSlider();
   initMarketSegments();
+  initPlants();
   initBoardSlider();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
@@ -287,7 +289,7 @@ function initAboutParallax(lenis) {
 }
 
 /**
- * History section — GSAP ScrollTrigger pin.
+ * History section — GSAP ScrollTrigger pin (desktop, min-width 1025px).
  * Title + intro stay below the site header; the two card sets live in a
  * stage underneath so they never sit under the heading. Set 2 slides up
  * over set 1 while the section is pinned, then the pin releases intact.
@@ -308,7 +310,7 @@ function initHistoryStack() {
 
   const mm = gsap.matchMedia();
 
-  mm.add('(min-width: 40.0625rem)', () => {
+  mm.add('(min-width: 64.0625rem)', () => {
     section.classList.add('is-gsap');
     gsap.set(sets[1], { yPercent: 100 });
 
@@ -590,9 +592,11 @@ function initMarketSegments() {
   const tabsNav = document.querySelector('[data-segment-tabs]');
   const panel = document.querySelector('[data-segment-panel]');
   const productsSection = document.querySelector('[data-segment-products]');
+  const introEl = document.querySelector('[data-segment-intro]');
+  const heroImage = document.querySelector('[data-segment-hero]');
+  const productsIntroEl = document.querySelector('[data-segment-products-intro]');
   if (!tabsNav || !panel || !productsSection) return;
 
-  const titleEl = panel.querySelector('[data-segment-title]');
   const categoriesEl = panel.querySelector('[data-segment-categories]');
   const gallery = panel.querySelector('[data-segment-gallery]');
   const slides = gallery ? Array.from(gallery.querySelectorAll('.segment-panel__slide')) : [];
@@ -605,9 +609,6 @@ function initMarketSegments() {
   const nameEl = feature?.querySelector('[data-product-name]');
   const descEl = feature?.querySelector('[data-product-desc]');
   const traitsEl = feature?.querySelector('[data-product-traits]');
-
-  const panelInner = panel.querySelector('.segment-panel__inner');
-  const panelContent = panel.querySelector('.segment-panel__content');
 
   if (!categoriesEl || !gallery || slides.length === 0 || !picker || !wrapper || !feature) return;
 
@@ -627,45 +628,6 @@ function initMarketSegments() {
       .replaceAll('>', '&gt;')
       .replaceAll('"', '&quot;');
   }
-
-  function syncDropdownListHeight() {
-    if (!panelInner || !panelContent || !gallery || !categoriesEl) return;
-
-    if (!categoriesEl.classList.contains('segment-panel__list--dropdowns')) {
-      panelInner.style.removeProperty('--segment-panel-gallery-height');
-      categoriesEl.style.removeProperty('max-height');
-      categoriesEl.removeAttribute('data-lenis-prevent');
-      panelContent.removeAttribute('data-lenis-prevent');
-      return;
-    }
-
-    categoriesEl.setAttribute('data-lenis-prevent', '');
-    panelContent.setAttribute('data-lenis-prevent', '');
-
-    const galleryHeight = gallery.getBoundingClientRect().height;
-    const titleHeight = titleEl ? titleEl.getBoundingClientRect().height : 0;
-    const stacked = window.matchMedia('(max-width: 64rem)').matches;
-    const cap = stacked ? Math.min(window.innerHeight * 0.55, 420) : galleryHeight;
-
-    if (galleryHeight > 0 || stacked) {
-      panelInner.style.setProperty(
-        '--segment-panel-gallery-height',
-        `${Math.round(stacked ? cap : galleryHeight)}px`
-      );
-      categoriesEl.style.maxHeight = `${Math.max(120, Math.round(cap - titleHeight))}px`;
-    }
-  }
-
-  /* Keep wheel/trackpad scroll on the list — Lenis otherwise steals it */
-  categoriesEl.addEventListener(
-    'wheel',
-    (event) => {
-      if (!categoriesEl.classList.contains('segment-panel__list--dropdowns')) return;
-      if (categoriesEl.scrollHeight <= categoriesEl.clientHeight + 1) return;
-      event.stopPropagation();
-    },
-    { passive: true, capture: true }
-  );
 
   function setDotState(dot, isActive) {
     if (!dot) return;
@@ -742,20 +704,16 @@ function initMarketSegments() {
   }
 
   function renderCategories(segment) {
-    const useDropdowns = segment.id === 'automotive';
+    const useDropdowns = segment.categories.some((category) => Array.isArray(category.options));
 
     categoriesEl.classList.toggle('segment-panel__list--dropdowns', useDropdowns);
-    if (useDropdowns) {
-      categoriesEl.setAttribute('data-lenis-prevent', '');
-    } else {
-      categoriesEl.removeAttribute('data-lenis-prevent');
-    }
 
     categoriesEl.innerHTML = segment.categories
       .map((category, index) => {
         const images = category.images.join('|');
         const isActive = index === 0;
-        const hasOptions = useDropdowns && Array.isArray(category.options) && category.options.length > 0;
+        const hasOptions = Array.isArray(category.options);
+        const isOpen = isActive && hasOptions && category.options.length > 0;
 
         if (!hasOptions) {
           return `
@@ -792,20 +750,22 @@ function initMarketSegments() {
           .join('');
 
         return `
-          <li class="segment-panel__dropdown${isActive ? ' is-open' : ''}">
+          <li class="segment-panel__dropdown${isOpen ? ' is-open' : ''}">
             <button
               type="button"
               class="segment-panel__item segment-panel__item--trigger${isActive ? ' is-active' : ''}"
-              aria-expanded="${isActive ? 'true' : 'false'}"
+              aria-expanded="${isOpen ? 'true' : 'false'}"
               aria-pressed="${isActive ? 'true' : 'false'}"
               data-images="${escapeHtml(images)}"
             >
               <span class="segment-panel__item-label">${escapeHtml(category.label)}</span>
               <span class="segment-panel__chevron" aria-hidden="true"></span>
             </button>
-            <ul class="segment-panel__submenu" ${isActive ? '' : 'hidden'}>
-              ${optionsMarkup}
-            </ul>
+            <div class="segment-panel__submenu-wrap">
+              <ul class="segment-panel__submenu" aria-hidden="${isOpen ? 'false' : 'true'}">
+                ${optionsMarkup}
+              </ul>
+            </div>
           </li>
         `;
       })
@@ -817,15 +777,15 @@ function initMarketSegments() {
 
         if (dropdown) {
           const wasOpen = dropdown.classList.contains('is-open');
-          const submenu = dropdown.querySelector('.segment-panel__submenu');
+          const canOpen = (dropdown.querySelector('.segment-panel__submenu')?.children.length || 0) > 0;
 
           categoriesEl.querySelectorAll('.segment-panel__dropdown').forEach((item) => {
             const trigger = item.querySelector('.segment-panel__item--trigger');
             const menu = item.querySelector('.segment-panel__submenu');
-            const open = item === dropdown && !wasOpen;
+            const open = canOpen && item === dropdown && !wasOpen;
             item.classList.toggle('is-open', open);
             if (trigger) trigger.setAttribute('aria-expanded', String(open));
-            if (menu) menu.hidden = !open;
+            if (menu) menu.setAttribute('aria-hidden', String(!open));
           });
 
           clearCategoryActiveState();
@@ -839,7 +799,6 @@ function initMarketSegments() {
           setGalleryImages(images, {
             alt: `${segment.title} — ${button.querySelector('.segment-panel__item-label')?.textContent.trim() || button.textContent.trim()}`,
           });
-          syncDropdownListHeight();
           return;
         }
 
@@ -994,7 +953,12 @@ function initMarketSegments() {
     setActiveTab(segmentKey);
 
     panel.id = segment.id;
-    if (titleEl) titleEl.textContent = segment.title;
+    if (introEl) introEl.textContent = segment.intro || '';
+    if (productsIntroEl) productsIntroEl.textContent = segment.productsIntro || '';
+    if (heroImage && segment.hero) {
+      heroImage.src = segment.hero;
+      heroImage.alt = `Market segment — ${segment.title}`;
+    }
 
     renderCategories(segment);
     const firstCategory = segment.categories[0];
@@ -1005,10 +969,6 @@ function initMarketSegments() {
       alt: `${segment.title} — ${initialLabel}`.trim(),
     });
     renderProducts(segment);
-    requestAnimationFrame(() => {
-      syncDropdownListHeight();
-      requestAnimationFrame(syncDropdownListHeight);
-    });
   }
 
   dots.forEach((dot) => {
@@ -1050,7 +1010,85 @@ function initMarketSegments() {
   const initialKey =
     tabLinks.find((link) => link.classList.contains('is-active'))?.dataset.segment || 'furnishing';
   showSegment(initialKey);
+}
 
-  window.addEventListener('resize', syncDropdownListHeight);
+/**
+ * Plants page — Jaitpura is featured by default; other two plants render as cards.
+ */
+function initPlants() {
+  const page = document.querySelector('[data-plants-page]');
+  if (!page) return;
+
+  const featured = page.querySelector('[data-plants-featured]');
+  const grid = page.querySelector('[data-plants-grid]');
+  if (!featured || !grid) return;
+
+  const imageEl = featured.querySelector('[data-plant-image]');
+  const nameEl = featured.querySelector('[data-plant-name]');
+  const locationEl = featured.querySelector('[data-plant-location]');
+  const copyEl = featured.querySelector('[data-plant-copy]');
+  const DEFAULT_PLANT = 'jaitpura';
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function activePlantId() {
+    const plantId = new URLSearchParams(window.location.search).get('plant');
+    return PLANT_DATA[plantId] ? plantId : DEFAULT_PLANT;
+  }
+
+  function renderFeatured(plant) {
+    if (imageEl) {
+      imageEl.src = plant.main;
+      imageEl.alt = plant.name;
+      imageEl.style.objectPosition = plant.objectPosition || 'center';
+    }
+    if (nameEl) nameEl.textContent = plant.name;
+    if (locationEl) locationEl.textContent = plant.location;
+    if (copyEl) {
+      copyEl.innerHTML = plant.paragraphs
+        .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
+        .join('');
+    }
+
+    featured.setAttribute('aria-labelledby', 'plants-featured-title');
+    document.title = `${plant.name} — Mayur Uniquoters`;
+  }
+
+  function renderCards(activeId) {
+    const others = PLANT_ORDER.map((id) => PLANT_DATA[id]).filter(
+      (plant) => plant && plant.id !== activeId
+    );
+
+    grid.innerHTML = others
+      .map(
+        (plant) => `
+          <article class="plants-card">
+            <div class="plants-card__media">
+              <img
+                src="${escapeHtml(plant.thumb)}"
+                alt="${escapeHtml(plant.name)} exterior"
+                class="plants-card__image"
+                width="820"
+                height="480"
+                loading="lazy"
+              />
+            </div>
+            <h2 class="plants-card__title">${escapeHtml(plant.name)}</h2>
+            <a href="plants.html?plant=${escapeHtml(plant.id)}#plant" class="plants-card__button">Read More</a>
+          </article>
+        `
+      )
+      .join('');
+  }
+
+  const plantId = activePlantId();
+  renderFeatured(PLANT_DATA[plantId]);
+  renderCards(plantId);
 }
 

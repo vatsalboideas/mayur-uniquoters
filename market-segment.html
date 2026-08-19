@@ -84,7 +84,7 @@
                 >Market Segment</a
               >
             </li>
-            <li><a href="#" class="site-header__nav-link">Plants</a></li>
+            <li><a href="plants.html" class="site-header__nav-link">Plants</a></li>
             <li><a href="#" class="site-header__nav-link">Sustainability</a></li>
             <li><a href="#" class="site-header__nav-link">Global Presence</a></li>
             <li><a href="#" class="site-header__nav-link">News &amp; Media</a></li>
@@ -108,17 +108,17 @@
           width="1920"
           height="823"
           fetchpriority="high"
+          data-segment-hero
         />
-        <!-- Color: swap --white / --black to match the image -->
-        <div class="page-hero__caption page-hero__caption--white">
-          <p class="page-hero__caption-line">
-            Lorem ipsum dolor sit amet consectetur. Pellentesque accumsan dolor
-            lacus eget dictumst elit dictum feugiat. Et at cras turpis velit
-            commodo. Ut massa nunc magna tortor quis faucibus facilisi eu
-            hendrerit. Erat nisl amet porttitor bibendum amet id.
-          </p>
-        </div>
       </section>
+
+      <!-- Segment intro — copy swaps with the active category tab -->
+      <p class="segment-intro" data-segment-intro data-aos="fade-up">
+        Designed for spaces that demand both style and performance, Mayur's furnishing solutions
+        combine comfort, durability and design versatility. From contemporary homes to high-traffic
+        commercial environments, our materials are engineered to deliver lasting aesthetics and
+        everyday reliability.
+      </p>
 
       <!-- Market segment category tabs -->
       <nav class="segment-tabs" aria-label="Market segments" data-segment-tabs data-aos="fade-up">
@@ -229,7 +229,7 @@
 
           <div class="segment-panel__content">
             <h2 id="segment-panel-title" class="segment-panel__title" data-segment-title>
-              Furnishing
+              Industries
             </h2>
             <ul class="segment-panel__list" data-segment-categories>
               <!-- Filled by JS from segment data -->
@@ -247,6 +247,10 @@
       >
         <div class="segment-products__inner container">
           <h2 id="segment-products-title" class="segment-products__heading">Our Products</h2>
+          <p class="segment-products__intro" data-segment-products-intro>
+            Explore a wide range of furnishing materials available in multiple textures, finishes
+            and colours, developed to meet diverse aesthetic and performance requirements.
+          </p>
 
           <div class="segment-products__row" data-product-feature>
             <figure class="segment-products__media">
@@ -264,8 +268,8 @@
             <div class="segment-products__details">
               <h3 class="segment-products__name" data-product-name>Product Name</h3>
               <p class="segment-products__desc" data-product-desc>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.
+                A premium furnishing material designed to deliver durability, comfort and refined
+                aesthetics across a variety of interior applications.
               </p>
               <ul class="segment-products__traits" data-product-traits>
                 <li class="segment-products__trait">Characteristic 1</li>
