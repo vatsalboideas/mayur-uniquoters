@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMarketSegments();
   initPlants();
   initBoardSlider();
+  initLifeSlider();
+  initOpeningsForm();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
   initHistoryStack();
@@ -144,6 +146,59 @@ function initTestimonialsSlider() {
         });
       },
     },
+  });
+}
+
+/**
+ * Life at Mayur — centered image carousel: active slide full size,
+ * neighbours scaled down and dimmed.
+ */
+function initLifeSlider() {
+  const el = document.querySelector('[data-life-slider]');
+  if (!el) return;
+
+  const wrap = el.closest('.careers-life__slider-wrap');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  new Swiper(el, {
+    slidesPerView: 'auto',
+    centeredSlides: true,
+    loop: true,
+    loopedSlides: 6,
+    loopAdditionalSlides: 3,
+    spaceBetween: 32,
+    speed: 700,
+    grabCursor: true,
+    slideToClickedSlide: true,
+    watchSlidesProgress: true,
+    autoplay: prefersReducedMotion
+      ? false
+      : {
+          delay: 4000,
+          disableOnInteraction: false,
+          pauseOnMouseEnter: true,
+        },
+    navigation: {
+      prevEl: wrap?.querySelector('[data-life-prev]'),
+      nextEl: wrap?.querySelector('[data-life-next]'),
+    },
+  });
+}
+
+/**
+ * Current Openings application form — prevent a full-page reload on submit.
+ */
+function initOpeningsForm() {
+  document.querySelectorAll('[data-openings-form]').forEach((form) => {
+    const status = form.querySelector('[data-openings-status]');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      form.reset();
+      if (!status) return;
+      status.hidden = false;
+      status.textContent = 'Thank you. Your message has been sent.';
+    });
   });
 }
 

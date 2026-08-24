@@ -4,8 +4,8 @@
 
 const ASSETS = {
   furnishing: {
-    hero: 'assets/images/market-segment/furnishing/carousel/image1.png',
-    category: 'assets/images/market-segment/furnishing/category-images/image1.png',
+    hero: 'assets/images/market-segment/furnishing/carousel/image1.webp',
+    category: 'assets/images/market-segment/furnishing/category-images/image1.webp',
   },
   automotive: {
     hero: 'assets/images/market-segment/automotive/hero.webp',
@@ -17,7 +17,7 @@ const ASSETS = {
   },
   'leather-goods': {
     hero: 'assets/images/market-segment/leather-goods/hero.webp',
-    category: 'assets/images/market-segment/leather-goods/category-images/image1.webp',
+    category: 'assets/images/market-segment/leather-goods/category-images/image1-new.webp',
   },
 };
 
