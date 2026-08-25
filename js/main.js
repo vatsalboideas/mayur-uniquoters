@@ -8,6 +8,7 @@ import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/index.js';
 import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger.js';
 import { SEGMENT_DATA } from './segment-data.js';
 import { PLANT_DATA, PLANT_ORDER } from './plant-data.js';
+import { PRESENCE_LOCATIONS, PRESENCE_TYPES } from './presence-data.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBoardSlider();
   initLifeSlider();
   initOpeningsForm();
+  initPresenceMap();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
   initHistoryStack();
@@ -200,6 +202,123 @@ function initOpeningsForm() {
       status.textContent = 'Thank you. Your message has been sent.';
     });
   });
+}
+
+/**
+ * Global Presence map — pin selection, location picker, and next-location control.
+ */
+function initPresenceMap() {
+  const root = document.querySelector('[data-presence-map]');
+  if (!root) return;
+
+  const pinsEl = root.querySelector('[data-presence-pins]');
+  const currentEl = root.querySelector('[data-presence-current]');
+  const selectBtn = root.querySelector('[data-presence-select]');
+  const menuEl = root.querySelector('[data-presence-menu]');
+  const goBtn = root.querySelector('[data-presence-go]');
+  if (!pinsEl || !currentEl || !selectBtn || !menuEl || !goBtn) return;
+
+  const sorted = [...PRESENCE_LOCATIONS].sort((a, b) => a.name.localeCompare(b.name));
+  let activeId = PRESENCE_LOCATIONS.some((loc) => loc.id === 'south-africa')
+    ? 'south-africa'
+    : PRESENCE_LOCATIONS[0].id;
+
+  pinsEl.innerHTML = PRESENCE_LOCATIONS.map(
+    (loc) => `
+      <button
+        type="button"
+        class="presence-map__pin presence-map__pin--${loc.type}"
+        style="left: ${loc.x}%; top: ${loc.y}%;"
+        data-presence-pin
+        data-id="${loc.id}"
+        aria-label="${loc.name} — ${PRESENCE_TYPES[loc.type].label}"
+      ></button>
+    `
+  ).join('');
+
+  menuEl.innerHTML = sorted
+    .map(
+      (loc) => `
+        <li role="none">
+          <button
+            type="button"
+            class="presence-map__option"
+            role="option"
+            data-presence-option
+            data-id="${loc.id}"
+          >
+            ${loc.name}
+          </button>
+        </li>
+      `
+    )
+    .join('');
+
+  function setActive(id) {
+    const loc = PRESENCE_LOCATIONS.find((item) => item.id === id);
+    if (!loc) return;
+    activeId = id;
+    currentEl.textContent = loc.name;
+    pinsEl.querySelectorAll('[data-presence-pin]').forEach((pin) => {
+      const isActive = pin.dataset.id === id;
+      pin.classList.toggle('is-active', isActive);
+      if (isActive) pin.setAttribute('aria-current', 'true');
+      else pin.removeAttribute('aria-current');
+    });
+    menuEl.querySelectorAll('[data-presence-option]').forEach((option) => {
+      option.setAttribute('aria-selected', option.dataset.id === id ? 'true' : 'false');
+    });
+  }
+
+  function closeMenu() {
+    menuEl.hidden = true;
+    selectBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  function openMenu() {
+    menuEl.hidden = false;
+    selectBtn.setAttribute('aria-expanded', 'true');
+    const selected = menuEl.querySelector('[aria-selected="true"]');
+    selected?.focus();
+  }
+
+  selectBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (menuEl.hidden) openMenu();
+    else closeMenu();
+  });
+
+  menuEl.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-presence-option]');
+    if (!option) return;
+    setActive(option.dataset.id);
+    closeMenu();
+    selectBtn.focus();
+  });
+
+  pinsEl.addEventListener('click', (event) => {
+    const pin = event.target.closest('[data-presence-pin]');
+    if (!pin) return;
+    setActive(pin.dataset.id);
+    closeMenu();
+  });
+
+  goBtn.addEventListener('click', () => {
+    const index = sorted.findIndex((loc) => loc.id === activeId);
+    const next = sorted[(index + 1) % sorted.length];
+    setActive(next.id);
+    closeMenu();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!root.contains(event.target)) closeMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeMenu();
+  });
+
+  setActive(activeId);
 }
 
 /**
