@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initLifeSlider();
   initOpeningsForm();
   initPresenceMap();
+  initPresenceCounters();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
   initHistoryStack();
@@ -160,14 +161,33 @@ function initLifeSlider() {
   if (!el) return;
 
   const wrap = el.closest('.careers-life__slider-wrap');
+  const wrapper = el.querySelector('.swiper-wrapper');
+  const originals = wrapper ? Array.from(wrapper.querySelectorAll('.swiper-slide')) : [];
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /*
+    Slides are ~58% wide and centered, so Swiper only has a couple of them to
+    shuffle around and its loop runs out of slides on one side. Duplicating the
+    set gives loopFix enough material to keep the track filled in both
+    directions.
+  */
+  if (wrapper && originals.length > 1) {
+    for (let i = 0; i < 2; i += 1) {
+      originals.forEach((slide) => {
+        const clone = slide.cloneNode(true);
+        clone.querySelectorAll('img').forEach((img) => {
+          img.setAttribute('alt', '');
+        });
+        wrapper.appendChild(clone);
+      });
+    }
+  }
 
   new Swiper(el, {
     slidesPerView: 'auto',
     centeredSlides: true,
     loop: true,
-    loopedSlides: 6,
-    loopAdditionalSlides: 3,
+    loopPreventsSliding: false,
     spaceBetween: 32,
     speed: 700,
     grabCursor: true,
@@ -202,6 +222,45 @@ function initOpeningsForm() {
       status.textContent = 'Thank you. Your message has been sent.';
     });
   });
+}
+
+/**
+ * Global Presence stats — count up when the numbers enter the viewport.
+ */
+function initPresenceCounters() {
+  const values = document.querySelectorAll('[data-count-to]');
+  if (values.length === 0) return;
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const duration = 3000;
+
+  function formatValue(el, current) {
+    const suffix = el.dataset.countSuffix || '';
+    el.textContent = `${current}${suffix}`;
+  }
+
+  function animate(el) {
+    const target = Number(el.dataset.countTo);
+    if (!Number.isFinite(target)) return;
+
+    if (reduceMotion) {
+      formatValue(el, target);
+      return;
+    }
+
+    const start = performance.now();
+
+    function frame(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      formatValue(el, Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  values.forEach((el) => animate(el));
 }
 
 /**

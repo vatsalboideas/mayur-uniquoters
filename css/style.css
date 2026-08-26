@@ -2210,7 +2210,6 @@ h6 {
   align-items: start;
   padding-top: 8.125rem; /* 130px */
   padding-bottom: 8.125rem; /* 130px */
-  border-top: 0.125rem solid var(--color-brand-red-active); /* 2px */
   border-bottom: 0.125rem solid var(--color-brand-red-active); /* 2px */
 }
 
