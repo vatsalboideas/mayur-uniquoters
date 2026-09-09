@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>R&amp;D — Mayur Uniquoters</title>
+
+    <!-- Favicons (SVG switches light/dark via prefers-color-scheme) -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg" />
+    <link rel="icon" type="image/png" href="../assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="../assets/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#BD9568" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          /* 1720px @ 1920 design — site content max width */
+          container: {
+            center: true,
+            screens: {
+              sm: '107.5rem',
+              md: '107.5rem',
+              lg: '107.5rem',
+              xl: '107.5rem',
+              '2xl': '107.5rem',
+            },
+          },
+          extend: {
+            colors: {
+              brand: {
+                tan: '#BD9568',
+                cream: '#F5D4AB',
+                red: '#8B2332',
+                'red-active': '#84000C',
+              },
+            },
+            fontFamily: {
+              sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+              display: ['SF Pro Display', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              abril: ['Abril Display', 'Georgia', 'Times New Roman', 'serif'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts & custom styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link rel="stylesheet" href="../css/fonts.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="min-h-screen bg-[#F5F5F5] font-sans text-gray-900">
+    <header class="site-header bg-brand-red-active">
+      <div class="site-header__inner container">
+        <a href="../" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
+          <img src="../assets/logo-white.svg" alt="Mayur Uniquoters Limited" width="184" height="76" />
+        </a>
+        <button
+          type="button"
+          class="site-header__toggle"
+          aria-expanded="false"
+          aria-controls="site-header-nav"
+          aria-label="Open menu"
+        >
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <nav id="site-header-nav" class="site-header__nav" aria-label="Main navigation">
+          <ul class="site-header__nav-list">
+            <li><a href="../" class="site-header__nav-link">About</a></li>
+            <li>
+              <a href="../market-segment/furnishing.html" class="site-header__nav-link">Market Segment</a>
+            </li>
+            <li><a href="../plants.html" class="site-header__nav-link">Plants</a></li>
+            <li>
+              <a href="our-products.html" class="site-header__nav-link is-active" aria-current="page"
+                >Products</a
+              >
+            </li>
+            <li><a href="#" class="site-header__nav-link">Sustainability</a></li>
+            <li><a href="../global-presence.html" class="site-header__nav-link">Global Presence</a></li>
+            <li><a href="#" class="site-header__nav-link">News &amp; Media</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section
+        class="page-hero page-hero--rnd relative w-full overflow-hidden"
+        aria-labelledby="research-hero-title"
+        data-aos="fade-in"
+        data-aos-duration="1000"
+      >
+        <img
+          src="../assets/images/products/rnd/hero.webp"
+          alt="Researchers working in a Mayur Uniquoters laboratory"
+          class="page-hero__image"
+          width="1920"
+          height="917"
+          fetchpriority="high"
+        />
+        <div class="page-hero__overlay">
+          <div class="page-hero__overlay-inner container">
+            <h1 id="research-hero-title" class="page-hero__title">
+              Research.<br />
+              Develop.<br />
+              Refine.
+            </h1>
+          </div>
+        </div>
+      </section>
+
+      <section class="products-intro products-intro--wide" aria-label="Research and development" data-aos="fade-up">
+        <div class="products-intro__inner">
+          <p class="products-intro__copy">
+            Our in-house R&amp;D capabilities support material development from initial customer
+            requirements through prototyping, testing and validation.
+          </p>
+          <p class="products-intro__copy">
+            With dedicated R&amp;D laboratories at Jaitpura and Dhodhsar, we work to develop
+            solutions across performance, appearance and application requirements.
+          </p>
+        </div>
+      </section>
+
+      <nav class="segment-tabs" aria-label="Products" data-aos="fade-up">
+        <ul class="segment-tabs__list">
+          <li>
+            <a href="our-products.html" class="segment-tabs__link">Our Products</a>
+          </li>
+          <li>
+            <a href="research-and-development.html" class="segment-tabs__link is-active" aria-current="page">R&amp;D</a>
+          </li>
+        </ul>
+      </nav>
+
+      <section
+        class="rnd-process"
+        aria-roledescription="carousel"
+        aria-labelledby="rnd-process-title"
+        data-rnd-process
+        data-aos="fade-up"
+      >
+        <div class="rnd-process__inner">
+          <div class="rnd-process__stage">
+            <div class="rnd-process__layout container">
+              <div class="rnd-process__media" data-rnd-process-media>
+                <div class="rnd-process__slide is-active" data-slide="0" aria-hidden="false">
+                  <img
+                    src="../assets/images/products/rnd/carousel/1.webp"
+                    alt="Researchers working with lab mixer, coater and printing equipment"
+                    class="rnd-process__image"
+                    width="1067"
+                    height="601"
+                  />
+                </div>
+                <div class="rnd-process__slide" data-slide="1" aria-hidden="true">
+                  <img
+                    src="../assets/images/products/rnd/carousel/1.webp"
+                    alt=""
+                    class="rnd-process__image"
+                    width="1067"
+                    height="601"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="rnd-process__slide" data-slide="2" aria-hidden="true">
+                  <img
+                    src="../assets/images/products/rnd/carousel/1.webp"
+                    alt=""
+                    class="rnd-process__image"
+                    width="1067"
+                    height="601"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="rnd-process__slide" data-slide="3" aria-hidden="true">
+                  <img
+                    src="../assets/images/products/rnd/carousel/1.webp"
+                    alt=""
+                    class="rnd-process__image"
+                    width="1067"
+                    height="601"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="rnd-process__slide" data-slide="4" aria-hidden="true">
+                  <img
+                    src="../assets/images/products/rnd/carousel/1.webp"
+                    alt=""
+                    class="rnd-process__image"
+                    width="1067"
+                    height="601"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+              <div class="rnd-process__content">
+                <h2 id="rnd-process-title" class="rnd-process__title">
+                  From Requirement<br />
+                  to Production
+                </h2>
+                <hr class="rnd-process__rule" />
+                <div class="rnd-process__steps" data-rnd-process-steps>
+                  <div class="rnd-process__step-panel is-active" data-slide="0" aria-hidden="false">
+                    <h3 class="rnd-process__step">RFQ &amp; Feasibility</h3>
+                    <p class="rnd-process__copy">
+                      Understanding the requirement and assessing development feasibility.
+                    </p>
+                  </div>
+                  <div class="rnd-process__step-panel" data-slide="1" aria-hidden="true">
+                    <h3 class="rnd-process__step">Swatch &amp; Prototype</h3>
+                    <p class="rnd-process__copy">
+                      Developing initial material swatches and prototypes.
+                    </p>
+                  </div>
+                  <div class="rnd-process__step-panel" data-slide="2" aria-hidden="true">
+                    <h3 class="rnd-process__step"></h3>
+                    <p class="rnd-process__copy"></p>
+                  </div>
+                  <div class="rnd-process__step-panel" data-slide="3" aria-hidden="true">
+                    <h3 class="rnd-process__step"></h3>
+                    <p class="rnd-process__copy"></p>
+                  </div>
+                  <div class="rnd-process__step-panel" data-slide="4" aria-hidden="true">
+                    <h3 class="rnd-process__step"></h3>
+                    <p class="rnd-process__copy"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <nav class="rnd-process__dots" aria-label="Process steps">
+            <button
+              type="button"
+              class="rnd-process__dot is-active"
+              data-slide-to="0"
+              aria-label="Go to RFQ and Feasibility"
+              aria-current="true"
+            ></button>
+            <button
+              type="button"
+              class="rnd-process__dot"
+              data-slide-to="1"
+              aria-label="Go to Swatch and Prototype"
+            ></button>
+            <button
+              type="button"
+              class="rnd-process__dot"
+              data-slide-to="2"
+              aria-label="Go to Prototyping"
+            ></button>
+            <button
+              type="button"
+              class="rnd-process__dot"
+              data-slide-to="3"
+              aria-label="Go to Testing and Validation"
+            ></button>
+            <button
+              type="button"
+              class="rnd-process__dot"
+              data-slide-to="4"
+              aria-label="Go to Production Transfer"
+            ></button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="rnd-material" aria-labelledby="rnd-material-title" data-aos="fade-up">
+        <div class="rnd-material__inner container">
+          <h2 id="rnd-material-title" class="rnd-material__title">Our Material</h2>
+          <p class="rnd-material__subtitle">Understanding What Goes Into Every Layer</p>
+          <img
+            src="../assets/images/products/rnd/our-material.webp"
+            alt="Exploded view of material layers: skin, foam, adhesive and fabric"
+            class="rnd-material__image"
+            width="1324"
+            height="764"
+            loading="lazy"
+          />
+        </div>
+      </section>
+
+      <section class="rnd-design-lab" aria-labelledby="rnd-design-lab-title" data-aos="fade-up">
+        <div class="rnd-design-lab__inner container">
+          <h2 id="rnd-design-lab-title" class="rnd-design-lab__title">Design Lab</h2>
+          <p class="rnd-design-lab__subtitle">Where Trends Take Material Form</p>
+          <div class="rnd-design-lab__copy">
+            <p>
+              Our Design Lab brings together trend intelligence, colour and surface development to
+              respond to evolving design and customer requirements.
+            </p>
+            <p>
+              Mayur uses WGSN for global trend forecasting and Coloro for colour intelligence and
+              matching.
+            </p>
+          </div>
+          <ul class="rnd-design-lab__grid">
+            <li>
+              <figure class="rnd-design-lab__item">
+                <img
+                  src="../assets/images/products/rnd/paper-grains.webp"
+                  alt="Rolled leather materials in brown, tan and black grains"
+                  class="rnd-design-lab__image"
+                  width="822"
+                  height="338"
+                  loading="lazy"
+                />
+                <figcaption class="rnd-design-lab__label">Paper Grains</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rnd-design-lab__item">
+                <img
+                  src="../assets/images/products/rnd/embossing.webp"
+                  alt="Leather with a geometric circular embossed pattern"
+                  class="rnd-design-lab__image"
+                  width="822"
+                  height="338"
+                  loading="lazy"
+                />
+                <figcaption class="rnd-design-lab__label">Embossing</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rnd-design-lab__item">
+                <img
+                  src="../assets/images/products/rnd/perforation.webp"
+                  alt="Cream leather sheet with a grid of perforated holes"
+                  class="rnd-design-lab__image"
+                  width="822"
+                  height="338"
+                  loading="lazy"
+                />
+                <figcaption class="rnd-design-lab__label">Perforation</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure class="rnd-design-lab__item">
+                <img
+                  src="../assets/images/products/rnd/prints.webp"
+                  alt="Leather with organic print and geometric line patterns"
+                  class="rnd-design-lab__image"
+                  width="822"
+                  height="338"
+                  loading="lazy"
+                />
+                <figcaption class="rnd-design-lab__label">Prints</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="rnd-qa" aria-labelledby="rnd-qa-title" data-aos="fade-up">
+        <div class="rnd-qa__inner container">
+          <h2 id="rnd-qa-title" class="rnd-qa__title">Quality Assurance Process</h2>
+          <p class="rnd-qa__subtitle">Quality Checked at Every Stage</p>
+          <p class="rnd-qa__intro">
+            Mayur follows a defined quality assurance process across raw materials, production and
+            finished material.
+          </p>
+        </div>
+        <div class="rnd-qa__board">
+            <ol class="rnd-qa__timeline">
+              <li class="rnd-qa__step rnd-qa__step--right">
+                <div class="rnd-qa__body">
+                  <div class="rnd-qa__visual">
+                    <img
+                      src="../assets/images/products/rnd/quality-assurance/Group.svg"
+                      alt=""
+                      class="rnd-qa__icon"
+                      width="69"
+                      height="61"
+                      loading="lazy"
+                    />
+                    <span class="rnd-qa__num">01</span>
+                  </div>
+                  <h3 class="rnd-qa__name">Incoming Inspection</h3>
+                  <p class="rnd-qa__copy">Raw materials are tested and verified before use.</p>
+                </div>
+              </li>
+              <li class="rnd-qa__step rnd-qa__step--left">
+                <div class="rnd-qa__body">
+                  <div class="rnd-qa__visual">
+                    <img
+                      src="../assets/images/products/rnd/quality-assurance/Group-1.svg"
+                      alt=""
+                      class="rnd-qa__icon"
+                      width="74"
+                      height="58"
+                      loading="lazy"
+                    />
+                    <span class="rnd-qa__num">02</span>
+                  </div>
+                  <h3 class="rnd-qa__name">Online Inspection</h3>
+                  <p class="rnd-qa__copy">
+                    Initial production output is checked for colour, feel, weight, thickness, finish
+                    and other required parameters.
+                  </p>
+                </div>
+              </li>
+              <li class="rnd-qa__step rnd-qa__step--right">
+                <div class="rnd-qa__body">
+                  <div class="rnd-qa__visual">
+                    <img
+                      src="../assets/images/products/rnd/quality-assurance/Group-2.svg"
+                      alt=""
+                      class="rnd-qa__icon"
+                      width="73"
+                      height="57"
+                      loading="lazy"
+                    />
+                    <span class="rnd-qa__num">03</span>
+                  </div>
+                  <h3 class="rnd-qa__name">In-Process Inspection</h3>
+                  <p class="rnd-qa__copy">
+                    Key production parameters are monitored and controlled throughout manufacturing.
+                  </p>
+                </div>
+              </li>
+              <li class="rnd-qa__step rnd-qa__step--left">
+                <div class="rnd-qa__body">
+                  <div class="rnd-qa__visual">
+                    <img
+                      src="../assets/images/products/rnd/quality-assurance/Group-3.svg"
+                      alt=""
+                      class="rnd-qa__icon"
+                      width="95"
+                      height="61"
+                      loading="lazy"
+                    />
+                    <span class="rnd-qa__num">04</span>
+                  </div>
+                  <h3 class="rnd-qa__name">Final Inspection</h3>
+                  <p class="rnd-qa__copy">
+                    Finished material undergoes physical and visual inspection before dispatch.
+                  </p>
+                </div>
+              </li>
+              <li class="rnd-qa__step rnd-qa__step--right">
+                <div class="rnd-qa__body">
+                  <div class="rnd-qa__visual">
+                    <img
+                      src="../assets/images/products/rnd/quality-assurance/Group-4.svg"
+                      alt=""
+                      class="rnd-qa__icon"
+                      width="61"
+                      height="64"
+                      loading="lazy"
+                    />
+                    <span class="rnd-qa__num">05</span>
+                  </div>
+                  <h3 class="rnd-qa__name">Calibration &amp; Audits</h3>
+                  <p class="rnd-qa__copy">
+                    Measuring instruments are calibrated &amp; processes are supported by regular
+                    internal audits.
+                  </p>
+                </div>
+              </li>
+            </ol>
+            <p class="rnd-qa__note">100% visual inspection of material before dispatch.</p>
+          </div>
+      </section>
+    </main>
+
+    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+      <div class="site-footer__inner container">
+        <div class="site-footer__top">
+          <nav class="site-footer__links" aria-label="Footer navigation">
+            <div class="site-footer__group">
+              <a href="../careers.html" class="site-footer__link site-footer__link--heading">Career</a>
+              <ul class="site-footer__sublist">
+                <li><a href="../careers.html#life-at-mayur" class="site-footer__link">Life at Mayur</a></li>
+                <li><a href="#" class="site-footer__link">Student Programmes</a></li>
+                <li><a href="../careers.html#current-openings" class="site-footer__link">Vacancies</a></li>
+              </ul>
+            </div>
+            <a href="#" class="site-footer__link site-footer__link--heading">FAQ</a>
+            <a href="../contact.html" class="site-footer__link site-footer__link--heading">Contact Us</a>
+          </nav>
+
+          <div class="site-footer__contact">
+            <a href="tel:+911423224001" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"
+                  fill="currentColor"
+                />
+              </svg>
+              +91-1423-224001
+            </a>
+            <a href="mailto:info@mayur.biz" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M2 2a2 2 0 0 0-2 2v.01l8 4.667 8-4.667V4a2 2 0 0 0-2-2H2zm14 5.333L8.667 11.5 2 7.333V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.333z"
+                  fill="currentColor"
+                />
+              </svg>
+              info@mayur.biz
+            </a>
+          </div>
+        </div>
+
+        <hr class="site-footer__divider" />
+
+        <p class="site-footer__copyright">
+          Copyright &copy; <span id="copyright-year"></span> Mayur Uniquoters Limited, All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script type="module" src="../js/main.js"></script>
+  </body>
+</html>

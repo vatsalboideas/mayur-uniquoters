@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyrightYear();
   initSiteHeader();
   initAboutHeroSlider();
+  initRndProcessSlider();
   initMarketSegments();
   initPlants();
   initBoardSlider();
@@ -271,16 +272,23 @@ function initPresenceMap() {
   if (!root) return;
 
   const pinsEl = root.querySelector('[data-presence-pins]');
+  const zoomEl = root.querySelector('[data-presence-zoom]');
   const currentEl = root.querySelector('[data-presence-current]');
   const selectBtn = root.querySelector('[data-presence-select]');
   const menuEl = root.querySelector('[data-presence-menu]');
   const goBtn = root.querySelector('[data-presence-go]');
   if (!pinsEl || !currentEl || !selectBtn || !menuEl || !goBtn) return;
 
-  const sorted = [...PRESENCE_LOCATIONS].sort((a, b) => a.name.localeCompare(b.name));
+  const TYPE_ORDER = ['client', 'office', 'hub'];
+  const grouped = TYPE_ORDER.flatMap((type) =>
+    PRESENCE_LOCATIONS.filter((loc) => loc.type === type).sort((a, b) =>
+      a.name.localeCompare(b.name)
+    )
+  );
   let activeId = PRESENCE_LOCATIONS.some((loc) => loc.id === 'south-africa')
     ? 'south-africa'
-    : PRESENCE_LOCATIONS[0].id;
+    : grouped[0].id;
+  let zoomed = false;
 
   pinsEl.innerHTML = PRESENCE_LOCATIONS.map(
     (loc) => `
@@ -295,25 +303,70 @@ function initPresenceMap() {
     `
   ).join('');
 
-  menuEl.innerHTML = sorted
-    .map(
-      (loc) => `
-        <li role="none">
-          <button
-            type="button"
-            class="presence-map__option"
-            role="option"
-            data-presence-option
-            data-id="${loc.id}"
-          >
-            ${loc.name}
-          </button>
-        </li>
-      `
-    )
-    .join('');
+  menuEl.innerHTML = TYPE_ORDER.map((type) => {
+    const items = grouped.filter((loc) => loc.type === type);
+    const { label } = PRESENCE_TYPES[type];
+    return `
+      <li class="presence-map__group-heading" role="presentation">
+        <span class="presence-map__group-dot presence-map__group-dot--${type}"></span>
+        ${label}
+      </li>
+      ${items
+        .map(
+          (loc) => `
+            <li role="none">
+              <button
+                type="button"
+                class="presence-map__option"
+                role="option"
+                data-presence-option
+                data-id="${loc.id}"
+              >
+                ${loc.name}
+              </button>
+            </li>
+          `
+        )
+        .join('')}
+    `;
+  }).join('');
 
-  function setActive(id) {
+  function zoomLevel() {
+    return window.matchMedia('(max-width: 48rem)').matches ? 2.15 : 2.45;
+  }
+
+  function applyZoom(zoom, panX, panY) {
+    if (!zoomEl) return;
+    zoomEl.style.setProperty('--zoom', String(zoom));
+    zoomEl.style.setProperty('--pan-x', `${panX}px`);
+    zoomEl.style.setProperty('--pan-y', `${panY}px`);
+  }
+
+  function zoomTo(loc) {
+    if (!zoomEl || !loc) return;
+    const width = zoomEl.offsetWidth;
+    const height = zoomEl.offsetHeight;
+    if (!width || !height) return;
+
+    const zoom = zoomLevel();
+    let panX = width / 2 - (loc.x / 100) * width * zoom;
+    let panY = height / 2 - (loc.y / 100) * height * zoom;
+
+    const minX = width - width * zoom;
+    const minY = height - height * zoom;
+    panX = Math.min(0, Math.max(minX, panX));
+    panY = Math.min(0, Math.max(minY, panY));
+
+    applyZoom(zoom, panX, panY);
+    zoomed = true;
+  }
+
+  function zoomToWorld() {
+    applyZoom(1, 0, 0);
+    zoomed = false;
+  }
+
+  function setActive(id, { zoom = true } = {}) {
     const loc = PRESENCE_LOCATIONS.find((item) => item.id === id);
     if (!loc) return;
     activeId = id;
@@ -327,6 +380,7 @@ function initPresenceMap() {
     menuEl.querySelectorAll('[data-presence-option]').forEach((option) => {
       option.setAttribute('aria-selected', option.dataset.id === id ? 'true' : 'false');
     });
+    if (zoom) zoomTo(loc);
   }
 
   function closeMenu() {
@@ -358,13 +412,14 @@ function initPresenceMap() {
   pinsEl.addEventListener('click', (event) => {
     const pin = event.target.closest('[data-presence-pin]');
     if (!pin) return;
-    setActive(pin.dataset.id);
+    if (pin.dataset.id === activeId && zoomed) zoomToWorld();
+    else setActive(pin.dataset.id);
     closeMenu();
   });
 
   goBtn.addEventListener('click', () => {
-    const index = sorted.findIndex((loc) => loc.id === activeId);
-    const next = sorted[(index + 1) % sorted.length];
+    const index = grouped.findIndex((loc) => loc.id === activeId);
+    const next = grouped[(index + 1) % grouped.length];
     setActive(next.id);
     closeMenu();
   });
@@ -377,7 +432,13 @@ function initPresenceMap() {
     if (event.key === 'Escape') closeMenu();
   });
 
-  setActive(activeId);
+  window.addEventListener('resize', () => {
+    if (!zoomed) return;
+    const loc = PRESENCE_LOCATIONS.find((item) => item.id === activeId);
+    if (loc) zoomTo(loc);
+  });
+
+  setActive(activeId, { zoom: false });
 }
 
 /**
@@ -469,45 +530,64 @@ function initBoardSlider() {
 }
 
 /**
- * Scroll parallax for About section images.
- * Disabled when the about stage is stacked (max-width: 75rem) so transforms
- * do not fight the static document-flow layout.
+ * Scroll parallax for About collage and product-feature images.
+ * About: disabled when the about stage is stacked (max-width: 75rem).
+ * Products: disabled when product rows stack (max-width: 64rem).
  */
 function initAboutParallax(lenis) {
-  const section = document.querySelector('.about-section');
-  const figures = Array.from(document.querySelectorAll('[data-parallax]'));
-  if (!section || figures.length === 0) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const stackedLayout = window.matchMedia('(max-width: 75rem)');
+  const aboutSection = document.querySelector('.about-section');
+  const aboutFigures = aboutSection
+    ? Array.from(aboutSection.querySelectorAll('[data-parallax]'))
+    : [];
+  const productFigures = Array.from(
+    document.querySelectorAll('.product-feature [data-parallax]')
+  );
 
-  if (prefersReducedMotion.matches) return;
+  if (aboutFigures.length === 0 && productFigures.length === 0) return;
 
-  const items = figures.map((figure) => ({
+  const aboutStacked = window.matchMedia('(max-width: 75rem)');
+  const productStacked = window.matchMedia('(max-width: 64rem)');
+
+  const aboutItems = aboutFigures.map((figure) => ({
     figure,
     speed: Number.parseFloat(figure.dataset.parallaxSpeed) || 0.08,
   }));
+  const productItems = productFigures.map((figure) => ({
+    figure,
+    speed: Number.parseFloat(figure.dataset.parallaxSpeed) || 0.08,
+    article: figure.closest('.product-feature'),
+  }));
 
-  function clearTransforms() {
+  function clearTransforms(items) {
     items.forEach(({ figure }) => {
       figure.style.transform = '';
     });
   }
 
   function updateParallax() {
-    if (stackedLayout.matches) {
-      clearTransforms();
-      return;
+    if (aboutSection && aboutItems.length) {
+      if (aboutStacked.matches) {
+        clearTransforms(aboutItems);
+      } else {
+        const sectionTop = aboutSection.getBoundingClientRect().top;
+        aboutItems.forEach(({ figure, speed }) => {
+          figure.style.transform = `translate3d(0, ${sectionTop * speed}px, 0)`;
+        });
+      }
     }
 
-    /* Rest at original layout when section top aligns with viewport top */
-    const sectionTop = section.getBoundingClientRect().top;
-
-    items.forEach(({ figure, speed }) => {
-      /* Scroll down → sectionTop goes negative → images move up */
-      const offset = sectionTop * speed;
-      figure.style.transform = `translate3d(0, ${offset}px, 0)`;
-    });
+    if (productItems.length) {
+      if (productStacked.matches) {
+        clearTransforms(productItems);
+      } else {
+        productItems.forEach(({ figure, speed, article }) => {
+          const top = (article || figure).getBoundingClientRect().top;
+          figure.style.transform = `translate3d(0, ${top * speed}px, 0)`;
+        });
+      }
+    }
   }
 
   if (lenis) {
@@ -517,7 +597,8 @@ function initAboutParallax(lenis) {
   }
 
   window.addEventListener('resize', updateParallax, { passive: true });
-  stackedLayout.addEventListener('change', updateParallax);
+  aboutStacked.addEventListener('change', updateParallax);
+  productStacked.addEventListener('change', updateParallax);
   updateParallax();
 }
 
@@ -671,6 +752,111 @@ function initSiteHeader() {
 }
 
 /**
+ * R&D process carousel — image + step copy with centered dots.
+ */
+function initRndProcessSlider() {
+  const root = document.querySelector('[data-rnd-process]');
+  if (!root) return;
+
+  const slides = Array.from(root.querySelectorAll('.rnd-process__slide'));
+  const panels = Array.from(root.querySelectorAll('.rnd-process__step-panel'));
+  const dots = Array.from(root.querySelectorAll('.rnd-process__dot'));
+  if (slides.length === 0) return;
+
+  let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
+  if (activeIndex < 0) activeIndex = 0;
+
+  let autoplayTimer = null;
+  const AUTOPLAY_MS = 5000;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function setDotState(dot, isActive) {
+    if (!dot) return;
+    dot.classList.toggle('is-active', isActive);
+    if (isActive) {
+      dot.setAttribute('aria-current', 'true');
+    } else {
+      dot.removeAttribute('aria-current');
+    }
+  }
+
+  function goToSlide(index) {
+    const nextIndex = ((index % slides.length) + slides.length) % slides.length;
+    if (nextIndex === activeIndex) return;
+
+    slides[activeIndex].classList.remove('is-active');
+    slides[activeIndex].setAttribute('aria-hidden', 'true');
+    panels[activeIndex]?.classList.remove('is-active');
+    panels[activeIndex]?.setAttribute('aria-hidden', 'true');
+    setDotState(dots[activeIndex], false);
+
+    slides[nextIndex].classList.add('is-active');
+    slides[nextIndex].setAttribute('aria-hidden', 'false');
+    panels[nextIndex]?.classList.add('is-active');
+    panels[nextIndex]?.setAttribute('aria-hidden', 'false');
+    setDotState(dots[nextIndex], true);
+
+    activeIndex = nextIndex;
+  }
+
+  function nextSlide() {
+    goToSlide(activeIndex + 1);
+  }
+
+  function startAutoplay() {
+    if (prefersReducedMotion || slides.length < 2) return;
+    stopAutoplay();
+    autoplayTimer = window.setInterval(nextSlide, AUTOPLAY_MS);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer !== null) {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const target = Number(dot.dataset.slideTo);
+      if (Number.isNaN(target)) return;
+      goToSlide(target);
+      startAutoplay();
+    });
+  });
+
+  root.addEventListener('mouseenter', stopAutoplay);
+  root.addEventListener('mouseleave', startAutoplay);
+  root.addEventListener('focusin', stopAutoplay);
+  root.addEventListener('focusout', (event) => {
+    if (!root.contains(event.relatedTarget)) startAutoplay();
+  });
+
+  root.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      nextSlide();
+      startAutoplay();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goToSlide(activeIndex - 1);
+      startAutoplay();
+    }
+  });
+
+  slides.forEach((slide, index) => {
+    slide.setAttribute('aria-hidden', String(index !== activeIndex));
+  });
+  panels.forEach((panel, index) => {
+    panel.setAttribute('aria-hidden', String(index !== activeIndex));
+  });
+  dots.forEach((dot, index) => setDotState(dot, index === activeIndex));
+
+  root.setAttribute('tabindex', '0');
+  startAutoplay();
+}
+
+/**
  * About page hero slider — subtle crossfade with centered dot navigation
  */
 function initAboutHeroSlider() {
@@ -819,40 +1005,38 @@ function initAboutHeroSlider() {
 }
 
 /**
- * Market segments — tabs swap panel categories + products (same layout, different data)
+ * Market segments — each page loads its own industries panel; tabs navigate between pages.
  */
 function initMarketSegments() {
   const tabsNav = document.querySelector('[data-segment-tabs]');
   const panel = document.querySelector('[data-segment-panel]');
-  const productsSection = document.querySelector('[data-segment-products]');
   const introEl = document.querySelector('[data-segment-intro]');
   const heroImage = document.querySelector('[data-segment-hero]');
-  const productsIntroEl = document.querySelector('[data-segment-products-intro]');
-  if (!tabsNav || !panel || !productsSection) return;
+  const segmentAttrs = Array.from(document.querySelectorAll('[data-segment-attrs]'));
+  if (!tabsNav || !panel) return;
 
   const categoriesEl = panel.querySelector('[data-segment-categories]');
   const gallery = panel.querySelector('[data-segment-gallery]');
   const slides = gallery ? Array.from(gallery.querySelectorAll('.segment-panel__slide')) : [];
   const dots = gallery ? Array.from(gallery.querySelectorAll('.segment-panel__dot')) : [];
 
-  const picker = document.getElementById('product-picker');
-  const wrapper = picker?.querySelector('.swiper-wrapper');
-  const feature = productsSection.querySelector('[data-product-feature]');
-  const imageEl = feature?.querySelector('[data-product-image]');
-  const nameEl = feature?.querySelector('[data-product-name]');
-  const descEl = feature?.querySelector('[data-product-desc]');
-  const traitsEl = feature?.querySelector('[data-product-traits]');
-
-  if (!categoriesEl || !gallery || slides.length === 0 || !picker || !wrapper || !feature) return;
+  if (!categoriesEl || !gallery || slides.length === 0) return;
 
   const tabLinks = Array.from(tabsNav.querySelectorAll('[data-segment]'));
   const AUTOPLAY_MS = 4000;
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const assetRoot = document.body.dataset.assetRoot || '';
 
   let activeIndex = 0;
   let autoplayTimer = null;
-  let productSwiper = null;
-  let activeSegmentKey = 'furnishing';
+
+  function assetUrl(path) {
+    if (!path || !assetRoot) return path;
+    if (/^(?:https?:)?\/\//.test(path) || path.startsWith('/') || path.startsWith('../')) {
+      return path;
+    }
+    return `${assetRoot}${path}`;
+  }
 
   function escapeHtml(value) {
     return String(value)
@@ -911,7 +1095,7 @@ function initMarketSegments() {
     slides.forEach((slide, index) => {
       const img = slide.querySelector('.segment-panel__image');
       if (!img) return;
-      img.src = paths[index % paths.length];
+      img.src = assetUrl(paths[index % paths.length]);
       img.alt = alt;
     });
 
@@ -1073,99 +1257,6 @@ function initMarketSegments() {
     });
   }
 
-  function applyProduct(slide) {
-    if (!slide) return;
-
-    const name = slide.dataset.name || '';
-    const desc = slide.dataset.desc || '';
-    const image = slide.dataset.image || '';
-    const traits = (slide.dataset.traits || '').split('|').filter(Boolean);
-
-    if (imageEl && image) {
-      imageEl.src = image;
-      imageEl.alt = name || 'Product';
-    }
-    if (nameEl) nameEl.textContent = name;
-    if (descEl) descEl.textContent = desc;
-    if (traitsEl) {
-      traitsEl.innerHTML = traits
-        .map((trait) => `<li class="segment-products__trait">${escapeHtml(trait)}</li>`)
-        .join('');
-    }
-
-    wrapper.querySelectorAll('.segment-products__pick').forEach((pick) => {
-      const isActive = pick === slide;
-      pick.classList.toggle('is-active', isActive);
-      pick.setAttribute('aria-pressed', String(isActive));
-    });
-  }
-
-  function renderProducts(segment) {
-    const products = [...segment.products, ...segment.products, ...segment.products];
-
-    if (productSwiper) {
-      productSwiper.destroy(true, true);
-      productSwiper = null;
-    }
-
-    wrapper.innerHTML = products
-      .map((product, index) => {
-        const traits = product.traits.join('|');
-        return `
-          <button
-            type="button"
-            class="swiper-slide segment-products__pick${index === 0 ? ' is-active' : ''}"
-            data-product-index="${index}"
-            data-name="${escapeHtml(product.name)}"
-            data-desc="${escapeHtml(product.desc)}"
-            data-image="${escapeHtml(product.image)}"
-            data-traits="${escapeHtml(traits)}"
-            aria-label="${escapeHtml(product.name)}"
-            aria-pressed="${index === 0 ? 'true' : 'false'}"
-          >
-            <span class="segment-products__pick-thumb">
-              <img
-                src="${escapeHtml(product.image)}"
-                alt=""
-                class="segment-products__pick-image"
-                width="100"
-                height="100"
-                loading="lazy"
-              />
-            </span>
-            <span class="segment-products__pick-label">${escapeHtml(product.name)}</span>
-          </button>
-        `;
-      })
-      .join('');
-
-    productSwiper = new Swiper(picker, {
-      slidesPerView: 7,
-      slidesPerGroup: 4,
-      spaceBetween: 24,
-      speed: 500,
-      grabCursor: true,
-      watchOverflow: true,
-      pagination: {
-        el: picker.querySelector('.segment-products__pagination'),
-        clickable: true,
-      },
-      breakpoints: {
-        0: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 16 },
-        640: { slidesPerView: 4, slidesPerGroup: 3, spaceBetween: 20 },
-        900: { slidesPerView: 5, slidesPerGroup: 4, spaceBetween: 22 },
-        1200: { slidesPerView: 7, slidesPerGroup: 4, spaceBetween: 24 },
-      },
-    });
-
-    productSwiper.on('slideChangeTransitionEnd', () => {
-      const activeSlide = productSwiper.slides[productSwiper.activeIndex];
-      if (activeSlide) applyProduct(activeSlide);
-    });
-
-    applyProduct(wrapper.querySelector('.segment-products__pick'));
-  }
-
   function setActiveTab(segmentKey) {
     tabLinks.forEach((link) => {
       const isActive = link.dataset.segment === segmentKey;
@@ -1182,14 +1273,12 @@ function initMarketSegments() {
     const segment = SEGMENT_DATA[segmentKey];
     if (!segment) return;
 
-    activeSegmentKey = segmentKey;
     setActiveTab(segmentKey);
 
     panel.id = segment.id;
     if (introEl) introEl.textContent = segment.intro || '';
-    if (productsIntroEl) productsIntroEl.textContent = segment.productsIntro || '';
     if (heroImage && segment.hero) {
-      heroImage.src = segment.hero;
+      heroImage.src = assetUrl(segment.hero);
       heroImage.alt = `Market segment — ${segment.title}`;
     }
 
@@ -1201,7 +1290,13 @@ function initMarketSegments() {
     setGalleryImages(initialImages, {
       alt: `${segment.title} — ${initialLabel}`.trim(),
     });
-    renderProducts(segment);
+
+    segmentAttrs.forEach((el) => {
+      const isActive = el.dataset.segmentAttrs === segmentKey;
+      el.hidden = !isActive;
+      if (isActive) el.classList.add('aos-animate');
+    });
+    window.AOS?.refresh();
   }
 
   dots.forEach((dot) => {
@@ -1220,28 +1315,15 @@ function initMarketSegments() {
     if (!gallery.contains(event.relatedTarget)) startAutoplay();
   });
 
-  wrapper.addEventListener('click', (event) => {
-    const slide = event.target.closest('.segment-products__pick');
-    if (!slide || !wrapper.contains(slide)) return;
-    applyProduct(slide);
-  });
-
-  tabLinks.forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const key = link.dataset.segment;
-      if (!key || key === activeSegmentKey) return;
-      showSegment(key);
-    });
-  });
-
   slides.forEach((slide, index) => {
     slide.setAttribute('aria-hidden', String(index !== 0));
   });
   dots.forEach((dot, index) => setDotState(dot, index === 0));
 
   const initialKey =
-    tabLinks.find((link) => link.classList.contains('is-active'))?.dataset.segment || 'furnishing';
+    document.body.dataset.segmentPage ||
+    tabLinks.find((link) => link.classList.contains('is-active'))?.dataset.segment ||
+    'furnishing';
   showSegment(initialKey);
 }
 

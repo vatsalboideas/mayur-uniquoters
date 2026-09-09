@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Products — Mayur Uniquoters</title>
+
+    <!-- Favicons (SVG switches light/dark via prefers-color-scheme) -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon/favicon.svg" />
+    <link rel="icon" type="image/png" href="../assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="../assets/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#BD9568" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          /* 1720px @ 1920 design — site content max width */
+          container: {
+            center: true,
+            screens: {
+              sm: '107.5rem',
+              md: '107.5rem',
+              lg: '107.5rem',
+              xl: '107.5rem',
+              '2xl': '107.5rem',
+            },
+          },
+          extend: {
+            colors: {
+              brand: {
+                tan: '#BD9568',
+                cream: '#F5D4AB',
+                red: '#8B2332',
+                'red-active': '#84000C',
+              },
+            },
+            fontFamily: {
+              sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+              display: ['SF Pro Display', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              abril: ['Abril Display', 'Georgia', 'Times New Roman', 'serif'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts & custom styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link rel="stylesheet" href="../css/fonts.css" />
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body class="min-h-screen bg-[#F5F5F5] font-sans text-gray-900">
+    <header class="site-header bg-brand-red-active">
+      <div class="site-header__inner container">
+        <a href="../" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
+          <img src="../assets/logo-white.svg" alt="Mayur Uniquoters Limited" width="184" height="76" />
+        </a>
+        <button
+          type="button"
+          class="site-header__toggle"
+          aria-expanded="false"
+          aria-controls="site-header-nav"
+          aria-label="Open menu"
+        >
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <nav id="site-header-nav" class="site-header__nav" aria-label="Main navigation">
+          <ul class="site-header__nav-list">
+            <li><a href="../" class="site-header__nav-link">About</a></li>
+            <li>
+              <a href="../market-segment/furnishing.html" class="site-header__nav-link">Market Segment</a>
+            </li>
+            <li><a href="../plants.html" class="site-header__nav-link">Plants</a></li>
+            <li>
+              <a href="our-products.html" class="site-header__nav-link is-active" aria-current="page"
+                >Products</a
+              >
+            </li>
+            <li><a href="#" class="site-header__nav-link">Sustainability</a></li>
+            <li><a href="../global-presence.html" class="site-header__nav-link">Global Presence</a></li>
+            <li><a href="#" class="site-header__nav-link">News &amp; Media</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section
+        class="page-hero relative w-full overflow-hidden"
+        aria-label="Our products"
+        data-aos="fade-in"
+        data-aos-duration="1000"
+      >
+        <img
+          src="../assets/images/products/our-products/hero.webp"
+          alt="Olive-green upholstered wooden bench styled in a sunlit interior"
+          class="page-hero__image"
+          width="1920"
+          height="917"
+          fetchpriority="high"
+        />
+      </section>
+
+      <section class="products-intro" aria-labelledby="products-intro-title" data-aos="fade-up">
+        <div class="products-intro__inner">
+          <h1 id="products-intro-title" class="products-intro__title">
+            Materials Engineered for Possibility
+          </h1>
+          <p class="products-intro__copy">
+            Mayur develops artificial leather solutions for diverse industries and applications,
+            combining manufacturing expertise with material development, design and research
+            capabilities.
+          </p>
+        </div>
+      </section>
+
+      <nav class="segment-tabs" aria-label="Products" data-aos="fade-up">
+        <ul class="segment-tabs__list">
+          <li>
+            <a href="our-products.html" class="segment-tabs__link is-active" aria-current="page"
+              >Our Products</a
+            >
+          </li>
+          <li>
+            <a href="research-and-development.html" class="segment-tabs__link">R&amp;D</a>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="products-portfolio" aria-labelledby="products-portfolio-title">
+        <div class="products-portfolio__intro" data-aos="fade-up">
+          <h2 id="products-portfolio-title" class="products-portfolio__title">
+            Materials for Diverse Applications
+          </h2>
+          <p class="products-portfolio__copy">
+            From our founding PVC material to PU and more sustainable alternatives, our portfolio is
+            developed to meet diverse performance, design and application requirements.
+          </p>
+        </div>
+
+        <article class="product-feature" aria-labelledby="product-pvc-title" data-aos="fade-up">
+          <div class="product-feature__inner container">
+            <div
+              class="product-feature__media"
+              data-parallax
+              data-parallax-speed="0.08"
+            >
+              <img
+                src="../assets/images/products/our-products/pvc-vinyl.webp"
+                alt="Burgundy and tan PVC vinyl leather draped on wood"
+                class="product-feature__image"
+                width="894"
+                height="503"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-feature__content">
+              <h3 id="product-pvc-title" class="product-feature__title">PVC Vinyl</h3>
+              <p class="product-feature__tagline">Where It All Began</p>
+              <hr class="product-feature__rule" />
+              <div class="product-feature__copy">
+                <p>
+                  Our founding material and still our highest-volume line, PVC Vinyl combines
+                  dimensional stability, water resistance and colour retention for diverse
+                  applications.
+                </p>
+                <p>
+                  With 7 Release Paper Transfer Coating lines, Mayur manufactures PVC Vinyl for
+                  applications across automotive, marine and heavy-duty furnishing.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="product-feature product-feature--reverse"
+          aria-labelledby="product-pu-title"
+          data-aos="fade-up"
+        >
+          <div class="product-feature__inner container">
+            <div
+              class="product-feature__media"
+              data-parallax
+              data-parallax-speed="0.06"
+            >
+              <img
+                src="../assets/images/products/our-products/pu.webp"
+                alt="Rolled PU leather in tan, burgundy, olive and brown"
+                class="product-feature__image"
+                width="894"
+                height="503"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-feature__content">
+              <h3 id="product-pu-title" class="product-feature__title">PU</h3>
+              <p class="product-feature__tagline">A Softer, More Supple Alternative</p>
+              <hr class="product-feature__rule" />
+              <div class="product-feature__copy">
+                <p>
+                  Designed to offer a feel closer to natural leather, Mayur’s PU material combines
+                  softness and flexibility for applications including premium automotive interiors,
+                  fashion accessories and footwear uppers.
+                </p>
+                <p>
+                  Our dedicated PU manufacturing facility at Morena, Madhya Pradesh has an initial
+                  installed capacity of 5 million linear metres per year, expandable up to 20 million
+                  linear metres.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-feature" aria-labelledby="product-hybrid-title" data-aos="fade-up">
+          <div class="product-feature__inner container">
+            <div
+              class="product-feature__media"
+              data-parallax
+              data-parallax-speed="0.1"
+            >
+              <img
+                src="../assets/images/products/our-products/pu-pvc.webp"
+                alt="PU-PVC hybrid leather swatches draped over wooden pedestals"
+                class="product-feature__image"
+                width="894"
+                height="503"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-feature__content">
+              <h3 id="product-hybrid-title" class="product-feature__title">PU-PVC Hybrid</h3>
+              <hr class="product-feature__rule" />
+              <div class="product-feature__copy">
+                <p>
+                  Combining a PU skin with a PVC base, PU-PVC Hybrid brings together the look and
+                  feel of PU with the rigidity and dimensional stability of PVC.
+                </p>
+                <p>
+                  Its dual-layer construction makes it suitable for applications where hardware
+                  attachment or structural shape retention is important.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article
+          class="product-feature product-feature--reverse"
+          aria-labelledby="product-unico-title"
+          data-aos="fade-up"
+        >
+          <div class="product-feature__inner container">
+            <div
+              class="product-feature__media"
+              data-parallax
+              data-parallax-speed="0.07"
+            >
+              <img
+                src="../assets/images/products/our-products/sustainable-materials.webp"
+                alt="Fan of sustainable UNICO leather swatches in earth tones"
+                class="product-feature__image"
+                width="894"
+                height="503"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-feature__content">
+              <h3 id="product-unico-title" class="product-feature__title">Sustainable Materials</h3>
+              <p class="product-feature__tagline">UNICO</p>
+              <hr class="product-feature__rule" />
+              <div class="product-feature__copy">
+                <p>
+                  Developed using bio-PUR and bio-based yarns, UNICO incorporates more sustainable
+                  inputs into material development.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-feature" aria-labelledby="product-pavo-title" data-aos="fade-up">
+          <div class="product-feature__inner container">
+            <div
+              class="product-feature__media"
+              data-parallax
+              data-parallax-speed="0.09"
+            >
+              <img
+                src="../assets/images/products/our-products/sustainable-materials-1.webp"
+                alt="PAVO sustainable materials draped over a wooden chair"
+                class="product-feature__image"
+                width="894"
+                height="503"
+                loading="lazy"
+              />
+            </div>
+            <div class="product-feature__content">
+              <h3 id="product-pavo-title" class="product-feature__title">Sustainable Materials</h3>
+              <p class="product-feature__tagline">PAVO</p>
+              <hr class="product-feature__rule" />
+              <div class="product-feature__copy">
+                <p>
+                  Developed using recycled yarns and bio-PVC, PAVO brings together recycled and
+                  bio-based inputs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="why-mayur" aria-labelledby="why-mayur-title" data-aos="fade-up">
+        <div class="why-mayur__inner container">
+          <h2 id="why-mayur-title" class="why-mayur__title">Why Mayur?</h2>
+          <ul class="why-mayur__list">
+            <li class="why-mayur__item">
+              <img
+                src="../assets/images/products/our-products/why-mayur/Layer_1.svg"
+                alt=""
+                class="why-mayur__icon"
+                width="94"
+                height="102"
+                loading="lazy"
+              />
+              <div class="why-mayur__text">
+                <h3 class="why-mayur__name">Quality</h3>
+                <p class="why-mayur__copy">
+                  Rigorous standards and processes support consistent material quality across
+                  production.
+                </p>
+              </div>
+            </li>
+            <li class="why-mayur__item">
+              <img
+                src="../assets/images/products/our-products/why-mayur/Layer_1-1.svg"
+                alt=""
+                class="why-mayur__icon"
+                width="94"
+                height="115"
+                loading="lazy"
+              />
+              <div class="why-mayur__text">
+                <h3 class="why-mayur__name">Customisation</h3>
+                <p class="why-mayur__copy">
+                  Our prototype capabilities support the development of 90–100 unique samples every
+                  day, enabling us to respond to varied customer requirements.
+                </p>
+              </div>
+            </li>
+            <li class="why-mayur__item">
+              <img
+                src="../assets/images/products/our-products/why-mayur/Group-2.svg"
+                alt=""
+                class="why-mayur__icon"
+                width="113"
+                height="86"
+                loading="lazy"
+              />
+              <div class="why-mayur__text">
+                <h3 class="why-mayur__name">Delivery</h3>
+                <p class="why-mayur__copy">
+                  With three manufacturing facilities and a network of branch offices and warehouses
+                  across 30+ countries, Mayur serves customers across global markets.
+                </p>
+              </div>
+            </li>
+            <li class="why-mayur__item">
+              <img
+                src="../assets/images/products/our-products/why-mayur/Group-1.svg"
+                alt=""
+                class="why-mayur__icon"
+                width="118"
+                height="106"
+                loading="lazy"
+              />
+              <div class="why-mayur__text">
+                <h3 class="why-mayur__name">Haptics &amp; Feel</h3>
+                <p class="why-mayur__copy">
+                  A focus on texture, touch and feel enables materials to meet varied aesthetic and
+                  application requirements.
+                </p>
+              </div>
+            </li>
+            <li class="why-mayur__item">
+              <img
+                src="../assets/images/products/our-products/why-mayur/Group.svg"
+                alt=""
+                class="why-mayur__icon"
+                width="132"
+                height="69"
+                loading="lazy"
+              />
+              <div class="why-mayur__text">
+                <h3 class="why-mayur__name">Extensive Grain Library</h3>
+                <p class="why-mayur__copy">
+                  An extensive selection of grains offers greater choice across textures, finishes
+                  and design requirements.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="products-explore" aria-labelledby="products-explore-title" data-aos="fade-up">
+        <div class="products-explore__inner">
+          <div class="products-explore__header">
+            <h2 id="products-explore-title" class="products-explore__title">
+              Looking for a Material for a Specific Application?
+            </h2>
+            <p class="products-explore__copy">
+              Explore how Mayur’s material solutions are used across industries and applications.
+            </p>
+          </div>
+          <div class="products-explore__media">
+            <img
+              src="../assets/images/products/our-products/explore-market-segments.webp"
+              alt="Mayur materials used in furnishing, automotive, footwear and leather goods"
+              class="products-explore__image"
+              width="1920"
+              height="608"
+              loading="lazy"
+            />
+            <a href="../market-segment/furnishing.html" class="products-explore__cta"
+              >Explore Market Segments</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+      <div class="site-footer__inner container">
+        <div class="site-footer__top">
+          <nav class="site-footer__links" aria-label="Footer navigation">
+            <div class="site-footer__group">
+              <a href="../careers.html" class="site-footer__link site-footer__link--heading">Career</a>
+              <ul class="site-footer__sublist">
+                <li><a href="../careers.html#life-at-mayur" class="site-footer__link">Life at Mayur</a></li>
+                <li><a href="#" class="site-footer__link">Student Programmes</a></li>
+                <li><a href="../careers.html#current-openings" class="site-footer__link">Vacancies</a></li>
+              </ul>
+            </div>
+            <a href="#" class="site-footer__link site-footer__link--heading">FAQ</a>
+            <a href="../contact.html" class="site-footer__link site-footer__link--heading">Contact Us</a>
+          </nav>
+
+          <div class="site-footer__contact">
+            <a href="tel:+911423224001" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"
+                  fill="currentColor"
+                />
+              </svg>
+              +91-1423-224001
+            </a>
+            <a href="mailto:info@mayur.biz" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M2 2a2 2 0 0 0-2 2v.01l8 4.667 8-4.667V4a2 2 0 0 0-2-2H2zm14 5.333L8.667 11.5 2 7.333V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.333z"
+                  fill="currentColor"
+                />
+              </svg>
+              info@mayur.biz
+            </a>
+          </div>
+        </div>
+
+        <hr class="site-footer__divider" />
+
+        <p class="site-footer__copyright">
+          Copyright &copy; <span id="copyright-year"></span> Mayur Uniquoters Limited, All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script type="module" src="../js/main.js"></script>
+  </body>
+</html>
