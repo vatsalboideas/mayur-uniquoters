@@ -1940,25 +1940,13 @@ h6 {
   text-align: center;
 }
 
-.history-section__sets {
-  display: flex;
-  flex-direction: column;
-  gap: 4rem;
+.history-section__track {
   width: 100%;
   min-width: 0;
+  overflow: hidden;
 }
 
-.history-section__set {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-width: 0;
-  padding: 0.5rem 0 1.5rem;
-  background-color: #eae3d8;
-}
-
-/* GSAP pin mode: section fills the viewport below the header; sets overlay */
+/* GSAP pin mode: section fills the viewport below the header; cards scroll on X */
 .history-section.is-gsap {
   height: calc(100dvh - var(--header-height));
   min-height: calc(100dvh - var(--header-height));
@@ -1975,32 +1963,17 @@ h6 {
   height: 100%;
 }
 
-.history-section.is-gsap .history-section__sets {
+.history-section.is-gsap .history-section__track {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  gap: 0;
   overflow: hidden;
-}
-
-.history-section.is-gsap .history-section__set {
-  position: absolute;
-  inset: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-.history-section.is-gsap .history-section__set:nth-child(1) {
-  z-index: 1;
-}
-
-.history-section.is-gsap .history-section__set:nth-child(2) {
-  z-index: 2;
-  will-change: transform;
+  container-type: inline-size;
 }
 
 .history-section__timeline {
   display: flex;
+  flex-wrap: wrap;
   justify-content: stretch;
   align-items: stretch;
   width: 100%;
@@ -2011,6 +1984,14 @@ h6 {
   list-style: none;
 }
 
+.history-section.is-gsap .history-section__timeline {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  width: max-content;
+  height: 100%;
+  will-change: transform;
+}
+
 .history-section__item {
   position: relative;
   display: flex;
@@ -2018,10 +1999,10 @@ h6 {
   justify-content: flex-start;
   align-items: stretch;
   gap: 1.5rem;
-  flex: 1 1 0;
+  flex: 1 1 30%;
   width: auto;
   min-width: 0;
-  max-width: 100%;
+  max-width: 33.333%;
   margin: 0;
   padding: 1.5rem clamp(1.25rem, 5.2vw, 6.25rem) 1.75rem;
   background-color: transparent;
@@ -2031,7 +2012,10 @@ h6 {
 }
 
 .history-section.is-gsap .history-section__item {
+  flex: 0 0 calc(100cqi / 3);
   justify-content: center;
+  width: calc(100cqi / 3);
+  max-width: none;
   min-height: 0;
   height: 100%;
 }
@@ -2144,23 +2128,16 @@ h6 {
     font-size: 1.25rem;
   }
 
-  .history-section__sets {
-    gap: 0;
-  }
-
-  .history-section__set {
-    padding: 0;
-    align-items: stretch;
-  }
-
   .history-section__timeline {
     flex-direction: column;
+    flex-wrap: nowrap;
     align-items: stretch;
     height: auto;
   }
 
   .history-section__item,
   .history-section__item--alt {
+    flex: 0 0 auto;
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
@@ -2341,7 +2318,7 @@ h6 {
   height: 5rem; /* 80px */
   padding: 0 1.75rem;
   border: 0.125rem solid var(--color-brand-tan); /* 2px, #BD9568 */
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 9999px;
   background-color: transparent;
   font-family: var(--font-sans); /* SF Pro Text */
   font-size: 1.5625rem; /* 25px */
@@ -2471,7 +2448,7 @@ h6 {
 .board-slider__viewport {
   position: relative;
   width: 100%;
-  height: calc(var(--board-image-h) + 6.5rem); /* image + caption block */
+  height: calc(var(--board-image-h) + 8rem); /* image + caption block */
   overflow: hidden;
 }
 
@@ -2518,16 +2495,18 @@ h6 {
   margin: 0;
   line-height: 0;
   width: 100%;
+  aspect-ratio: 424 / 493;
+  overflow: hidden;
+  background-color: #eae3d8;
+  border-radius: 0.375rem; /* 6px */
 }
 
 .board-slider__image {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 424 / 493;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 0.375rem; /* 6px */
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
 }
 
 .board-slider__caption {
@@ -2705,7 +2684,7 @@ h6 {
   height: 5rem; /* 80px */
   padding: 0 1.75rem;
   border: 0.125rem solid var(--color-brand-tan); /* 2px, #BD9568 */
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 9999px;
   background-color: transparent;
   font-family: var(--font-sans); /* SF Pro Text Semibold */
   font-size: 1.5625rem; /* 25px */
@@ -3212,7 +3191,7 @@ h6 {
   height: 5rem; /* 80px */
   padding: 0 1.75rem;
   border: 0.125rem solid var(--color-brand-tan); /* 2px, #BD9568 */
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 9999px;
   background-color: transparent;
   font-family: var(--font-sans); /* SF Pro Text Semibold */
   font-size: 1.5625rem; /* 25px */
@@ -3569,7 +3548,7 @@ h6 {
   margin: 0 0 1.75rem;
   line-height: 0;
   overflow: hidden;
-  border-radius: 0.5rem; /* 8px */
+  border-radius: 0.55rem; /* 8.8px — 10% more than 8px */
 }
 
 .plants-card__image {
@@ -3579,7 +3558,7 @@ h6 {
   aspect-ratio: 820 / 480;
   object-fit: cover;
   object-position: center;
-  border-radius: 0.5rem; /* 8px */
+  border-radius: 0.55rem; /* 8.8px — 10% more than 8px */
 }
 
 .plants-card__title {
@@ -3599,7 +3578,7 @@ h6 {
   height: 3.25rem; /* 52px */
   padding: 0 1.5rem;
   border: 0.125rem solid var(--color-brand-red-active); /* 2px */
-  border-radius: 0.125rem;
+  border-radius: 9999px;
   background-color: transparent;
   font-family: var(--font-sans);
   font-size: 1.125rem; /* 18px */

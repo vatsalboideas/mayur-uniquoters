@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initPresenceCounters();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
-  initHistoryStack();
+  initHistoryScroll();
   initFounderReadMore();
   initPolicyCertificates();
   initAOS();
@@ -603,15 +603,16 @@ function initAboutParallax(lenis) {
 }
 
 /**
- * History section — GSAP ScrollTrigger pin (desktop, min-width 1025px).
- * Title + intro stay below the site header; the two card sets live in a
- * stage underneath so they never sit under the heading. Set 2 slides up
- * over set 1 while the section is pinned, then the pin releases intact.
+ * History section — GSAP horizontal scroll (desktop, min-width 1025px).
+ * Title + intro stay pinned below the site header. Timeline cards sit in
+ * a single row (three visible) and translate on X as the user scrolls.
  */
-function initHistoryStack() {
+function initHistoryScroll() {
   const section = document.querySelector('.history-section');
-  const sets = gsap.utils.toArray('.history-section__set');
-  if (!section || sets.length < 2) return;
+  const track = section?.querySelector('.history-section__timeline');
+  const clip = section?.querySelector('.history-section__track');
+  const items = gsap.utils.toArray('.history-section__item');
+  if (!section || !track || !clip || items.length < 2) return;
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   if (prefersReducedMotion.matches) return;
@@ -622,19 +623,35 @@ function initHistoryStack() {
     return header?.getBoundingClientRect().height ?? 0;
   }
 
+  function sizeItems() {
+    const itemWidth = clip.clientWidth / 3;
+    items.forEach((item) => {
+      item.style.flex = `0 0 ${itemWidth}px`;
+      item.style.width = `${itemWidth}px`;
+      item.style.maxWidth = 'none';
+    });
+  }
+
+  function getScrollDistance() {
+    return Math.max(0, track.scrollWidth - clip.clientWidth);
+  }
+
   const mm = gsap.matchMedia();
 
   mm.add('(min-width: 64.0625rem)', () => {
     section.classList.add('is-gsap');
-    gsap.set(sets[1], { yPercent: 100 });
+    sizeItems();
 
-    const tween = gsap.to(sets[1], {
-      yPercent: 0,
+    const tween = gsap.to(track, {
+      x: () => {
+        sizeItems();
+        return -getScrollDistance();
+      },
       ease: 'none',
       scrollTrigger: {
         trigger: section,
         start: () => `top ${headerOffset()}px`,
-        end: () => `+=${Math.round(window.innerHeight * 1.25)}`,
+        end: () => `+=${Math.round(getScrollDistance())}`,
         pin: true,
         pinSpacing: true,
         scrub: 0.55,
@@ -649,7 +666,12 @@ function initHistoryStack() {
       tween.scrollTrigger?.kill();
       tween.kill();
       section.classList.remove('is-gsap');
-      gsap.set(sets[1], { clearProps: 'transform' });
+      gsap.set(track, { clearProps: 'transform' });
+      items.forEach((item) => {
+        item.style.flex = '';
+        item.style.width = '';
+        item.style.maxWidth = '';
+      });
     };
   });
 }
