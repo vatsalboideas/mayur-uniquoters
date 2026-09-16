@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sustainability — Mayur Uniquoters</title>
+
+    <!-- Favicons (SVG switches light/dark via prefers-color-scheme) -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg" />
+    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
+    <meta name="theme-color" content="#BD9568" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          /* 1720px @ 1920 design — site content max width */
+          container: {
+            center: true,
+            screens: {
+              sm: '107.5rem',
+              md: '107.5rem',
+              lg: '107.5rem',
+              xl: '107.5rem',
+              '2xl': '107.5rem',
+            },
+          },
+          extend: {
+            colors: {
+              brand: {
+                tan: '#BD9568',
+                cream: '#F5D4AB',
+                red: '#8B2332',
+                'red-active': '#84000C',
+              },
+            },
+            fontFamily: {
+              sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+              display: ['SF Pro Display', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              abril: ['Abril Display', 'Georgia', 'Times New Roman', 'serif'],
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Fonts & custom styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="min-h-screen bg-[#F5F5F5] font-sans text-gray-900">
+    <header class="site-header bg-brand-red-active">
+      <div class="site-header__inner container">
+        <a href="./" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
+          <img src="assets/logo-white.svg" alt="Mayur Uniquoters Limited" width="184" height="76" />
+        </a>
+        <button
+          type="button"
+          class="site-header__toggle"
+          aria-expanded="false"
+          aria-controls="site-header-nav"
+          aria-label="Open menu"
+        >
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+          <span class="site-header__toggle-bar" aria-hidden="true"></span>
+        </button>
+        <nav id="site-header-nav" class="site-header__nav" aria-label="Main navigation">
+          <ul class="site-header__nav-list">
+            <li><a href="./" class="site-header__nav-link">About</a></li>
+            <li>
+              <a href="market-segment/furnishing.html" class="site-header__nav-link">Market Segment</a>
+            </li>
+            <li><a href="plants.html" class="site-header__nav-link">Plants</a></li>
+            <li><a href="products/our-products.html" class="site-header__nav-link">Products</a></li>
+            <li>
+              <a href="sustainability.html" class="site-header__nav-link is-active" aria-current="page"
+                >Sustainability</a
+              >
+            </li>
+            <li><a href="global-presence.html" class="site-header__nav-link">Global Presence</a></li>
+            <li><a href="#" class="site-header__nav-link">News &amp; Media</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section
+        class="page-hero relative w-full overflow-hidden"
+        aria-label="Sustainability"
+        data-aos="fade-in"
+        data-aos-duration="1000"
+      >
+        <img
+          src="assets/images/sustainability/hero.webp"
+          alt="Natural material swatches beside a green leaf with water droplets"
+          class="page-hero__image"
+          width="1920"
+          height="947"
+          fetchpriority="high"
+        />
+      </section>
+
+      <section class="sust-intro" aria-labelledby="sust-intro-title" data-aos="fade-up">
+        <div class="sust-intro__inner container">
+          <h1 id="sust-intro-title" class="sust-intro__title">
+            Sustainability by Choice.<br />
+            Responsibility by Design.
+          </h1>
+          <p class="sust-intro__text">
+            At Mayur Uniquoters, sustainability is embedded into the way we think, innovate and grow.
+            From responsible manufacturing and product innovation to environmental stewardship and
+            community engagement, our approach is guided by the belief that long-term business
+            success goes hand in hand with creating lasting value for people and the planet.
+          </p>
+        </div>
+      </section>
+
+      <section class="sust-approach" aria-labelledby="sust-approach-title" data-aos="fade-up">
+        <div class="sust-approach__inner container">
+          <figure class="sust-approach__figure">
+            <img
+              src="assets/images/sustainability/our-approach.webp"
+              alt="Hands inspecting a draped piece of textured material"
+              class="sust-approach__image"
+              width="940"
+              height="871"
+              loading="lazy"
+            />
+          </figure>
+          <div class="sust-approach__content">
+            <h2 id="sust-approach-title" class="sust-approach__title">
+              <span class="sust-approach__initial">O</span>ur<br /><span
+                class="sust-approach__initial"
+                >A</span
+              >pproach
+            </h2>
+            <div class="sust-approach__copy">
+              <h3 class="sust-approach__subtitle">Sustainability at Mayur</h3>
+              <p>
+                Sustainability is an integral part of our business strategy, influencing decisions
+                across our operations, products and value chain. Guided by globally recognised
+                frameworks, including the United Nations Global Compact (UNGC), Sustainable
+                Development Goals (SDGs) and Global Reporting Initiative (GRI), we continue to
+                strengthen our environmental, social and governance practices while creating
+                long-term value for all stakeholders.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sust-framework" aria-labelledby="sust-framework-title" data-aos="fade-up">
+        <div class="sust-framework__inner container">
+          <h2 id="sust-framework-title" class="sust-framework__title">Our 5P Framework</h2>
+          <p class="sust-framework__lead">
+            Our sustainability strategy is built around five interconnected pillars that guide how we
+            create long-term value for our business, stakeholders and society.
+          </p>
+
+          <div class="sust-5p" role="img" aria-label="5P Framework: Planet, Purpose, Product, Prosperity, People">
+            <div class="sust-5p__wheel">
+              <svg class="sust-5p__pie" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+                <defs>
+                  <clipPath id="sust-5p-clip">
+                    <circle cx="200" cy="200" r="200" />
+                  </clipPath>
+                </defs>
+                <g clip-path="url(#sust-5p-clip)">
+                  <path fill="#E8D4C0" d="M200 200 L82.44 38.2 A200 200 0 0 1 317.56 38.2 Z" />
+                  <path fill="#C49A82" d="M200 200 L317.56 38.2 A200 200 0 0 1 390.21 261.8 Z" />
+                  <path fill="#5C3C30" d="M200 200 L390.21 261.8 A200 200 0 0 1 200 400 Z" />
+                  <path fill="#A56B5C" d="M200 200 L200 400 A200 200 0 0 1 9.79 261.8 Z" />
+                  <path fill="#E4D9CC" d="M200 200 L9.79 261.8 A200 200 0 0 1 82.44 38.2 Z" />
+                  <g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="butt">
+                    <line x1="200" y1="200" x2="82.44" y2="38.2" />
+                    <line x1="200" y1="200" x2="317.56" y2="38.2" />
+                    <line x1="200" y1="200" x2="390.21" y2="261.8" />
+                    <line x1="200" y1="200" x2="200" y2="400" />
+                    <line x1="200" y1="200" x2="9.79" y2="261.8" />
+                  </g>
+                </g>
+              </svg>
+              <ul class="sust-5p__segments">
+                <li class="sust-5p__segment sust-5p__segment--planet" style="--angle: 0deg">
+                  <div class="sust-5p__content">
+                    <img
+                      src="assets/images/sustainability/framework/planet.svg"
+                      alt=""
+                      class="sust-5p__icon"
+                      width="86"
+                      height="106"
+                      loading="lazy"
+                    />
+                    <span class="sust-5p__name">Planet</span>
+                    <span class="sust-5p__desc">Environment Responsibility</span>
+                  </div>
+                </li>
+                <li class="sust-5p__segment sust-5p__segment--purpose" style="--angle: 72deg">
+                  <div class="sust-5p__content">
+                    <img
+                      src="assets/images/sustainability/framework/materials.svg"
+                      alt=""
+                      class="sust-5p__icon"
+                      width="107"
+                      height="93"
+                      loading="lazy"
+                    />
+                    <span class="sust-5p__name">Purpose</span>
+                    <span class="sust-5p__desc">Long-Term Impact</span>
+                  </div>
+                </li>
+                <li class="sust-5p__segment sust-5p__segment--product" style="--angle: 144deg">
+                  <div class="sust-5p__content">
+                    <img
+                      src="assets/images/sustainability/framework/circularity.svg"
+                      alt=""
+                      class="sust-5p__icon"
+                      width="101"
+                      height="88"
+                      loading="lazy"
+                    />
+                    <span class="sust-5p__name">Product</span>
+                    <span class="sust-5p__desc">Product Excellence</span>
+                  </div>
+                </li>
+                <li class="sust-5p__segment sust-5p__segment--prosperity" style="--angle: 216deg">
+                  <div class="sust-5p__content">
+                    <img
+                      src="assets/images/sustainability/framework/performance.svg"
+                      alt=""
+                      class="sust-5p__icon"
+                      width="93"
+                      height="89"
+                      loading="lazy"
+                    />
+                    <span class="sust-5p__name">Prosperity</span>
+                    <span class="sust-5p__desc">Economic Resilience</span>
+                  </div>
+                </li>
+                <li class="sust-5p__segment sust-5p__segment--people" style="--angle: 288deg">
+                  <div class="sust-5p__content">
+                    <img
+                      src="assets/images/sustainability/framework/people.svg"
+                      alt=""
+                      class="sust-5p__icon"
+                      width="87"
+                      height="94"
+                      loading="lazy"
+                    />
+                    <span class="sust-5p__name">People</span>
+                    <span class="sust-5p__desc">Social Responsibility</span>
+                  </div>
+                </li>
+              </ul>
+              <div class="sust-5p__hub">
+                <span class="sust-5p__hub-title">5P</span>
+                <span class="sust-5p__hub-label">Framework</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sust-pillars" aria-label="5P pillars" data-aos="fade-up">
+        <div class="sust-pillars__board">
+          <ol class="sust-pillars__timeline">
+            <li class="sust-pillars__step sust-pillars__step--right">
+              <div class="sust-pillars__icon-wrap" aria-hidden="true">
+                <img
+                  src="assets/images/sustainability/framework/materials.svg"
+                  alt=""
+                  class="sust-pillars__icon"
+                  width="107"
+                  height="93"
+                  loading="lazy"
+                />
+              </div>
+              <div class="sust-pillars__body">
+                <h3 class="sust-pillars__name">Purpose</h3>
+                <p class="sust-pillars__copy">
+                  Embedding responsibility into how we govern and grow.
+                </p>
+                <button type="button" class="sust-pillars__link" data-pillar-open="purpose">
+                  Read More
+                </button>
+              </div>
+            </li>
+            <li class="sust-pillars__step sust-pillars__step--left">
+              <div class="sust-pillars__body">
+                <h3 class="sust-pillars__name">People</h3>
+                <p class="sust-pillars__copy">
+                  Creating a safe, inclusive workplace and stronger communities.
+                </p>
+                <button type="button" class="sust-pillars__link" data-pillar-open="people">
+                  Read More
+                </button>
+              </div>
+              <div class="sust-pillars__icon-wrap" aria-hidden="true">
+                <img
+                  src="assets/images/sustainability/framework/people.svg"
+                  alt=""
+                  class="sust-pillars__icon"
+                  width="87"
+                  height="94"
+                  loading="lazy"
+                />
+              </div>
+            </li>
+            <li class="sust-pillars__step sust-pillars__step--right">
+              <div class="sust-pillars__icon-wrap" aria-hidden="true">
+                <img
+                  src="assets/images/sustainability/framework/planet.svg"
+                  alt=""
+                  class="sust-pillars__icon"
+                  width="86"
+                  height="106"
+                  loading="lazy"
+                />
+              </div>
+              <div class="sust-pillars__body">
+                <h3 class="sust-pillars__name">Planet</h3>
+                <p class="sust-pillars__copy">
+                  Reducing our environmental impact through responsible use of resources.
+                </p>
+                <button type="button" class="sust-pillars__link" data-pillar-open="planet">
+                  Read More
+                </button>
+              </div>
+            </li>
+            <li class="sust-pillars__step sust-pillars__step--left">
+              <div class="sust-pillars__body">
+                <h3 class="sust-pillars__name">Product</h3>
+                <p class="sust-pillars__copy">
+                  Innovating for performance with sustainability in mind.
+                </p>
+                <button type="button" class="sust-pillars__link" data-pillar-open="product">
+                  Read More
+                </button>
+              </div>
+              <div class="sust-pillars__icon-wrap" aria-hidden="true">
+                <img
+                  src="assets/images/sustainability/framework/circularity.svg"
+                  alt=""
+                  class="sust-pillars__icon"
+                  width="101"
+                  height="88"
+                  loading="lazy"
+                />
+              </div>
+            </li>
+            <li class="sust-pillars__step sust-pillars__step--right">
+              <div class="sust-pillars__icon-wrap" aria-hidden="true">
+                <img
+                  src="assets/images/sustainability/framework/performance.svg"
+                  alt=""
+                  class="sust-pillars__icon"
+                  width="93"
+                  height="89"
+                  loading="lazy"
+                />
+              </div>
+              <div class="sust-pillars__body">
+                <h3 class="sust-pillars__name">Prosperity</h3>
+                <p class="sust-pillars__copy">
+                  Creating long-term value through responsible and resilient growth.
+                </p>
+                <button type="button" class="sust-pillars__link" data-pillar-open="prosperity">
+                  Read More
+                </button>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section
+        class="sust-csr"
+        id="csr"
+        aria-labelledby="sust-csr-title"
+        data-aos="fade-up"
+      >
+        <div class="sust-csr__inner container">
+          <h2 id="sust-csr-title" class="sust-csr__title">
+            Creating impact beyond our operations
+          </h2>
+          <p class="sust-csr__lead">
+            Our responsibility extends to the communities around us. Through long-term and
+            need-based initiatives across healthcare, education, community infrastructure, sports
+            and the environment, we work to create meaningful impact where it matters.
+          </p>
+
+          <article class="sust-csr__feature">
+            <figure class="sust-csr__media">
+              <img
+                src="assets/images/sustainability/image1.webp"
+                alt="Healthcare worker checking blood pressure"
+                class="sust-csr__image"
+                width="893"
+                height="503"
+                loading="lazy"
+              />
+            </figure>
+            <div class="sust-csr__content">
+              <h3 class="sust-csr__heading">
+                Strengthening Maternal<br />
+                &amp; Child Health
+              </h3>
+              <p class="sust-csr__copy">
+                For over 23 years, our immunisation programme has supported communities across 82
+                villages in the Phagi block. In FY 2025–26, a mobile healthcare unit operating
+                20–22 days each month helped provide essential vaccinations to 1,895 children and
+                maternal vaccinations to 2,886 pregnant women, in collaboration with government
+                health authorities.
+              </p>
+              <ul class="sust-csr__stats">
+                <li class="sust-csr__stat">
+                  <span class="sust-csr__stat-value" data-count-to="82">0</span>
+                  <span class="sust-csr__stat-label">Villages</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="23"
+                    data-count-suffix="+"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Years</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="1895"
+                    data-count-format="comma"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Children<br />immunised</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="2886"
+                    data-count-format="comma"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Pregnant women<br />supported</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="sust-csr__feature sust-csr__feature--flip">
+            <figure class="sust-csr__media">
+              <img
+                src="assets/images/sustainability/image2.webp"
+                alt="Students in a classroom during a lesson"
+                class="sust-csr__image"
+                width="893"
+                height="503"
+                loading="lazy"
+              />
+            </figure>
+            <div class="sust-csr__content">
+              <h3 class="sust-csr__heading">
+                Empowering Through<br />
+                Education
+              </h3>
+              <p class="sust-csr__copy">
+                We continue to strengthen access to education through scholarships and improved
+                learning infrastructure. In FY 2025–26, 10 new classrooms were constructed across
+                three government schools, expected to benefit approximately 1,100 students, while
+                280 new furniture sets were provided across multiple schools. Through the
+                long-running SK Poddar Scholarship initiative, meritorious students from government
+                schools continue to receive financial support towards their education.
+              </p>
+              <ul class="sust-csr__stats">
+                <li class="sust-csr__stat">
+                  <span class="sust-csr__stat-value" data-count-to="10">0</span>
+                  <span class="sust-csr__stat-label">Classrooms</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="1100"
+                    data-count-format="comma"
+                    data-count-prefix="~"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Students</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span class="sust-csr__stat-value" data-count-to="280">0</span>
+                  <span class="sust-csr__stat-label">Furniture sets</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="sust-csr__feature">
+            <figure class="sust-csr__media">
+              <img
+                src="assets/images/sustainability/image3.webp"
+                alt="Woman reading in a community library"
+                class="sust-csr__image"
+                width="893"
+                height="503"
+                loading="lazy"
+              />
+            </figure>
+            <div class="sust-csr__content">
+              <h3 class="sust-csr__heading">
+                Creating Spaces for<br />
+                Women to Learn &amp; Grow
+              </h3>
+              <p class="sust-csr__copy">
+                A new community hall and library in Dhodhsar has been developed to promote
+                women’s education and empowerment. Designed to accommodate up to 100 girls at a
+                time, the facility is expected to benefit nearly 3,000 women and girls from
+                Dhodhsar and neighbouring Singod Kalan.
+              </p>
+              <ul class="sust-csr__stats sust-csr__stats--pair">
+                <li class="sust-csr__stat">
+                  <span class="sust-csr__stat-kicker">Upto</span>
+                  <span class="sust-csr__stat-value" data-count-to="100">0</span>
+                  <span class="sust-csr__stat-label">Learners at<br />a time</span>
+                </li>
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="3000"
+                    data-count-format="comma"
+                    data-count-prefix="~"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Women &amp; girls<br />expected to benefit</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="sust-csr__feature sust-csr__feature--flip">
+            <figure class="sust-csr__media">
+              <img
+                src="assets/images/sustainability/image4.webp"
+                alt="Athletes playing hockey"
+                class="sust-csr__image"
+                width="893"
+                height="503"
+                loading="lazy"
+              />
+            </figure>
+            <div class="sust-csr__content">
+              <h3 class="sust-csr__heading">
+                Promoting Sports &amp;<br />
+                Community Well-being
+              </h3>
+              <p class="sust-csr__copy">
+                From building sports infrastructure to supporting promising athletes, our
+                initiatives encourage active lifestyles and grassroots talent. Open gyms
+                installed for community use benefit over 10,000 local residents, while support
+                has also been extended to young athletes and local sports teams.
+              </p>
+              <ul class="sust-csr__stats sust-csr__stats--single">
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="10000"
+                    data-count-format="comma"
+                    data-count-suffix="+"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Local residents benefiting<br />from open gyms</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="sust-csr__feature">
+            <figure class="sust-csr__media">
+              <img
+                src="assets/images/sustainability/image5.webp"
+                alt="Hands planting a sapling"
+                class="sust-csr__image"
+                width="893"
+                height="503"
+                loading="lazy"
+              />
+            </figure>
+            <div class="sust-csr__content">
+              <h3 class="sust-csr__heading">Greener Communities</h3>
+              <p class="sust-csr__copy">
+                Our environmental initiatives extend beyond our facilities and into surrounding
+                communities. More than 47,000 saplings have been planted near our facilities
+                through CSR plantation initiatives, alongside solar installations that support
+                community infrastructure and the long-term maintenance of plantation sites.
+              </p>
+              <ul class="sust-csr__stats sust-csr__stats--single">
+                <li class="sust-csr__stat">
+                  <span
+                    class="sust-csr__stat-value"
+                    data-count-to="47000"
+                    data-count-format="comma"
+                    data-count-suffix="+"
+                    >0</span
+                  >
+                  <span class="sust-csr__stat-label">Saplings Planted</span>
+                </li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="sust-standards" aria-labelledby="sust-standards-title" data-aos="fade-up">
+        <div class="sust-standards__inner container">
+          <h2 id="sust-standards-title" class="sust-standards__title">
+            Guided by Global Standards
+          </h2>
+          <p class="sust-standards__lead">
+            Our sustainability efforts are aligned with internationally recognised frameworks and
+            industry initiatives, reinforcing our commitment to responsible and transparent
+            business practices.
+          </p>
+          <ul class="sust-standards__list" aria-label="Sustainability frameworks and standards">
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/brsr.png"
+                alt="Business Responsibility and Sustainability Reporting"
+                class="sust-standards__logo"
+                width="125"
+                height="124"
+                loading="lazy"
+              />
+            </li>
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/ungc.svg"
+                alt="United Nations Global Compact"
+                class="sust-standards__logo"
+                width="288"
+                height="85"
+                loading="lazy"
+              />
+            </li>
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/ghg-protocol.png"
+                alt="Greenhouse Gas Protocol"
+                class="sust-standards__logo"
+                width="284"
+                height="79"
+                loading="lazy"
+              />
+            </li>
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/ecovadis.png"
+                alt="EcoVadis"
+                class="sust-standards__logo"
+                width="192"
+                height="107"
+                loading="lazy"
+              />
+            </li>
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/sdg.png"
+                alt="United Nations Sustainable Development Goals"
+                class="sust-standards__logo"
+                width="198"
+                height="102"
+                loading="lazy"
+              />
+            </li>
+            <li class="sust-standards__item">
+              <img
+                src="assets/images/sustainability/global-standards/gri.png"
+                alt="Global Reporting Initiative"
+                class="sust-standards__logo"
+                width="204"
+                height="98"
+                loading="lazy"
+              />
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="sust-ctas" aria-labelledby="sust-ctas-title" data-aos="fade-up">
+        <div class="sust-ctas__inner container">
+          <h2 id="sust-ctas-title" class="sust-ctas__title">Explore Our Sustainability Journey</h2>
+          <p class="sust-ctas__lead">
+            Download our latest Sustainability Report or learn more about our CSR initiatives and
+            global commitments.
+          </p>
+          <div class="sust-ctas__grid">
+            <a
+              class="sust-ctas__card"
+              href="https://www.mayuruniquoters.com/pdf/sustainability-report-2023.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="assets/images/sustainability/download-report.webp"
+                alt=""
+                class="sust-ctas__image"
+                width="811"
+                height="517"
+                loading="lazy"
+              />
+              <span class="sust-ctas__btn">Download Sustainability Report</span>
+            </a>
+            <a class="sust-ctas__card" href="#csr">
+              <img
+                src="assets/images/sustainability/explore-csr.webp"
+                alt=""
+                class="sust-ctas__image"
+                width="811"
+                height="517"
+                loading="lazy"
+              />
+              <span class="sust-ctas__btn">Explore CSR</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="sust-dialog" data-pillar-dialog aria-hidden="true">
+      <div class="sust-dialog__scrim" data-pillar-dismiss></div>
+      <div
+        class="sust-dialog__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="sust-dialog-title"
+        data-lenis-prevent
+      >
+        <button type="button" class="sust-dialog__close" data-pillar-close aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h2 id="sust-dialog-title" class="sust-dialog__title" data-pillar-title></h2>
+        <p class="sust-dialog__lead" data-pillar-lead></p>
+        <p class="sust-dialog__action" data-pillar-action></p>
+      </div>
+    </div>
+
+    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+      <div class="site-footer__inner container">
+        <div class="site-footer__top">
+          <nav class="site-footer__links" aria-label="Footer navigation">
+            <div class="site-footer__group">
+              <a href="careers.html" class="site-footer__link site-footer__link--heading">Career</a>
+              <ul class="site-footer__sublist">
+                <li><a href="careers.html#life-at-mayur" class="site-footer__link">Life at Mayur</a></li>
+                <li><a href="#" class="site-footer__link">Student Programmes</a></li>
+                <li>
+                  <a href="careers.html#current-openings" class="site-footer__link">Vacancies</a>
+                </li>
+              </ul>
+            </div>
+            <a href="#" class="site-footer__link site-footer__link--heading">FAQ</a>
+            <a href="contact.html" class="site-footer__link site-footer__link--heading">Contact Us</a>
+          </nav>
+
+          <div class="site-footer__contact">
+            <a href="tel:+911423224001" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"
+                  fill="currentColor"
+                />
+              </svg>
+              +91-1423-224001
+            </a>
+            <a href="mailto:info@mayur.biz" class="site-footer__contact-item">
+              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path
+                  d="M2 2a2 2 0 0 0-2 2v.01l8 4.667 8-4.667V4a2 2 0 0 0-2-2H2zm14 5.333L8.667 11.5 2 7.333V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.333z"
+                  fill="currentColor"
+                />
+              </svg>
+              info@mayur.biz
+            </a>
+          </div>
+        </div>
+
+        <hr class="site-footer__divider" />
+
+        <p class="site-footer__copyright">
+          Copyright &copy; <span id="copyright-year"></span> Mayur Uniquoters Limited, All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

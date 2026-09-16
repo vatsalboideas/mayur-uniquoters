@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAboutParallax(lenis);
   initHistoryScroll();
   initFounderReadMore();
+  initPillarDialog(lenis);
   initPolicyCertificates();
   initAOS();
 });
@@ -226,7 +227,7 @@ function initOpeningsForm() {
 }
 
 /**
- * Global Presence stats — count up when the numbers enter the viewport.
+ * Count-up stats — animate when the parent card (or the number) enters the viewport.
  */
 function initPresenceCounters() {
   const values = document.querySelectorAll('[data-count-to]');
@@ -236,11 +237,17 @@ function initPresenceCounters() {
   const duration = 3000;
 
   function formatValue(el, current) {
+    const prefix = el.dataset.countPrefix || '';
     const suffix = el.dataset.countSuffix || '';
-    el.textContent = `${current}${suffix}`;
+    const formatted =
+      el.dataset.countFormat === 'comma' ? current.toLocaleString('en-US') : String(current);
+    el.textContent = `${prefix}${formatted}${suffix}`;
   }
 
   function animate(el) {
+    if (el.dataset.countStarted === 'true') return;
+    el.dataset.countStarted = 'true';
+
     const target = Number(el.dataset.countTo);
     if (!Number.isFinite(target)) return;
 
@@ -261,7 +268,36 @@ function initPresenceCounters() {
     requestAnimationFrame(frame);
   }
 
-  values.forEach((el) => animate(el));
+  const groups = new Map();
+  values.forEach((el) => {
+    formatValue(el, 0);
+    const root =
+      el.closest('.sust-csr__feature, .sust-csr__stats, .presence-hero__stats') || el;
+    if (!groups.has(root)) groups.set(root, []);
+    groups.get(root).push(el);
+  });
+
+  function playGroup(root) {
+    (groups.get(root) || []).forEach(animate);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    groups.forEach((_, root) => playGroup(root));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        playGroup(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.35, rootMargin: '0px 0px -8% 0px' }
+  );
+
+  groups.forEach((_, root) => observer.observe(root));
 }
 
 /**
@@ -689,6 +725,104 @@ function initFounderReadMore() {
     extra.setAttribute('aria-hidden', String(!isOpen));
     button.setAttribute('aria-expanded', String(isOpen));
     button.textContent = isOpen ? 'Read Less' : 'Read More';
+  });
+}
+
+const PILLAR_DIALOG_CONTENT = {
+  purpose: {
+    title: 'Purpose',
+    lead: 'We integrate sustainability into our business strategy, governance and decision-making, supported by globally aligned practices and transparent reporting.',
+    action:
+      'In Action: Strengthened ESG governance and transparency through continued sustainability reporting and alignment with global frameworks such as the UN Global Compact and Sustainable Development Goals.',
+  },
+  people: {
+    title: 'People',
+    lead: 'Our approach focuses on employee well-being and development while extending our impact to communities through initiatives across education, healthcare and empowerment.',
+    action:
+      'In Action: Our community initiatives include education programmes such as Ujjwal Bhavishya, Avum Srijan and Addhyan Yojna, along with healthcare, nutrition and employee health & safety initiatives.',
+  },
+  planet: {
+    title: 'Planet',
+    lead: 'We continue to improve energy efficiency, adopt renewable energy, conserve water, manage waste and emissions, and strengthen environmentally responsible practices across our operations.',
+    action:
+      'In Action: Generated 868 MWh of renewable energy and planted 10,386 trees, alongside continued investments in water conservation, emission control and responsible waste management.',
+  },
+  prosperity: {
+    title: 'Prosperity',
+    lead: 'We pursue growth by continually investing in manufacturing capabilities, innovation, product development and responsible business practices that strengthen our long-term resilience.',
+    action:
+      'In Action: Continued investments across manufacturing, innovation and sustainable product development to build a stronger, future-ready business.',
+  },
+  product: {
+    title: 'Product',
+    lead: 'We continue to explore more sustainable materials and processes while maintaining the quality, functionality and performance our customers expect.',
+    action:
+      'In Action: Developed UNICO and PAVO, material families incorporating bio-based and recycled inputs as part of our growing sustainable product portfolio.',
+  },
+};
+
+function initPillarDialog(lenis) {
+  const root = document.querySelector('[data-pillar-dialog]');
+  if (!root) return;
+
+  const titleEl = root.querySelector('[data-pillar-title]');
+  const leadEl = root.querySelector('[data-pillar-lead]');
+  const actionEl = root.querySelector('[data-pillar-action]');
+  const closeBtn = root.querySelector('[data-pillar-close]');
+  const dismissEls = root.querySelectorAll('[data-pillar-dismiss], [data-pillar-close]');
+  const triggers = document.querySelectorAll('[data-pillar-open]');
+  if (!titleEl || !leadEl || !actionEl || triggers.length === 0) return;
+
+  let lastFocus = null;
+
+  function isOpen() {
+    return root.classList.contains('is-open');
+  }
+
+  function openPillar(key) {
+    const content = PILLAR_DIALOG_CONTENT[key];
+    if (!content) return;
+
+    titleEl.textContent = content.title;
+    leadEl.textContent = content.lead;
+    actionEl.textContent = content.action;
+
+    lastFocus = document.activeElement;
+    root.classList.add('is-open');
+    root.setAttribute('aria-hidden', 'false');
+    root.inert = false;
+    lenis?.stop();
+    closeBtn?.focus();
+  }
+
+  function closeDialog() {
+    if (!isOpen()) return;
+
+    root.classList.remove('is-open');
+    root.setAttribute('aria-hidden', 'true');
+    root.inert = true;
+    lenis?.start();
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  root.inert = true;
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      event.preventDefault();
+      openPillar(trigger.dataset.pillarOpen);
+    });
+  });
+
+  dismissEls.forEach((el) => {
+    el.addEventListener('click', closeDialog);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      event.preventDefault();
+      closeDialog();
+    }
   });
 }
 
