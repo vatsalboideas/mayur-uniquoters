@@ -6981,7 +6981,7 @@ h6 {
 .sust-pillars__timeline {
   --pillar-line: 0.125rem;
   --pillar-gap: 4.25rem;
-  --pillar-join: 1.15rem;
+  --pillar-join: 1.725rem; /* vertical center of 48px title / hz line */
   --pillar-branch: 2.35rem;
   position: relative;
   width: 100%;
@@ -7053,7 +7053,8 @@ h6 {
 .sust-pillars__icon-wrap {
   display: flex;
   align-items: center;
-  height: 2.35rem;
+  height: calc(var(--pillar-join) * 2 + var(--pillar-line));
+  overflow: visible;
   box-sizing: border-box;
 }
 
@@ -7080,8 +7081,8 @@ h6 {
 
 .sust-pillars__icon {
   display: block;
-  width: auto;
-  height: 3.5rem;
+  width: 5rem; /* 80px @ 1920 */
+  height: auto;
   object-fit: contain;
 }
 
@@ -7204,27 +7205,27 @@ h6 {
   margin: 0 0 1.25rem;
   padding-right: 2rem;
   font-family: var(--font-abril);
-  font-size: 2rem;
+  font-size: 3rem; /* 48px */
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
   color: #84000c;
 }
 
 .sust-dialog__lead {
   margin: 0 0 1.25rem;
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: 1.5625rem; /* 25px */
   font-weight: 700;
-  line-height: 1.55;
+  line-height: 1.35;
   color: #84000c;
 }
 
 .sust-dialog__action {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 1.125rem;
+  font-size: 1.5625rem; /* 25px */
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.35;
   color: #1a1a1a;
 }
 
@@ -7234,12 +7235,12 @@ h6 {
   }
 
   .sust-dialog__title {
-    font-size: 1.625rem;
+    font-size: 2.25rem;
   }
 
   .sust-dialog__lead,
   .sust-dialog__action {
-    font-size: 1rem;
+    font-size: 1.125rem;
   }
 }
 
@@ -7680,11 +7681,12 @@ h6 {
   .sust-pillars__timeline {
     --pillar-gap: 3.25rem;
     --pillar-branch: 2rem;
-    --pillar-join: 1.1rem;
+    --pillar-join: 1.3rem;
   }
 
   .sust-pillars__icon {
-    height: 3.15rem;
+    width: 5rem;
+    height: auto;
   }
 
   .sust-pillars__name {
@@ -7896,7 +7898,8 @@ h6 {
   }
 
   .sust-pillars__icon {
-    height: 3rem;
+    width: 4.25rem;
+    height: auto;
   }
 
   .sust-pillars__name {
