@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSiteHeader();
   initAboutHeroSlider();
   initRndProcessSlider();
-  initMarketSegments();
+  initMarketSegments(lenis);
   initPlants();
   initBoardSlider();
   initLifeSlider();
@@ -1163,7 +1163,7 @@ function initAboutHeroSlider() {
 /**
  * Market segments — each page loads its own industries panel; tabs navigate between pages.
  */
-function initMarketSegments() {
+function initMarketSegments(lenis) {
   const tabsNav = document.querySelector('[data-segment-tabs]');
   const panel = document.querySelector('[data-segment-panel]');
   const introEl = document.querySelector('[data-segment-intro]');
@@ -1270,75 +1270,141 @@ function initMarketSegments() {
   }
 
   function clearCategoryActiveState() {
-    categoriesEl.querySelectorAll('.segment-panel__item, .segment-panel__option').forEach((item) => {
+    categoriesEl.querySelectorAll('.segment-panel__item').forEach((item) => {
       item.classList.remove('is-active');
       item.setAttribute('aria-pressed', 'false');
     });
   }
 
-  function renderCategories(segment) {
-    const useDropdowns = segment.categories.some((category) => Array.isArray(category.options));
+  function parseItemApps(button) {
+    const raw = button?.dataset.apps;
+    if (!raw) return [];
+    try {
+      const parsed = JSON.parse(decodeURIComponent(raw));
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
 
-    categoriesEl.classList.toggle('segment-panel__list--dropdowns', useDropdowns);
+  function getVisibleAttrs() {
+    return segmentAttrs.find((el) => !el.hidden) || segmentAttrs[0] || null;
+  }
 
-    categoriesEl.innerHTML = segment.categories
-      .map((category, index) => {
-        const images = category.images.join('|');
-        const isActive = index === 0;
-        const hasOptions = Array.isArray(category.options);
-        const isOpen = isActive && hasOptions && category.options.length > 0;
+  function scrollToAppsSection() {
+    const attrsEl = getVisibleAttrs();
+    if (!attrsEl) return;
 
-        if (!hasOptions) {
+    const target = attrsEl.querySelector('[data-segment-apps]') || attrsEl;
+    const headerOffset = -(document.querySelector('.site-header')?.offsetHeight || 0) - 16;
+
+    requestAnimationFrame(() => {
+      if (lenis) {
+        lenis.scrollTo(target, {
+          offset: headerOffset,
+          duration: 1.05,
+          easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t)),
+        });
+        return;
+      }
+
+      const top = target.getBoundingClientRect().top + window.scrollY + headerOffset;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    });
+  }
+
+  function syncAppsPanel(segment) {
+    const attrsEl = getVisibleAttrs();
+    if (!attrsEl) return;
+
+    const appsEl = attrsEl.querySelector('[data-segment-apps]');
+    const listEl = attrsEl.querySelector('[data-segment-apps-list]');
+    if (!appsEl || !listEl) return;
+
+    const activeItem = categoriesEl.querySelector('.segment-panel__item.is-active');
+    const options = parseItemApps(activeItem);
+    const shouldOpen = options.length > 0;
+    const appsKey = options.map((option) => option.label).join('|');
+    const wasOpen = attrsEl.classList.contains('is-apps-open');
+
+    attrsEl.classList.toggle('is-apps-open', shouldOpen);
+    appsEl.setAttribute('aria-hidden', String(!shouldOpen));
+
+    if (!shouldOpen) return;
+
+    const needsRender =
+      listEl.dataset.appsKey !== appsKey || !wasOpen || listEl.childElementCount === 0;
+
+    if (needsRender) {
+      listEl.dataset.appsKey = appsKey;
+      listEl.innerHTML = options
+        .map((option, index) => {
+          const isActive = index === 0;
           return `
             <li>
               <button
                 type="button"
-                class="segment-panel__item${isActive ? ' is-active' : ''}"
+                class="perf-attrs__apps-item${isActive ? ' is-active' : ''}"
+                data-apps-index="${index}"
                 aria-pressed="${isActive ? 'true' : 'false'}"
-                data-images="${escapeHtml(images)}"
               >
-                ${escapeHtml(category.label)}
+                ${escapeHtml(option.label)}
               </button>
             </li>
           `;
-        }
+        })
+        .join('');
 
-        const optionsMarkup = category.options
-          .map((option, optionIndex) => {
-            const optionImages = option.images.join('|');
-            const optionActive = isActive && optionIndex === 0;
-            return `
-              <li>
-                <button
-                  type="button"
-                  class="segment-panel__option${optionActive ? ' is-active' : ''}"
-                  aria-pressed="${optionActive ? 'true' : 'false'}"
-                  data-images="${escapeHtml(optionImages)}"
-                >
-                  ${escapeHtml(option.label)}
-                </button>
-              </li>
-            `;
-          })
-          .join('');
+      listEl.querySelectorAll('[data-apps-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const index = Number(button.dataset.appsIndex);
+          const option = options[index];
+          if (!option) return;
+
+          listEl.querySelectorAll('.perf-attrs__apps-item').forEach((item, itemIndex) => {
+            const isActive = itemIndex === index;
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-pressed', String(isActive));
+          });
+
+          const images = String(option.images || '')
+            .split('|')
+            .map((path) => path.trim())
+            .filter(Boolean);
+          setGalleryImages(images, {
+            alt: `${segment.title} — ${option.label}`,
+          });
+        });
+      });
+    }
+  }
+
+  function renderCategories(segment) {
+    categoriesEl.innerHTML = segment.categories
+      .map((category, index) => {
+        const images = category.images.join('|');
+        const isActive = index === 0;
+        const options = Array.isArray(category.options) ? category.options : [];
+        const appsPayload = encodeURIComponent(
+          JSON.stringify(
+            options.map((option) => ({
+              label: option.label,
+              images: (option.images || []).join('|'),
+            }))
+          )
+        );
 
         return `
-          <li class="segment-panel__dropdown${isOpen ? ' is-open' : ''}">
+          <li>
             <button
               type="button"
-              class="segment-panel__item segment-panel__item--trigger${isActive ? ' is-active' : ''}"
-              aria-expanded="${isOpen ? 'true' : 'false'}"
+              class="segment-panel__item${isActive ? ' is-active' : ''}"
               aria-pressed="${isActive ? 'true' : 'false'}"
               data-images="${escapeHtml(images)}"
+              data-apps="${escapeHtml(appsPayload)}"
             >
-              <span class="segment-panel__item-label">${escapeHtml(category.label)}</span>
-              <span class="segment-panel__chevron" aria-hidden="true"></span>
+              ${escapeHtml(category.label)}
             </button>
-            <div class="segment-panel__submenu-wrap">
-              <ul class="segment-panel__submenu" aria-hidden="${isOpen ? 'false' : 'true'}">
-                ${optionsMarkup}
-              </ul>
-            </div>
           </li>
         `;
       })
@@ -1346,21 +1412,7 @@ function initMarketSegments() {
 
     categoriesEl.querySelectorAll('.segment-panel__item').forEach((button) => {
       button.addEventListener('click', () => {
-        const dropdown = button.closest('.segment-panel__dropdown');
-
-        if (dropdown) {
-          const wasOpen = dropdown.classList.contains('is-open');
-          const canOpen = (dropdown.querySelector('.segment-panel__submenu')?.children.length || 0) > 0;
-
-          categoriesEl.querySelectorAll('.segment-panel__dropdown').forEach((item) => {
-            const trigger = item.querySelector('.segment-panel__item--trigger');
-            const menu = item.querySelector('.segment-panel__submenu');
-            const open = canOpen && item === dropdown && !wasOpen;
-            item.classList.toggle('is-open', open);
-            if (trigger) trigger.setAttribute('aria-expanded', String(open));
-            if (menu) menu.setAttribute('aria-hidden', String(!open));
-          });
-
+        if (!button.classList.contains('is-active')) {
           clearCategoryActiveState();
           button.classList.add('is-active');
           button.setAttribute('aria-pressed', 'true');
@@ -1369,48 +1421,15 @@ function initMarketSegments() {
             .split('|')
             .map((path) => path.trim())
             .filter(Boolean);
-          setGalleryImages(images, {
-            alt: `${segment.title} — ${button.querySelector('.segment-panel__item-label')?.textContent.trim() || button.textContent.trim()}`,
-          });
-          return;
+          setGalleryImages(images, { alt: `${segment.title} — ${button.textContent.trim()}` });
+          syncAppsPanel(segment);
         }
 
-        if (button.classList.contains('is-active')) return;
-
-        clearCategoryActiveState();
-        button.classList.add('is-active');
-        button.setAttribute('aria-pressed', 'true');
-
-        const images = (button.dataset.images || '')
-          .split('|')
-          .map((path) => path.trim())
-          .filter(Boolean);
-        setGalleryImages(images, { alt: `${segment.title} — ${button.textContent.trim()}` });
+        scrollToAppsSection();
       });
     });
 
-    categoriesEl.querySelectorAll('.segment-panel__option').forEach((optionButton) => {
-      optionButton.addEventListener('click', () => {
-        const dropdown = optionButton.closest('.segment-panel__dropdown');
-        const trigger = dropdown?.querySelector('.segment-panel__item--trigger');
-
-        clearCategoryActiveState();
-        optionButton.classList.add('is-active');
-        optionButton.setAttribute('aria-pressed', 'true');
-        if (trigger) {
-          trigger.classList.add('is-active');
-          trigger.setAttribute('aria-pressed', 'true');
-        }
-
-        const images = (optionButton.dataset.images || '')
-          .split('|')
-          .map((path) => path.trim())
-          .filter(Boolean);
-        setGalleryImages(images, {
-          alt: `${segment.title} — ${optionButton.textContent.trim()}`,
-        });
-      });
-    });
+    syncAppsPanel(segment);
   }
 
   function setActiveTab(segmentKey) {

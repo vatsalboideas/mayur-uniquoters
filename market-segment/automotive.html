@@ -233,11 +233,26 @@
 
       <section
         class="perf-attrs perf-attrs--rows"
-        aria-labelledby="perf-attrs-automotive-title"
+        aria-labelledby="perf-attrs-apps-title-automotive perf-attrs-automotive-title"
         data-segment-attrs="automotive"
       >
         <div class="perf-attrs__inner container">
-          <h2 id="perf-attrs-automotive-title" class="perf-attrs__title">Performance Attributes</h2>
+          <div class="perf-attrs__layout">
+            <div class="perf-attrs__apps-slot">
+              <aside
+                class="perf-attrs__apps"
+                data-segment-apps
+                aria-labelledby="perf-attrs-apps-title-automotive"
+                aria-hidden="true"
+              >
+                <h2 id="perf-attrs-apps-title-automotive" class="perf-attrs__apps-title">
+                  Area of Application
+                </h2>
+                <ul class="perf-attrs__apps-list" data-segment-apps-list></ul>
+              </aside>
+            </div>
+            <div class="perf-attrs__main">
+              <h2 id="perf-attrs-automotive-title" class="perf-attrs__title">Performance Attributes</h2>
 
           <div class="perf-attrs__rows">
             <ul class="perf-attrs__row">
@@ -296,6 +311,9 @@
                 />
                 <span class="perf-attrs__label">Crocking Resistance</span>
               </li>
+            </ul>
+
+            <ul class="perf-attrs__row">
               <li class="perf-attrs__item">
                 <img
                   src="../assets/images/market-segment/automotive/performance-attributes/Group-4.svg"
@@ -329,9 +347,6 @@
                 />
                 <span class="perf-attrs__label">Optimised Backing Fabric</span>
               </li>
-            </ul>
-
-            <ul class="perf-attrs__row">
               <li class="perf-attrs__item">
                 <img
                   src="../assets/images/market-segment/automotive/performance-attributes/Group-13.svg"
@@ -354,6 +369,9 @@
                 />
                 <span class="perf-attrs__label">Scratch Resistance</span>
               </li>
+            </ul>
+
+            <ul class="perf-attrs__row">
               <li class="perf-attrs__item">
                 <img
                   src="../assets/images/market-segment/automotive/performance-attributes/Group-9.svg"
@@ -410,6 +428,8 @@
                 <span class="perf-attrs__label">VDA 6.3</span>
               </li>
             </ul>
+          </div>
+            </div>
           </div>
         </div>
       </section>

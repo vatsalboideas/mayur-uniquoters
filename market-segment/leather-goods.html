@@ -234,13 +234,28 @@
 
       <section
         class="perf-attrs perf-attrs--rows"
-        aria-labelledby="perf-attrs-leather-goods-title"
+        aria-labelledby="perf-attrs-apps-title-leather-goods perf-attrs-leather-goods-title"
         data-segment-attrs="leather-goods"
       >
         <div class="perf-attrs__inner container">
-          <h2 id="perf-attrs-leather-goods-title" class="perf-attrs__title">
-            Performance Attributes
-          </h2>
+          <div class="perf-attrs__layout">
+            <div class="perf-attrs__apps-slot">
+              <aside
+                class="perf-attrs__apps"
+                data-segment-apps
+                aria-labelledby="perf-attrs-apps-title-leather-goods"
+                aria-hidden="true"
+              >
+                <h2 id="perf-attrs-apps-title-leather-goods" class="perf-attrs__apps-title">
+                  Area of Application
+                </h2>
+                <ul class="perf-attrs__apps-list" data-segment-apps-list></ul>
+              </aside>
+            </div>
+            <div class="perf-attrs__main">
+              <h2 id="perf-attrs-leather-goods-title" class="perf-attrs__title">
+                Performance Attributes
+              </h2>
 
           <div class="perf-attrs__rows">
             <ul class="perf-attrs__row">
@@ -380,6 +395,8 @@
                 <span class="perf-attrs__label">Print Compatible</span>
               </li>
             </ul>
+          </div>
+            </div>
           </div>
         </div>
       </section>

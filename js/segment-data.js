@@ -46,7 +46,7 @@ export const SEGMENT_DATA = {
         'Chairs',
         'Barstools',
         'Couches',
-        'More applications',
+        'More Applications',
       ]),
       { label: 'Work Place', images: slideSet(ASSETS.furnishing.category) },
       { label: 'Restaurants & Retails', images: slideSet(ASSETS.furnishing.category) },
