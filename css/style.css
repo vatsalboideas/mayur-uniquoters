@@ -1840,30 +1840,30 @@ h6 {
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-  width: 46.75rem; /* 748px @ 1920 — scales with rem */
+  width: 26.25rem; /* 420px — 40px type wraps like the mock */
   max-width: 100%;
   min-width: 0;
   text-align: center;
 }
 
 .mission-section__title {
-  margin: 0 0 1.5rem; /* 24px */
+  margin: 0 0 1.25rem;
   font-family: var(--font-abril);
   font-size: 2.875rem; /* 46px */
   font-weight: 500;
   line-height: 1.1;
   color: var(--color-brand-red-active);
-  text-align: center;
+  text-align: right;
 }
 
 .mission-section__text {
   margin: 0;
   font-family: var(--font-abril);
-  font-size: 5rem; /* 80px */
+  font-size: 2.5rem; /* 40px */
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.3;
   color: #1a1a1a;
-  text-align: center;
+  text-align: right;
 }
 
 .mission-section__figure {
@@ -1890,7 +1890,7 @@ h6 {
 
   .mission-section__content {
     position: static;
-    width: 46.75rem;
+    width: 26.25rem;
     max-width: 100%;
     margin-bottom: 2.5rem;
   }
@@ -1901,7 +1901,7 @@ h6 {
   }
 
   .mission-section__text {
-    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-size: 2.5rem; /* 40px */
   }
 }
 
@@ -1917,7 +1917,7 @@ h6 {
   }
 
   .mission-section__text {
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    font-size: clamp(1.5rem, 5.5vw, 2.5rem);
   }
 }
 
