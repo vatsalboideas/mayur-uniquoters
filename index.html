@@ -59,7 +59,7 @@
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body class="min-h-screen bg-[#F5F5F5] font-sans text-gray-900">
+  <body class="min-h-screen font-sans text-gray-900">
     <header class="site-header bg-brand-red-active">
       <div class="site-header__inner container">
         <a href="./" class="site-header__logo" aria-label="Mayur Uniquoters Limited — Home">
@@ -91,139 +91,33 @@
     </header>
 
     <main>
-      <!-- About hero carousel -->
-      <section
-        id="about-hero-slider"
-        class="about-hero-slider relative w-full overflow-hidden"
-        aria-label="About us gallery"
-        aria-roledescription="carousel"
-        data-aos="fade-in"
-        data-aos-duration="1000"
-      >
-        <div class="about-hero-slider__track relative h-full w-full">
-          <div
-            class="about-hero-slider__slide is-active"
-            data-slide="0"
-            data-caption-color="white"
-            aria-hidden="false"
-          >
-            <img
-              src="assets/images/about/carousel/image1-new.webp"
-              alt="Premium leather upholstery craftsmanship"
-              class="about-hero-slider__image"
-              width="1920"
-              height="823"
-              fetchpriority="high"
-            />
-            <div class="about-hero-slider__caption-source" hidden>
-              <p class="about-hero-slider__caption-line">
-                Engineering Material Solutions<br />
-                for a Changing World.
-              </p>
-            </div>
-          </div>
-          <div
-            class="about-hero-slider__slide"
-            data-slide="1"
-            data-caption-color="white"
-            aria-hidden="true"
-          >
-            <img
-              src="assets/images/about/carousel/image2.webp"
-              alt="Premium automotive interior materials"
-              class="about-hero-slider__image"
-              width="1920"
-              height="823"
-              loading="lazy"
-            />
-            <div class="about-hero-slider__caption-source" hidden>
-              <p class="about-hero-slider__caption-line">
-                Engineering Material Solutions<br />
-                for a Changing World.
-              </p>
-            </div>
-          </div>
-          <div
-            class="about-hero-slider__slide"
-            data-slide="2"
-            data-caption-color="white"
-            aria-hidden="true"
-          >
-            <img
-              src="assets/images/about/carousel/image3.webp"
-              alt="Advanced synthetic leather manufacturing"
-              class="about-hero-slider__image"
-              width="2096"
-              height="1170"
-              loading="lazy"
-            />
-            <div class="about-hero-slider__caption-source" hidden>
-              <p class="about-hero-slider__caption-line">
-                Engineering Material Solutions<br />
-                for a Changing World.
-              </p>
-            </div>
-          </div>
-          <div
-            class="about-hero-slider__slide"
-            data-slide="3"
-            data-caption-color="white"
-            aria-hidden="true"
-          >
-            <img
-              src="assets/images/about/carousel/image4.webp"
-              alt="High-performance material solutions"
-              class="about-hero-slider__image"
-              width="2120"
-              height="1183"
-              loading="lazy"
-            />
-            <div class="about-hero-slider__caption-source" hidden>
-              <p class="about-hero-slider__caption-line">
-                Engineering Material Solutions<br />
-                for a Changing World.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Shared caption — content/color synced to the active slide -->
-        <div
-          class="about-hero-slider__caption about-hero-slider__caption--white is-visible"
-          data-hero-caption
-          aria-live="polite"
-        ></div>
-
-        <nav
-          class="about-hero-slider__dots absolute inset-x-0 bottom-6 z-10 flex items-center justify-center gap-2.5"
-          aria-label="Slide navigation"
-        >
-          <button
-            type="button"
-            class="about-hero-slider__dot is-active"
-            data-slide-to="0"
-            aria-label="Go to slide 1"
-            aria-current="true"
-          ></button>
-          <button
-            type="button"
-            class="about-hero-slider__dot"
-            data-slide-to="1"
-            aria-label="Go to slide 2"
-          ></button>
-          <button
-            type="button"
-            class="about-hero-slider__dot"
-            data-slide-to="2"
-            aria-label="Go to slide 3"
-          ></button>
-          <button
-            type="button"
-            class="about-hero-slider__dot"
-            data-slide-to="3"
-            aria-label="Go to slide 4"
-          ></button>
-        </nav>
+      <section class="about-hero" aria-labelledby="about-hero-title">
+        <h1 id="about-hero-title" class="about-hero__title">
+          <span class="about-hero__title-line">Engineering Material</span>
+          <span class="about-hero__title-line about-hero__title-line--2">Solutions for a</span>
+          <span class="about-hero__title-line about-hero__title-line--3">Changing World.</span>
+        </h1>
+        <img
+          class="about-hero__stand"
+          src="assets/images/about/carousel/first/stand.webp"
+          alt=""
+          width="387"
+          height="387"
+        />
+        <img
+          class="about-hero__plant"
+          src="assets/images/about/carousel/first/plant.webp"
+          alt=""
+          width="523"
+          height="784"
+        />
+        <img
+          class="about-hero__sofa"
+          src="assets/images/about/carousel/first/sofa_result.webp"
+          alt="Brown leather chesterfield sofa with a draped throw"
+          width="1685"
+          height="599"
+        />
       </section>
 
       <!-- About Us content -->
@@ -290,9 +184,14 @@
       </section>
 
       <!-- Vision -->
-      <section class="vision-section" aria-labelledby="vision-section-title" data-aos="fade-up">
+      <section class="vision-section" aria-labelledby="vision-section-title">
         <div class="vision-section__inner container">
-          <figure class="vision-section__figure">
+          <figure
+            class="vision-section__figure"
+            data-aos="vision-in-top"
+            data-aos-duration="900"
+            data-aos-easing="ease-out-cubic"
+          >
             <img
               src="assets/images/about/vision.webp"
               alt="Industrial leather manufacturing facility with coating machinery"
@@ -303,9 +202,19 @@
             />
           </figure>
 
-          <div class="vision-section__divider" aria-hidden="true"></div>
+          <div
+            class="vision-section__divider"
+            aria-hidden="true"
+            data-aos="fade-in"
+            data-aos-duration="900"
+          ></div>
 
-          <div class="vision-section__content">
+          <div
+            class="vision-section__content"
+            data-aos="vision-in-bottom"
+            data-aos-duration="900"
+            data-aos-easing="ease-out-cubic"
+          >
             <h2 id="vision-section-title" class="vision-section__title">Vision</h2>
             <p class="vision-section__text">
               To be the global leader in our industry through a great customer experience.
@@ -500,7 +409,7 @@
                   Expanded manufacturing capabilities, strengthened quality systems and introduced
                   new production technologies.
                 </p>
-                <h3 class="history-section__year">2015-<br />2018</h3>
+                <h3 class="history-section__year">2015&#8209;2018</h3>
               </li>
 
               <li class="history-section__item">
@@ -536,7 +445,7 @@
                   Published our first Sustainability Report, expanded global operations and
                   strengthened manufacturing infrastructure with new facilities and subsidiaries.
                 </p>
-                <h3 class="history-section__year">2020-<br />2024</h3>
+                <h3 class="history-section__year">2020&#8209;2024</h3>
               </li>
             </ol>
           </div>
@@ -669,13 +578,13 @@
               </li>
 
               <li class="board-slider__slide">
-                <figure class="board-slider__figure">
+                <figure class="board-slider__figure board-slider__figure--roongta">
                   <img
                     src="assets/images/about/board-memebers/ratan-kumar-roongta.png"
                     alt="Ratan Kumar Roongta, Independent Director of Mayur Uniquoters"
-                    class="board-slider__image"
-                    width="317"
-                    height="368"
+                    class="board-slider__image board-slider__image--roongta"
+                    width="200"
+                    height="415"
                     loading="lazy"
                   />
                 </figure>
@@ -1064,9 +973,10 @@
             Long-standing partnerships are built on trust, consistency and quality. Here's what our
             customers have to say about working with Mayur Uniquoters.
           </p>
+        </div>
 
-          <div class="clients-logos" aria-label="Client logos">
-            <ul class="clients-logos__row">
+        <div class="clients-logos" aria-label="Client logos">
+          <ul class="clients-logos__row" data-clients-marquee="left">
               <li class="clients-logos__item">
                 <img
                   src="assets/images/about/clients/stellantis.png"
@@ -1155,9 +1065,6 @@
                   loading="eager"
                 />
               </li>
-            </ul>
-
-            <ul class="clients-logos__row clients-logos__row--secondary">
               <li class="clients-logos__item">
                 <img
                   src="assets/images/about/clients/maruti-suzuki.png"
@@ -1182,6 +1089,9 @@
                   loading="lazy"
                 />
               </li>
+            </ul>
+
+            <ul class="clients-logos__row" data-clients-marquee="right">
               <li class="clients-logos__item">
                 <img
                   src="assets/images/about/clients/bajaj.png"
@@ -1230,9 +1140,6 @@
                   loading="lazy"
                 />
               </li>
-            </ul>
-
-            <ul class="clients-logos__row clients-logos__row--secondary">
               <li class="clients-logos__item">
                 <img
                   src="assets/images/about/clients/vkc.png"
@@ -1298,7 +1205,6 @@
                 />
               </li>
             </ul>
-          </div>
         </div>
       </section>
 

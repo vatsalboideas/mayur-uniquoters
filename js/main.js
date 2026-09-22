@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   bindLenisToGsap(lenis);
   initCopyrightYear();
   initSiteHeader();
-  initAboutHeroSlider();
   initRndProcessSlider();
   initMarketSegments(lenis);
   initPlants();
@@ -29,9 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // initTestimonialsSlider();
   initAboutParallax(lenis);
   initHistoryScroll();
+  initClientsMarquee();
   initFounderReadMore();
   initPillarDialog(lenis);
   initPolicyCertificates();
+  initValuesDrawIcons();
   initAOS();
 });
 
@@ -64,6 +65,88 @@ function bindLenisToGsap(lenis) {
     lenis.raf(time * 1000);
   });
   gsap.ticker.lagSmoothing(0);
+}
+
+/**
+ * Values icons — line-draw then fill when the row enters view.
+ */
+function initValuesDrawIcons() {
+  const section = document.querySelector('.values-section');
+  if (!section) return;
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const images = Array.from(section.querySelectorAll('img.values-section__icon'));
+
+  function uniquifyIds(svg, prefix) {
+    svg.querySelectorAll('[id]').forEach((el) => {
+      const nextId = `${prefix}-${el.id}`;
+      svg.querySelectorAll(`[clip-path="url(#${el.id})"]`).forEach((node) => {
+        node.setAttribute('clip-path', `url(#${nextId})`);
+      });
+      svg.querySelectorAll(`[fill="url(#${el.id})"]`).forEach((node) => {
+        node.setAttribute('fill', `url(#${nextId})`);
+      });
+      el.id = nextId;
+    });
+  }
+
+  function prepareSvg(svg, index) {
+    svg.classList.add('values-section__icon');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    uniquifyIds(svg, `values-icon-${index}`);
+
+    svg.querySelectorAll('rect[stroke]').forEach((rect) => {
+      if (!rect.closest('defs')) rect.remove();
+    });
+
+    svg.querySelectorAll('path, circle, ellipse').forEach((el) => {
+      if (el.closest('defs')) return;
+      el.setAttribute('pathLength', '1');
+    });
+  }
+
+  async function inlineIcon(img, index) {
+    try {
+      const response = await fetch(img.currentSrc || img.src);
+      if (!response.ok) return;
+      const markup = await response.text();
+      const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
+      const svg = parsed.querySelector('svg');
+      if (!svg || parsed.querySelector('parsererror')) return;
+      prepareSvg(svg, index);
+      img.replaceWith(svg);
+    } catch {
+      /* Keep the static image if fetch fails */
+    }
+  }
+
+  Promise.all(images.map((img, index) => inlineIcon(img, index))).then(() => {
+    if (prefersReducedMotion) {
+      section.querySelectorAll('.values-section__item').forEach((item) => {
+        item.classList.add('is-drawn');
+      });
+      return;
+    }
+
+    const items = Array.from(section.querySelectorAll('.values-section__item'));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-drawn');
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.4, rootMargin: '0px 0px -8% 0px' }
+    );
+
+    items.forEach((item, index) => {
+      item.style.setProperty('--draw-delay', `${index * 0.28}s`);
+      observer.observe(item);
+    });
+  });
 }
 
 /**
@@ -639,6 +722,79 @@ function initAboutParallax(lenis) {
 }
 
 /**
+ * Customer logos — two full-bleed rows drifting in opposite directions.
+ * Each row is duplicated until the loop can travel half its width without a gap.
+ */
+function initClientsMarquee() {
+  const root = document.querySelector('.clients-logos');
+  if (!root) return;
+
+  const rows = Array.from(root.querySelectorAll('[data-clients-marquee]'));
+  if (rows.length === 0) return;
+
+  const seeds = rows.map((row) => row.innerHTML);
+  let tweens = [];
+
+  function appendCopies(row, nodes) {
+    nodes.forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      row.appendChild(clone);
+    });
+  }
+
+  function build() {
+    tweens.forEach((tween) => tween.kill());
+    tweens = [];
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    rows.forEach((row, index) => {
+      row.innerHTML = seeds[index];
+      gsap.set(row, { clearProps: 'transform' });
+
+      const seedNodes = Array.from(row.children);
+      let guard = 0;
+      while (row.scrollWidth < window.innerWidth && guard < 8) {
+        appendCopies(row, seedNodes);
+        guard += 1;
+      }
+
+      appendCopies(row, Array.from(row.children));
+      if (reduceMotion) return;
+
+      /* Shift by the start of the cloned half, including the gap before it.
+         Half the row width is not the same distance, and that mismatch snaps
+         the loop. */
+      const half = row.children[row.children.length / 2];
+      const distance = half ? half.offsetLeft : 0;
+      if (!distance) return;
+
+      const pixelsPerSecond = 8;
+      const duration = distance / pixelsPerSecond;
+      const toRight = row.dataset.clientsMarquee === 'right';
+      const tween = toRight
+        ? gsap.fromTo(
+            row,
+            { x: -distance },
+            { x: 0, duration, ease: 'none', repeat: -1 }
+          )
+        : gsap.to(row, { x: -distance, duration, ease: 'none', repeat: -1 });
+
+      tweens.push(tween);
+    });
+  }
+
+  build();
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(build, 200);
+  });
+}
+
+/**
  * History section — GSAP horizontal scroll (desktop, min-width 1025px).
  * Title + intro stay pinned below the site header. Timeline cards sit in
  * a single row (three visible) and translate on X as the user scrolls.
@@ -1010,154 +1166,6 @@ function initRndProcessSlider() {
 
   root.setAttribute('tabindex', '0');
   startAutoplay();
-}
-
-/**
- * About page hero slider — subtle crossfade with centered dot navigation
- */
-function initAboutHeroSlider() {
-  const slider = document.querySelector('.about-hero-slider');
-  if (!slider) return;
-
-  const slides = Array.from(slider.querySelectorAll('.about-hero-slider__slide'));
-  const dots = Array.from(slider.querySelectorAll('.about-hero-slider__dot'));
-  const caption = slider.querySelector('[data-hero-caption]');
-
-  if (slides.length === 0) return;
-
-  let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
-  if (activeIndex < 0) activeIndex = 0;
-
-  let autoplayTimer = null;
-  let captionTimer = null;
-  const AUTOPLAY_MS = 6000;
-  const TRANSITION_MS = 900;
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function setDotState(dot, isActive) {
-    if (!dot) return;
-    dot.classList.toggle('is-active', isActive);
-    if (isActive) {
-      dot.setAttribute('aria-current', 'true');
-    } else {
-      /* Omit aria-current when inactive — aria-current="false" is still announced oddly */
-      dot.removeAttribute('aria-current');
-    }
-  }
-
-  function applyCaption(index) {
-    if (!caption) return;
-
-    const slide = slides[index];
-    const source = slide.querySelector('.about-hero-slider__caption-source');
-    const color = slide.dataset.captionColor === 'black' ? 'black' : 'white';
-
-    caption.classList.remove(
-      'about-hero-slider__caption--white',
-      'about-hero-slider__caption--black'
-    );
-    caption.classList.add(`about-hero-slider__caption--${color}`);
-    caption.innerHTML = source ? source.innerHTML : '';
-  }
-
-  function syncCaption(index, { animate = true } = {}) {
-    if (!caption) return;
-
-    if (captionTimer !== null) {
-      window.clearTimeout(captionTimer);
-      captionTimer = null;
-    }
-
-    if (!animate || prefersReducedMotion) {
-      applyCaption(index);
-      caption.classList.add('is-visible');
-      return;
-    }
-
-    caption.classList.remove('is-visible');
-    captionTimer = window.setTimeout(() => {
-      applyCaption(index);
-      caption.classList.add('is-visible');
-      captionTimer = null;
-    }, TRANSITION_MS * 0.35);
-  }
-
-  function goToSlide(index) {
-    const nextIndex = ((index % slides.length) + slides.length) % slides.length;
-    if (nextIndex === activeIndex) return;
-
-    slides[activeIndex].classList.remove('is-active');
-    slides[activeIndex].setAttribute('aria-hidden', 'true');
-    setDotState(dots[activeIndex], false);
-
-    slides[nextIndex].classList.add('is-active');
-    slides[nextIndex].setAttribute('aria-hidden', 'false');
-    setDotState(dots[nextIndex], true);
-
-    activeIndex = nextIndex;
-    syncCaption(activeIndex);
-  }
-
-  function nextSlide() {
-    goToSlide(activeIndex + 1);
-  }
-
-  function startAutoplay() {
-    if (prefersReducedMotion || slides.length < 2) return;
-    stopAutoplay();
-    autoplayTimer = window.setInterval(nextSlide, AUTOPLAY_MS);
-  }
-
-  function stopAutoplay() {
-    if (autoplayTimer !== null) {
-      window.clearInterval(autoplayTimer);
-      autoplayTimer = null;
-    }
-  }
-
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const target = Number(dot.dataset.slideTo);
-      if (Number.isNaN(target)) return;
-      goToSlide(target);
-      startAutoplay();
-    });
-  });
-
-  slider.addEventListener('mouseenter', stopAutoplay);
-  slider.addEventListener('mouseleave', startAutoplay);
-  slider.addEventListener('focusin', stopAutoplay);
-  slider.addEventListener('focusout', (event) => {
-    if (!slider.contains(event.relatedTarget)) startAutoplay();
-  });
-
-  slider.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      nextSlide();
-      startAutoplay();
-    } else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      goToSlide(activeIndex - 1);
-      startAutoplay();
-    }
-  });
-
-  /* Sync initial a11y state from markup classes */
-  slides.forEach((slide, index) => {
-    slide.setAttribute('aria-hidden', String(index !== activeIndex));
-  });
-  dots.forEach((dot, index) => setDotState(dot, index === activeIndex));
-  syncCaption(activeIndex, { animate: false });
-
-  slider.setAttribute('tabindex', '0');
-
-  if (prefersReducedMotion) {
-    document.documentElement.style.setProperty('--slider-transition-duration', '0ms');
-  } else {
-    document.documentElement.style.setProperty('--slider-transition-duration', `${TRANSITION_MS}ms`);
-    startAutoplay();
-  }
 }
 
 /**
