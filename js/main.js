@@ -18,6 +18,26 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyrightYear();
   initSiteHeader();
   initRndProcessSlider();
+  initScrubTimeline({
+    timelineSelector: '.rnd-qa__timeline',
+    stepSelector: '.rnd-qa__step',
+    bodySelector: '.rnd-qa__body',
+    extraSelector: '.rnd-qa__num',
+    extraOffset: 0.14,
+    extraDuration: 0.28,
+    extraY: 12,
+    drawVar: '--qa-draw',
+  });
+  initScrubTimeline({
+    timelineSelector: '.sust-pillars__timeline',
+    stepSelector: '.sust-pillars__step',
+    bodySelector: '.sust-pillars__body',
+    extraSelector: '.sust-pillars__icon-wrap',
+    extraOffset: 0.08,
+    extraDuration: 0.34,
+    extraY: 16,
+    drawVar: '--pillar-draw',
+  });
   initMarketSegments(lenis);
   initPlants();
   initBoardSlider();
@@ -27,12 +47,36 @@ document.addEventListener('DOMContentLoaded', () => {
   initPresenceCounters();
   // initTestimonialsSlider();
   initAboutParallax(lenis);
+  initAboutHero();
   initHistoryScroll();
   initClientsMarquee();
   initFounderReadMore();
   initPillarDialog(lenis);
   initPolicyCertificates();
-  initValuesDrawIcons();
+  initDrawIcons({
+    sectionSelector: '.values-section',
+    itemSelector: '.values-section__item',
+    iconSelector: 'img.values-section__icon',
+    iconClass: 'values-section__icon',
+    idPrefix: 'values-icon',
+  });
+  initDrawIcons({
+    sectionSelector: '.why-mayur',
+    itemSelector: '.why-mayur__item',
+    iconSelector: 'img.why-mayur__icon',
+    iconClass: 'why-mayur__icon',
+    idPrefix: 'why-mayur-icon',
+    delayStep: 0.45,
+  });
+  initDrawIcons({
+    sectionSelector: '.rnd-qa',
+    itemSelector: '.rnd-qa__step',
+    iconSelector: 'img.rnd-qa__icon',
+    iconClass: 'rnd-qa__icon',
+    idPrefix: 'rnd-qa-icon',
+    delayStep: 0,
+    autoObserve: false,
+  });
   initAOS();
 });
 
@@ -68,50 +112,76 @@ function bindLenisToGsap(lenis) {
 }
 
 /**
- * Values icons — line-draw then fill when the row enters view.
+ * Line-draw then fill SVG icons when their item enters view (Values, Why Mayur).
  */
-function initValuesDrawIcons() {
-  const section = document.querySelector('.values-section');
+function initDrawIcons({
+  sectionSelector,
+  itemSelector,
+  iconSelector,
+  iconClass,
+  idPrefix,
+  delayStep = 0.28,
+  autoObserve = true,
+  groupObserve = false,
+}) {
+  const section = document.querySelector(sectionSelector);
   if (!section) return;
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const images = Array.from(section.querySelectorAll('img.values-section__icon'));
+  const images = Array.from(section.querySelectorAll(iconSelector));
 
   function uniquifyIds(svg, prefix) {
+    const xlink = 'http://www.w3.org/1999/xlink';
+    const attrs = ['clip-path', 'fill', 'stroke', 'mask', 'filter', 'href'];
+
     svg.querySelectorAll('[id]').forEach((el) => {
-      const nextId = `${prefix}-${el.id}`;
-      svg.querySelectorAll(`[clip-path="url(#${el.id})"]`).forEach((node) => {
-        node.setAttribute('clip-path', `url(#${nextId})`);
+      const oldId = el.id;
+      const nextId = `${prefix}-${oldId}`;
+
+      svg.querySelectorAll('*').forEach((node) => {
+        attrs.forEach((attr) => {
+          const value = node.getAttribute(attr);
+          if (value && value.includes(`#${oldId}`)) {
+            node.setAttribute(attr, value.replaceAll(`#${oldId}`, `#${nextId}`));
+          }
+        });
+
+        const xlinkHref = node.getAttributeNS(xlink, 'href');
+        if (xlinkHref && xlinkHref.includes(`#${oldId}`)) {
+          node.setAttributeNS(xlink, 'href', xlinkHref.replaceAll(`#${oldId}`, `#${nextId}`));
+        }
       });
-      svg.querySelectorAll(`[fill="url(#${el.id})"]`).forEach((node) => {
-        node.setAttribute('fill', `url(#${nextId})`);
-      });
+
       el.id = nextId;
     });
   }
 
   function prepareSvg(svg, index) {
-    svg.classList.add('values-section__icon');
+    svg.classList.add(iconClass);
     svg.setAttribute('aria-hidden', 'true');
     svg.removeAttribute('width');
     svg.removeAttribute('height');
-    uniquifyIds(svg, `values-icon-${index}`);
+    uniquifyIds(svg, `${idPrefix}-${index}`);
 
     svg.querySelectorAll('rect[stroke]').forEach((rect) => {
       if (!rect.closest('defs')) rect.remove();
     });
 
+    let hasVectors = false;
     svg.querySelectorAll('path, circle, ellipse').forEach((el) => {
       if (el.closest('defs')) return;
+      hasVectors = true;
       el.setAttribute('pathLength', '1');
     });
+
+    if (!hasVectors) svg.classList.add(`${iconClass}--bitmap`);
   }
 
   async function inlineIcon(img, index) {
     try {
       const response = await fetch(img.currentSrc || img.src);
       if (!response.ok) return;
-      const markup = await response.text();
+      const markup = (await response.text()).replace(/<script[\s\S]*?<\/script>/gi, '');
       const parsed = new DOMParser().parseFromString(markup, 'image/svg+xml');
       const svg = parsed.querySelector('svg');
       if (!svg || parsed.querySelector('parsererror')) return;
@@ -122,30 +192,51 @@ function initValuesDrawIcons() {
     }
   }
 
+  function startDraw(targets) {
+    const list = Array.isArray(targets) ? targets : [targets];
+    requestAnimationFrame(() => {
+      list.forEach((item) => item.classList.add('is-drawn'));
+    });
+  }
+
   Promise.all(images.map((img, index) => inlineIcon(img, index))).then(() => {
+    const items = Array.from(section.querySelectorAll(itemSelector));
+
     if (prefersReducedMotion) {
-      section.querySelectorAll('.values-section__item').forEach((item) => {
-        item.classList.add('is-drawn');
-      });
+      items.forEach((item) => item.classList.add('is-drawn'));
       return;
     }
 
-    const items = Array.from(section.querySelectorAll('.values-section__item'));
+    if (!autoObserve) {
+      ScrollTrigger.refresh();
+      return;
+    }
+
+    items.forEach((item, index) => {
+      item.style.setProperty('--draw-delay', `${index * delayStep}s`);
+    });
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-drawn');
+          if (groupObserve) {
+            startDraw(items);
+            observer.disconnect();
+            return;
+          }
+          startDraw(entry.target);
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.4, rootMargin: '0px 0px -8% 0px' }
+      { threshold: groupObserve ? 0.28 : 0.4, rootMargin: '0px 0px -6% 0px' }
     );
 
-    items.forEach((item, index) => {
-      item.style.setProperty('--draw-delay', `${index * 0.28}s`);
-      observer.observe(item);
-    });
+    if (groupObserve) {
+      observer.observe(section);
+    } else {
+      items.forEach((item) => observer.observe(item));
+    }
   });
 }
 
@@ -722,6 +813,233 @@ function initAboutParallax(lenis) {
 }
 
 /**
+ * About hero — layered image slides. Current set exits left, then the next
+ * set enters from the right. Headline eases into the matching layout.
+ */
+function initAboutHero() {
+  const root = document.querySelector('[data-about-hero]');
+  if (!root) return;
+
+  const slides = Array.from(root.querySelectorAll('.about-hero__slide'));
+  const dots = Array.from(root.querySelectorAll('.about-hero__dot'));
+  const title = root.querySelector('.about-hero__title');
+  const titleLine2 = title?.querySelector('.about-hero__title-line--2');
+  const titleLine3 = title?.querySelector('.about-hero__title-line--3');
+  if (slides.length < 2) return;
+
+  const TITLE_LAYOUT = [
+    { top: '11%', left: '11%', line2: '4.15em', line3: '8.35em' },
+    { top: '5%', left: '9%', line2: '3.15em', line3: '5.35em' },
+  ];
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const HOLD_MS = 5000;
+  const EXIT_S = 1.35;
+  const ENTER_S = 1.45;
+  const STAGGER = 0.09;
+
+  let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
+  if (activeIndex < 0) activeIndex = 0;
+  let animating = false;
+  let autoplayTimer = null;
+  let activeTween = null;
+  let hovered = false;
+
+  function layersOf(slide) {
+    return Array.from(slide.querySelectorAll('[data-layer]'));
+  }
+
+  function travel() {
+    return Math.round(root.getBoundingClientRect().width * 1.15);
+  }
+
+  function titleLayout(index) {
+    return TITLE_LAYOUT[index] || TITLE_LAYOUT[0];
+  }
+
+  function setDots(index) {
+    dots.forEach((dot, i) => {
+      const on = i === index;
+      dot.classList.toggle('is-active', on);
+      if (on) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+  }
+
+  function setSlideClasses(index) {
+    slides.forEach((slide, i) => {
+      const on = i === index;
+      slide.classList.toggle('is-active', on);
+      slide.classList.remove('is-leaving', 'is-entering');
+      slide.style.zIndex = '';
+      slide.setAttribute('aria-hidden', on ? 'false' : 'true');
+    });
+    root.classList.toggle('is-slide-2', index === 1);
+    setDots(index);
+  }
+
+  function placeLayers(slide, x) {
+    gsap.set(layersOf(slide), { x, y: 0, opacity: 1, force3D: true });
+  }
+
+  function applyTitle(index, tween, position, duration) {
+    if (!title) return;
+    const layout = titleLayout(index);
+    if (!tween) {
+      root.classList.toggle('is-slide-2', index === 1);
+      gsap.set([title, titleLine2, titleLine3].filter(Boolean), {
+        clearProps: 'top,left,marginLeft,transform',
+      });
+      return;
+    }
+    tween.to(title, { top: layout.top, left: layout.left, duration, ease: 'power2.inOut' }, position);
+    if (titleLine2) {
+      tween.to(titleLine2, { marginLeft: layout.line2, duration, ease: 'power2.inOut' }, position);
+    }
+    if (titleLine3) {
+      tween.to(titleLine3, { marginLeft: layout.line3, duration, ease: 'power2.inOut' }, position);
+    }
+  }
+
+  function finishTo(index) {
+    setSlideClasses(index);
+    const dist = travel();
+    slides.forEach((slide, i) => {
+      placeLayers(slide, i === index ? 0 : dist);
+    });
+    applyTitle(index);
+    activeIndex = index;
+    animating = false;
+    activeTween = null;
+  }
+
+  finishTo(activeIndex);
+
+  function goToSlide(index) {
+    const nextIndex = ((index % slides.length) + slides.length) % slides.length;
+    if (nextIndex === activeIndex || animating) return;
+
+    if (prefersReducedMotion) {
+      finishTo(nextIndex);
+      return;
+    }
+
+    animating = true;
+    stopAutoplay();
+    if (activeTween) activeTween.kill();
+
+    const outgoing = slides[activeIndex];
+    const incoming = slides[nextIndex];
+    const outLayers = layersOf(outgoing);
+    const inLayers = layersOf(incoming);
+    const dist = travel();
+
+    placeLayers(outgoing, 0);
+    placeLayers(incoming, dist);
+
+    outgoing.classList.add('is-leaving');
+    incoming.classList.remove('is-entering');
+    outgoing.style.zIndex = '2';
+    incoming.style.zIndex = '1';
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.inOut', force3D: true },
+      onComplete() {
+        finishTo(nextIndex);
+        if (!hovered) startAutoplay();
+      },
+    });
+    activeTween = tl;
+
+    outLayers.forEach((layer, i) => {
+      tl.to(
+        layer,
+        { x: -dist, duration: EXIT_S, ease: 'power2.inOut' },
+        i * STAGGER
+      );
+    });
+
+    const enterAt = EXIT_S + (outLayers.length - 1) * STAGGER + 0.18;
+    tl.addLabel('enter', enterAt);
+    tl.call(
+      () => {
+        incoming.classList.add('is-entering');
+        incoming.setAttribute('aria-hidden', 'false');
+      },
+      null,
+      'enter'
+    );
+
+    inLayers.forEach((layer, i) => {
+      tl.fromTo(
+        layer,
+        { x: dist, y: 0 },
+        { x: 0, y: 0, duration: ENTER_S, ease: 'power2.inOut', immediateRender: false },
+        `enter+=${i * STAGGER}`
+      );
+    });
+
+    applyTitle(nextIndex, tl, 'enter', ENTER_S);
+  }
+
+  function nextSlide() {
+    goToSlide(activeIndex + 1);
+  }
+
+  function startAutoplay() {
+    if (prefersReducedMotion) return;
+    stopAutoplay();
+    autoplayTimer = window.setInterval(nextSlide, HOLD_MS);
+  }
+
+  function stopAutoplay() {
+    if (autoplayTimer !== null) {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const target = Number(dot.dataset.slideTo);
+      if (Number.isNaN(target)) return;
+      goToSlide(target);
+    });
+  });
+
+  root.addEventListener('mouseenter', () => {
+    hovered = true;
+    stopAutoplay();
+  });
+  root.addEventListener('mouseleave', () => {
+    hovered = false;
+    if (!animating) startAutoplay();
+  });
+  root.addEventListener('focusin', () => {
+    hovered = true;
+    stopAutoplay();
+  });
+  root.addEventListener('focusout', (event) => {
+    if (!root.contains(event.relatedTarget)) {
+      hovered = false;
+      if (!animating) startAutoplay();
+    }
+  });
+
+  root.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      goToSlide(activeIndex + 1);
+    }
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      goToSlide(activeIndex - 1);
+    }
+  });
+
+  startAutoplay();
+}
+
+/**
  * Customer logos — two full-bleed rows drifting in opposite directions.
  * Each row is duplicated until the loop can travel half its width without a gap.
  */
@@ -1060,6 +1378,82 @@ function initSiteHeader() {
 
   desktopQuery.addEventListener('change', (event) => {
     if (event.matches) closeNav();
+  });
+}
+
+/**
+ * Scrubbed timeline — spine, cards, and extras reverse on scroll up (R&D QA, 5P pillars).
+ */
+function initScrubTimeline({
+  timelineSelector,
+  stepSelector,
+  bodySelector,
+  extraSelector,
+  extraOffset = 0.14,
+  extraDuration = 0.28,
+  extraY = 12,
+  drawVar,
+}) {
+  const timeline = document.querySelector(timelineSelector);
+  if (!timeline) return;
+
+  const steps = Array.from(timeline.querySelectorAll(stepSelector));
+  if (steps.length === 0) return;
+
+  const extras = extraSelector
+    ? steps.map((step) => step.querySelector(extraSelector))
+    : [];
+  const bodies = steps.map((step) => step.querySelector(bodySelector));
+
+  function setDraw(step, value) {
+    step.style.setProperty(drawVar, String(value));
+  }
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    steps.forEach((step) => {
+      setDraw(step, 1);
+      step.classList.add('is-drawn');
+    });
+    gsap.set(extras.filter(Boolean), { autoAlpha: 1, y: 0 });
+    gsap.set(bodies.filter(Boolean), { autoAlpha: 1, y: 0 });
+    return;
+  }
+
+  steps.forEach((step) => {
+    setDraw(step, 0);
+    step.style.setProperty('--draw-delay', '0s');
+  });
+  gsap.set(extras.filter(Boolean), { autoAlpha: 0, y: extraY });
+  gsap.set(bodies.filter(Boolean), { autoAlpha: 0, y: 20 });
+
+  ScrollTrigger.create({
+    trigger: timeline,
+    start: 'top 85%',
+    end: 'bottom 85%',
+    scrub: 0.45,
+    onUpdate: (self) => {
+      const count = steps.length;
+      steps.forEach((step, index) => {
+        const start = index / count;
+        const end = (index + 1) / count;
+        const local = gsap.utils.clamp(0, 1, (self.progress - start) / (end - start));
+        setDraw(step, local);
+
+        const extra = extras[index];
+        if (extra) {
+          const shown = gsap.utils.clamp(0, 1, (local - extraOffset) / extraDuration);
+          gsap.set(extra, { autoAlpha: shown, y: extraY * (1 - shown) });
+        }
+
+        const body = bodies[index];
+        if (body) {
+          const bodyShown = gsap.utils.clamp(0, 1, (local - 0.12) / 0.38);
+          gsap.set(body, { autoAlpha: bodyShown, y: 20 * (1 - bodyShown) });
+        }
+
+        step.classList.toggle('is-drawn', local > 0.32);
+      });
+    },
   });
 }
 

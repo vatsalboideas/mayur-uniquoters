@@ -91,33 +91,107 @@
     </header>
 
     <main>
-      <section class="about-hero" aria-labelledby="about-hero-title">
+      <section
+        class="about-hero"
+        data-about-hero
+        aria-labelledby="about-hero-title"
+        aria-roledescription="carousel"
+      >
         <h1 id="about-hero-title" class="about-hero__title">
           <span class="about-hero__title-line">Engineering Material</span>
           <span class="about-hero__title-line about-hero__title-line--2">Solutions for a</span>
           <span class="about-hero__title-line about-hero__title-line--3">Changing World.</span>
         </h1>
-        <img
-          class="about-hero__stand"
-          src="assets/images/about/carousel/first/stand.webp"
-          alt=""
-          width="387"
-          height="387"
-        />
-        <img
-          class="about-hero__plant"
-          src="assets/images/about/carousel/first/plant.webp"
-          alt=""
-          width="523"
-          height="784"
-        />
-        <img
-          class="about-hero__sofa"
-          src="assets/images/about/carousel/first/sofa_result.webp"
-          alt="Brown leather chesterfield sofa with a draped throw"
-          width="1685"
-          height="599"
-        />
+
+        <div class="about-hero__slides">
+          <div class="about-hero__slide is-active" aria-hidden="false">
+            <img
+              class="about-hero__stand"
+              src="assets/images/about/carousel/first/stand.webp"
+              alt=""
+              width="387"
+              height="387"
+              data-layer
+              data-enter-x="-42%"
+              data-enter-y="18%"
+              data-duration="0.95"
+            />
+            <img
+              class="about-hero__plant"
+              src="assets/images/about/carousel/first/plant.webp"
+              alt=""
+              width="523"
+              height="784"
+              data-layer
+              data-enter-x="-18%"
+              data-enter-y="28%"
+              data-duration="1.2"
+            />
+            <img
+              class="about-hero__sofa"
+              src="assets/images/about/carousel/first/sofa_result.webp"
+              alt="Brown leather chesterfield sofa with a draped throw"
+              width="1685"
+              height="599"
+              data-layer
+              data-enter-x="32%"
+              data-enter-y="12%"
+              data-duration="1.45"
+            />
+          </div>
+
+          <div class="about-hero__slide" aria-hidden="true">
+            <img
+              class="about-hero__box about-hero__box--1"
+              src="assets/images/about/carousel/second/first-box.webp"
+              alt=""
+              width="295"
+              height="297"
+              data-layer
+              data-enter-x="-58%"
+              data-enter-y="8%"
+              data-duration="0.9"
+            />
+            <img
+              class="about-hero__box about-hero__box--2"
+              src="assets/images/about/carousel/second/second-box.webp"
+              alt=""
+              width="391"
+              height="201"
+              data-layer
+              data-enter-x="-72%"
+              data-enter-y="22%"
+              data-duration="1.15"
+            />
+            <img
+              class="about-hero__car"
+              src="assets/images/about/carousel/second/car.webp"
+              alt="Cutaway view of a car interior finished in tan leather"
+              width="1957"
+              height="834"
+              data-layer
+              data-enter-x="38%"
+              data-enter-y="10%"
+              data-duration="1.55"
+            />
+          </div>
+        </div>
+
+        <div class="about-hero__dots" role="tablist" aria-label="About hero slides">
+          <button
+            type="button"
+            class="about-hero__dot is-active"
+            data-slide-to="0"
+            aria-label="Show slide 1"
+            aria-current="true"
+          ></button>
+          <button
+            type="button"
+            class="about-hero__dot"
+            data-slide-to="1"
+            aria-label="Show slide 2"
+          ></button>
+        </div>
       </section>
 
       <!-- About Us content -->
