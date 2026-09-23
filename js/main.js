@@ -833,9 +833,9 @@ function initAboutHero() {
   ];
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const HOLD_MS = 5000;
-  const EXIT_S = 1.35;
-  const ENTER_S = 1.45;
-  const STAGGER = 0.09;
+  const EXIT_S = 1.4;
+  const ENTER_S = 1.4;
+  const STAGGER = 0.08;
 
   let activeIndex = slides.findIndex((slide) => slide.classList.contains('is-active'));
   if (activeIndex < 0) activeIndex = 0;
@@ -937,7 +937,8 @@ function initAboutHero() {
     placeLayers(incoming, dist);
 
     outgoing.classList.add('is-leaving');
-    incoming.classList.remove('is-entering');
+    incoming.classList.add('is-entering');
+    incoming.setAttribute('aria-hidden', 'false');
     outgoing.style.zIndex = '2';
     incoming.style.zIndex = '1';
 
@@ -958,27 +959,16 @@ function initAboutHero() {
       );
     });
 
-    const enterAt = EXIT_S + (outLayers.length - 1) * STAGGER + 0.18;
-    tl.addLabel('enter', enterAt);
-    tl.call(
-      () => {
-        incoming.classList.add('is-entering');
-        incoming.setAttribute('aria-hidden', 'false');
-      },
-      null,
-      'enter'
-    );
-
     inLayers.forEach((layer, i) => {
       tl.fromTo(
         layer,
         { x: dist, y: 0 },
-        { x: 0, y: 0, duration: ENTER_S, ease: 'power2.inOut', immediateRender: false },
-        `enter+=${i * STAGGER}`
+        { x: 0, y: 0, duration: ENTER_S, ease: 'power2.inOut', immediateRender: true },
+        0.22 + i * STAGGER
       );
     });
 
-    applyTitle(nextIndex, tl, 'enter', ENTER_S);
+    applyTitle(nextIndex, tl, 0.22, ENTER_S);
   }
 
   function nextSlide() {
@@ -1006,14 +996,6 @@ function initAboutHero() {
     });
   });
 
-  root.addEventListener('mouseenter', () => {
-    hovered = true;
-    stopAutoplay();
-  });
-  root.addEventListener('mouseleave', () => {
-    hovered = false;
-    if (!animating) startAutoplay();
-  });
   root.addEventListener('focusin', () => {
     hovered = true;
     stopAutoplay();
