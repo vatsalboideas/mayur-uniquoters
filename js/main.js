@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     idPrefix: 'values-icon',
   });
   initDrawIcons({
+    sectionSelector: '.careers-culture',
+    itemSelector: '.careers-culture__value',
+    iconSelector: 'img.careers-culture__icon',
+    iconClass: 'careers-culture__icon',
+    idPrefix: 'careers-culture-icon',
+  });
+  initDrawIcons({
     sectionSelector: '.why-mayur',
     itemSelector: '.why-mayur__item',
     iconSelector: 'img.why-mayur__icon',
@@ -68,16 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
     idPrefix: 'why-mayur-icon',
     delayStep: 0.45,
   });
-  initDrawIcons({
-    sectionSelector: '.rnd-qa',
-    itemSelector: '.rnd-qa__step',
-    iconSelector: 'img.rnd-qa__icon',
-    iconClass: 'rnd-qa__icon',
-    idPrefix: 'rnd-qa-icon',
-    delayStep: 0,
-    autoObserve: false,
-  });
   initAOS();
+  initSustFramework();
 });
 
 /**
@@ -256,6 +255,94 @@ function initAOS() {
   });
 
   requestAnimationFrame(() => aos.refresh());
+}
+
+/**
+ * 5P wheel — hub first, then one card at a time clockwise.
+ * Labels stay in their final place so they do not travel with the wedge.
+ */
+function initSustFramework() {
+  const root = document.querySelector('.sust-5p');
+  if (!root) return;
+
+  const wheel = root.querySelector('.sust-5p__wheel');
+  const hub = root.querySelector('.sust-5p__hub');
+  const deckEl = root.querySelector('.sust-5p__deck');
+  const segments = Array.from(root.querySelectorAll('.sust-5p__segment'));
+  const cardNames = ['planet', 'purpose', 'product', 'prosperity', 'people'];
+  const cards = cardNames.map((name) => root.querySelector(`.sust-5p__card--${name}`));
+  if (!wheel || !hub || !deckEl || segments.length !== cards.length || cards.some((card) => !card)) return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    root.classList.remove('sust-5p--play');
+    return;
+  }
+
+  function placeCard(index, deal) {
+    cards[index].setAttribute(
+      'transform',
+      `translate(200 200) rotate(${deal.toFixed(3)}) translate(-200 -200)`,
+    );
+  }
+
+  gsap.set(hub, { autoAlpha: 0, scale: 0.72, xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
+  gsap.set(segments, { autoAlpha: 0 });
+  cards.forEach((card, index) => {
+    card.style.opacity = '0';
+    if (index > 0) placeCard(index, -72);
+  });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: wheel,
+      start: 'top 78%',
+      once: true,
+    },
+    onComplete() {
+      root.classList.remove('sust-5p--play');
+      deckEl.style.removeProperty('visibility');
+      cards.forEach((card) => {
+        card.removeAttribute('transform');
+        card.style.removeProperty('opacity');
+      });
+    },
+  });
+
+  tl.to(hub, {
+    autoAlpha: 1,
+    scale: 1,
+    xPercent: -50,
+    yPercent: -50,
+    duration: 0.62,
+    ease: 'power2.out',
+  });
+
+  tl.call(() => {
+    deckEl.style.visibility = 'visible';
+    cards[0].style.opacity = '1';
+  }, null, '+=0.1');
+  tl.to(segments[0], { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, '<');
+
+  cards.forEach((card, index) => {
+    if (index === 0) return;
+    const motion = { deal: -72 };
+    tl.to(motion, {
+      deal: 0,
+      duration: 0.82,
+      ease: 'power2.inOut',
+      onStart() {
+        card.style.opacity = '1';
+        card.parentNode.appendChild(card);
+      },
+      onUpdate() {
+        placeCard(index, motion.deal);
+      },
+      onComplete() {
+        card.removeAttribute('transform');
+      },
+    }, '+=0.08');
+    tl.to(segments[index], { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, '-=0.22');
+  });
 }
 
 /**
