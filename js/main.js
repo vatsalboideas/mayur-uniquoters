@@ -1657,7 +1657,7 @@ function initMaterialSequence() {
         scrub: 0.45,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        markers: true,
+        // markers: true,
       },
       onUpdate: () => {
         const frame = Math.round(state.frame);
