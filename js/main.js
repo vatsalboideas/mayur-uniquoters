@@ -1633,47 +1633,48 @@ function initMaterialSequence() {
     });
   }
 
-  Promise.all(Array.from({ length: count }, (_, index) => loadFrame(index))).then(() => {
-    if (prefersReducedMotion) {
+  if (prefersReducedMotion) {
+    Promise.all(Array.from({ length: count }, (_, index) => loadFrame(index))).then(() => {
       draw(count - 1);
       stage.classList.add('is-labeled');
-      return;
-    }
-
-    const header = document.querySelector('.site-header');
-    const section = stage.closest('.rnd-material') || stage;
-    const pin = section.querySelector('.rnd-material__pin') || stage;
-
-    gsap.to(state, {
-      frame: count - 1,
-      snap: 'frame',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: pin,
-        start: () => `top ${header?.getBoundingClientRect().height + 100?? 0}px`,
-        end: () => `+=${Math.round(window.innerHeight * 1.8)}`,
-        pin: true,
-        pinSpacing: true,
-        scrub: 0.45,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        // markers: true,
-      },
-      onUpdate: () => {
-        const frame = Math.round(state.frame);
-        draw(frame);
-        stage.classList.toggle('is-labeled', frame >= count - 1);
-      },
     });
+    return;
+  }
 
-    draw(0);
+  const header = document.querySelector('.site-header');
+  const section = stage.closest('.rnd-material') || stage;
+  const pin = section.querySelector('.rnd-material__pin') || stage;
+  const pinGap = () => parseFloat(getComputedStyle(document.documentElement).fontSize) * 2;
 
-    window.addEventListener('resize', () => {
-      drawn = -1;
-      draw(Math.round(state.frame));
-    });
+  gsap.to(state, {
+    frame: count - 1,
+    snap: 'frame',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: pin,
+      start: () => `top ${(header?.getBoundingClientRect().height ?? 0) + pinGap()}px`,
+      end: () => `+=${Math.round(window.innerHeight * 1.8)}`,
+      pin: true,
+      pinSpacing: true,
+      scrub: 0.45,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+    onUpdate: () => {
+      const frame = Math.round(state.frame);
+      draw(frame);
+      stage.classList.toggle('is-labeled', frame >= count - 1);
+    },
+  });
 
-    requestAnimationFrame(() => ScrollTrigger.refresh());
+  window.addEventListener('resize', () => {
+    drawn = -1;
+    draw(Math.round(state.frame));
+  });
+
+  Promise.all(Array.from({ length: count }, (_, index) => loadFrame(index))).then(() => {
+    draw(Math.round(state.frame));
+    ScrollTrigger.refresh();
   });
 }
 
@@ -1996,6 +1997,7 @@ function initScrubTimeline({
     start: 'top 85%',
     end: 'bottom 85%',
     scrub: 0.45,
+    invalidateOnRefresh: true,
     onUpdate: (self) => {
       const count = steps.length;
       steps.forEach((step, index) => {
