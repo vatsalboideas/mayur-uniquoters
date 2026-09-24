@@ -8,7 +8,7 @@ import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/index.js';
 import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger.js';
 import { SEGMENT_DATA } from './segment-data.js';
 import { PLANT_DATA, PLANT_ORDER } from './plant-data.js';
-import { PRESENCE_LOCATIONS, PRESENCE_TYPES } from './presence-data.js';
+import { PRESENCE_ADDRESSES, PRESENCE_LOCATIONS, PRESENCE_TYPES } from './presence-data.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -652,18 +652,276 @@ function initPresenceMap() {
   const selectBtn = root.querySelector('[data-presence-select]');
   const menuEl = root.querySelector('[data-presence-menu]');
   const goBtn = root.querySelector('[data-presence-go]');
-  if (!pinsEl || !currentEl || !selectBtn || !menuEl || !goBtn) return;
+  const fullBtn = root.querySelector('[data-presence-full]');
+  const detailsEl = root.querySelector('[data-presence-details]');
+  const detailsTitleEl = root.querySelector('[data-presence-details-title]');
+  const cardsEl = root.querySelector('[data-presence-cards]');
+  if (!pinsEl || !currentEl || !selectBtn || !menuEl || !goBtn || !cardsEl) return;
 
   const TYPE_ORDER = ['client', 'office', 'hub'];
+
+  function countryIdOf(loc) {
+    return loc.countryId || loc.id;
+  }
+
+  function countryNameOf(loc) {
+    return loc.country || loc.name;
+  }
+
+  const countries = [];
+  const seenCountries = new Set();
+  PRESENCE_LOCATIONS.forEach((loc) => {
+    const id = countryIdOf(loc);
+    if (seenCountries.has(id)) return;
+    if (!loc.primary && PRESENCE_LOCATIONS.some((item) => countryIdOf(item) === id && item.primary)) {
+      return;
+    }
+    seenCountries.add(id);
+    countries.push({
+      id,
+      name: countryNameOf(loc),
+      type: loc.type,
+      pinId: loc.id,
+    });
+  });
+
   const grouped = TYPE_ORDER.flatMap((type) =>
-    PRESENCE_LOCATIONS.filter((loc) => loc.type === type).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    )
+    countries.filter((country) => country.type === type).sort((a, b) => a.name.localeCompare(b.name))
   );
-  let activeId = PRESENCE_LOCATIONS.some((loc) => loc.id === 'south-africa')
-    ? 'south-africa'
-    : grouped[0].id;
+
+  let activeId = grouped.some((country) => country.id === 'india') ? 'india' : grouped[0].id;
+  let focusPinId = null;
   let zoomed = false;
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+  }
+
+  function addressFingerprint(address) {
+    return [address.title, ...(address.lines || [])]
+      .join(' ')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim();
+  }
+
+  function uniqueAddresses(countryId) {
+    const seen = new Set();
+    return (PRESENCE_ADDRESSES[countryId] || []).filter((address) => {
+      const key = addressFingerprint(address);
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function renderMeta(address) {
+    const items = [];
+    (address.phones || []).forEach((phone) => {
+      const dial = phone.replace(/[^\d+]/g, '');
+      items.push(
+        `<a href="tel:${escapeHtml(dial)}">Phone ${escapeHtml(phone)}</a>`
+      );
+    });
+    (address.faxes || []).forEach((fax) => {
+      items.push(`<span>Fax ${escapeHtml(fax)}</span>`);
+    });
+    (address.emails || []).forEach((email) => {
+      items.push(
+        `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`
+      );
+    });
+    (address.websites || []).forEach((site) => {
+      items.push(
+        `<a href="${escapeHtml(site.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.label)}</a>`
+      );
+    });
+    if (!items.length) return '';
+    return `<p class="presence-map__card-meta">${items.join('')}</p>`;
+  }
+
+  let shownCountryId = null;
+  let addressJob = 0;
+  const ADDRESS_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function cardMarkup(addresses) {
+    return addresses
+      .map(
+        (address) => `
+          <li class="presence-map__card">
+            <p class="presence-map__card-label">${escapeHtml(address.label)}</p>
+            <p class="presence-map__card-title">${escapeHtml(address.title)}</p>
+            <address class="presence-map__card-address">
+              ${address.lines.map((line) => escapeHtml(line)).join('<br />')}
+            </address>
+            ${renderMeta(address)}
+          </li>
+        `
+      )
+      .join('');
+  }
+
+  function releaseAddressLayout() {
+    if (!detailsEl) return;
+    detailsEl.style.height = '';
+    detailsEl.style.marginTop = '';
+    detailsEl.style.overflow = '';
+    cardsEl.style.opacity = '';
+    cardsEl.style.transform = '';
+  }
+
+  function clearAddressMotion() {
+    if (!detailsEl) return;
+    [detailsEl, cardsEl, ...cardsEl.children].forEach((node) => {
+      node.getAnimations?.().forEach((anim) => anim.cancel());
+    });
+    releaseAddressLayout();
+  }
+
+  function paintAddresses(country, addresses) {
+    clearAddressMotion();
+    if (!addresses.length) {
+      cardsEl.innerHTML = '';
+      if (detailsTitleEl) detailsTitleEl.textContent = '';
+      if (detailsEl) {
+        detailsEl.hidden = true;
+        detailsEl.classList.add('is-empty');
+      }
+      return;
+    }
+
+    if (detailsTitleEl) detailsTitleEl.textContent = `Locations in ${country.name}`;
+    cardsEl.innerHTML = cardMarkup(addresses);
+    if (detailsEl) {
+      detailsEl.hidden = false;
+      detailsEl.classList.remove('is-empty');
+    }
+  }
+
+  function renderAddresses(country, { immediate = false } = {}) {
+    const addresses = uniqueAddresses(country.id);
+    const nextEmpty = addresses.length === 0;
+    const currentEmpty = !detailsEl || detailsEl.hidden || cardsEl.childElementCount === 0;
+
+    if (country.id === shownCountryId) return;
+    if (nextEmpty && currentEmpty) {
+      shownCountryId = country.id;
+      return;
+    }
+
+    shownCountryId = country.id;
+
+    if (immediate || prefersReducedMotion() || !detailsEl) {
+      paintAddresses(country, addresses);
+      return;
+    }
+
+    const job = ++addressJob;
+    playAddressTransition(job, country, addresses);
+  }
+
+  async function playAddressTransition(job, country, addresses) {
+    const stale = () => job !== addressJob;
+    clearAddressMotion();
+
+    const hide = addresses.length === 0;
+    const fromHeight = detailsEl.hidden ? 0 : detailsEl.getBoundingClientRect().height;
+    detailsEl.style.overflow = 'hidden';
+
+    if (!hide) detailsEl.classList.remove('is-empty');
+    else detailsEl.classList.add('is-empty');
+
+    if (!detailsEl.hidden && cardsEl.childElementCount) {
+      const fadeOut = cardsEl.animate(
+        [
+          { opacity: 1, transform: 'translateY(0px)' },
+          { opacity: 0, transform: 'translateY(10px)' },
+        ],
+        { duration: 340, easing: ADDRESS_EASE, fill: 'forwards' }
+      );
+      try {
+        await fadeOut.finished;
+      } catch {
+        return;
+      }
+      if (stale()) return;
+      if (hide) cardsEl.style.opacity = '0';
+      fadeOut.cancel();
+    }
+
+    if (stale()) return;
+
+    if (hide) {
+      const collapse = detailsEl.animate(
+        [
+          { height: `${fromHeight}px`, marginTop: '1.5rem' },
+          { height: '0px', marginTop: '0px' },
+        ],
+        { duration: 560, easing: ADDRESS_EASE, fill: 'forwards' }
+      );
+      try {
+        await collapse.finished;
+      } catch {
+        return;
+      }
+      if (stale()) return;
+      cardsEl.innerHTML = '';
+      if (detailsTitleEl) detailsTitleEl.textContent = '';
+      detailsEl.hidden = true;
+      collapse.cancel();
+      releaseAddressLayout();
+      return;
+    }
+
+    detailsEl.hidden = false;
+    detailsEl.style.overflow = 'hidden';
+    detailsEl.style.height = 'auto';
+    detailsEl.style.marginTop = fromHeight ? '' : '0px';
+    if (detailsTitleEl) detailsTitleEl.textContent = `Locations in ${country.name}`;
+    cardsEl.innerHTML = cardMarkup(addresses);
+
+    const toHeight = detailsEl.getBoundingClientRect().height;
+    detailsEl.style.height = `${fromHeight}px`;
+    const grow = detailsEl.animate(
+      [
+        { height: `${fromHeight}px`, marginTop: fromHeight ? '1.5rem' : '0px' },
+        { height: `${toHeight}px`, marginTop: '1.5rem' },
+      ],
+      { duration: 620, easing: ADDRESS_EASE, fill: 'forwards' }
+    );
+
+    [...cardsEl.children].forEach((card, index) => {
+      card.animate(
+        [
+          { opacity: 0, transform: 'translateY(16px)' },
+          { opacity: 1, transform: 'translateY(0px)' },
+        ],
+        {
+          duration: 680,
+          delay: 90 + index * 55,
+          easing: ADDRESS_EASE,
+          fill: 'both',
+        }
+      );
+    });
+
+    try {
+      await grow.finished;
+    } catch {
+      return;
+    }
+    if (stale()) return;
+    grow.cancel();
+    releaseAddressLayout();
+  }
 
   pinsEl.innerHTML = PRESENCE_LOCATIONS.map(
     (loc) => `
@@ -673,13 +931,15 @@ function initPresenceMap() {
         style="left: ${loc.x}%; top: ${loc.y}%;"
         data-presence-pin
         data-id="${loc.id}"
+        data-country="${countryIdOf(loc)}"
         aria-label="${loc.name} — ${PRESENCE_TYPES[loc.type].label}"
       ></button>
     `
   ).join('');
 
   menuEl.innerHTML = TYPE_ORDER.map((type) => {
-    const items = grouped.filter((loc) => loc.type === type);
+    const items = grouped.filter((country) => country.type === type);
+    if (!items.length) return '';
     const { label } = PRESENCE_TYPES[type];
     return `
       <li class="presence-map__group-heading" role="presentation">
@@ -688,16 +948,16 @@ function initPresenceMap() {
       </li>
       ${items
         .map(
-          (loc) => `
+          (country) => `
             <li role="none">
               <button
                 type="button"
                 class="presence-map__option"
                 role="option"
                 data-presence-option
-                data-id="${loc.id}"
+                data-id="${country.id}"
               >
-                ${loc.name}
+                ${escapeHtml(country.name)}
               </button>
             </li>
           `
@@ -734,20 +994,29 @@ function initPresenceMap() {
 
     applyZoom(zoom, panX, panY);
     zoomed = true;
+    fullBtn?.classList.remove('is-active');
+    fullBtn?.setAttribute('aria-pressed', 'false');
   }
 
   function zoomToWorld() {
     applyZoom(1, 0, 0);
     zoomed = false;
+    fullBtn?.classList.add('is-active');
+    fullBtn?.setAttribute('aria-pressed', 'true');
   }
 
-  function setActive(id, { zoom = true } = {}) {
-    const loc = PRESENCE_LOCATIONS.find((item) => item.id === id);
-    if (!loc) return;
+  function countryById(id) {
+    return grouped.find((country) => country.id === id);
+  }
+
+  function setActive(id, { zoom = true, pinId = null } = {}) {
+    const country = countryById(id);
+    if (!country) return;
     activeId = id;
-    currentEl.textContent = loc.name;
+    focusPinId = pinId || country.pinId;
+    currentEl.textContent = country.name;
     pinsEl.querySelectorAll('[data-presence-pin]').forEach((pin) => {
-      const isActive = pin.dataset.id === id;
+      const isActive = pin.dataset.country === id;
       pin.classList.toggle('is-active', isActive);
       if (isActive) pin.setAttribute('aria-current', 'true');
       else pin.removeAttribute('aria-current');
@@ -755,7 +1024,11 @@ function initPresenceMap() {
     menuEl.querySelectorAll('[data-presence-option]').forEach((option) => {
       option.setAttribute('aria-selected', option.dataset.id === id ? 'true' : 'false');
     });
-    if (zoom) zoomTo(loc);
+    renderAddresses(country);
+    if (zoom) {
+      const loc = PRESENCE_LOCATIONS.find((item) => item.id === focusPinId);
+      zoomTo(loc);
+    }
   }
 
   function closeMenu() {
@@ -787,15 +1060,21 @@ function initPresenceMap() {
   pinsEl.addEventListener('click', (event) => {
     const pin = event.target.closest('[data-presence-pin]');
     if (!pin) return;
-    if (pin.dataset.id === activeId && zoomed) zoomToWorld();
-    else setActive(pin.dataset.id);
+    const countryId = pin.dataset.country;
+    if (countryId === activeId && pin.dataset.id === focusPinId && zoomed) zoomToWorld();
+    else setActive(countryId, { pinId: pin.dataset.id });
     closeMenu();
   });
 
   goBtn.addEventListener('click', () => {
-    const index = grouped.findIndex((loc) => loc.id === activeId);
+    const index = grouped.findIndex((country) => country.id === activeId);
     const next = grouped[(index + 1) % grouped.length];
     setActive(next.id);
+    closeMenu();
+  });
+
+  fullBtn?.addEventListener('click', () => {
+    zoomToWorld();
     closeMenu();
   });
 
@@ -809,10 +1088,11 @@ function initPresenceMap() {
 
   window.addEventListener('resize', () => {
     if (!zoomed) return;
-    const loc = PRESENCE_LOCATIONS.find((item) => item.id === activeId);
+    const loc = PRESENCE_LOCATIONS.find((item) => item.id === focusPinId);
     if (loc) zoomTo(loc);
   });
 
+  fullBtn?.setAttribute('aria-pressed', 'true');
   setActive(activeId, { zoom: false });
 }
 

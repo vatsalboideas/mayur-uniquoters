@@ -112,7 +112,7 @@
               <span class="presence-hero__stat-label">Global Client Locations</span>
             </li>
             <li class="presence-hero__stat">
-              <span class="presence-hero__stat-value" data-count-to="8">0</span>
+              <span class="presence-hero__stat-value" data-count-to="10">0</span>
               <span class="presence-hero__stat-label">Office and Warehouse Facilities</span>
             </li>
             <li class="presence-hero__stat">
@@ -145,7 +145,12 @@
           </figure>
 
           <div class="presence-map__picker">
-            <p class="presence-map__picker-label">Choose a location</p>
+            <div class="presence-map__picker-head">
+              <p class="presence-map__picker-label">Choose a location</p>
+              <button type="button" class="presence-map__full is-active" data-presence-full>
+                Full view
+              </button>
+            </div>
             <div class="presence-map__picker-row">
               <button
                 type="button"
@@ -155,7 +160,7 @@
                 aria-expanded="false"
                 aria-controls="presence-location-menu"
               >
-                <span class="presence-map__select-name" data-presence-current>South Africa</span>
+                <span class="presence-map__select-name" data-presence-current>India</span>
                 <svg
                   class="presence-map__chevron"
                   width="14"
@@ -201,6 +206,11 @@
             ></ul>
           </div>
         </div>
+
+        <section class="presence-map__details is-empty" data-presence-details hidden>
+          <h2 class="sr-only" data-presence-details-title>Locations in India</h2>
+          <ul class="presence-map__cards" data-presence-cards></ul>
+        </section>
 
         <ul class="presence-map__legend" aria-label="Map legend">
           <li class="presence-map__legend-item">
