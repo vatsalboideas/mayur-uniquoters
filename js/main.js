@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyrightYear();
   initSiteHeader();
   initRndProcessSlider();
+  initMaterialSequence();
   initScrubTimeline({
     timelineSelector: '.rnd-qa__timeline',
     stepSelector: '.rnd-qa__step',
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     iconSelector: 'img.values-section__icon',
     iconClass: 'values-section__icon',
     idPrefix: 'values-icon',
+    replay: true,
   });
   initDrawIcons({
     sectionSelector: '.careers-culture',
@@ -123,6 +125,7 @@ function initDrawIcons({
   delayStep = 0.28,
   autoObserve = true,
   groupObserve = false,
+  replay = false,
 }) {
   const section = document.querySelector(sectionSelector);
   if (!section) return;
@@ -192,10 +195,43 @@ function initDrawIcons({
     }
   }
 
+  const drawTokens = new WeakMap();
+
   function startDraw(targets) {
     const list = Array.isArray(targets) ? targets : [targets];
+    if (!replay) {
+      requestAnimationFrame(() => {
+        list.forEach((item) => item.classList.add('is-drawn'));
+      });
+      return;
+    }
+
+    const tokens = list.map((item) => {
+      const token = (drawTokens.get(item) || 0) + 1;
+      drawTokens.set(item, token);
+      item.classList.add('is-resetting');
+      item.classList.remove('is-drawn');
+      return { item, token };
+    });
+    tokens.forEach(({ item }) => void item.offsetWidth);
     requestAnimationFrame(() => {
-      list.forEach((item) => item.classList.add('is-drawn'));
+      tokens.forEach(({ item, token }) => {
+        if (drawTokens.get(item) !== token) return;
+        item.classList.remove('is-resetting');
+        item.classList.add('is-drawn');
+      });
+    });
+  }
+
+  function resetDraw(targets) {
+    const list = Array.isArray(targets) ? targets : [targets];
+    list.forEach((item) => {
+      drawTokens.set(item, (drawTokens.get(item) || 0) + 1);
+      item.classList.add('is-resetting');
+      item.classList.remove('is-drawn');
+    });
+    requestAnimationFrame(() => {
+      list.forEach((item) => item.classList.remove('is-resetting'));
     });
   }
 
@@ -219,14 +255,17 @@ function initDrawIcons({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          if (groupObserve) {
-            startDraw(items);
-            observer.disconnect();
+          if (entry.isIntersecting) {
+            if (groupObserve) startDraw(items);
+            else startDraw(entry.target);
+            if (replay) return;
+            if (groupObserve) observer.disconnect();
+            else observer.unobserve(entry.target);
             return;
           }
-          startDraw(entry.target);
-          observer.unobserve(entry.target);
+          if (!replay) return;
+          if (groupObserve) resetDraw(items);
+          else resetDraw(entry.target);
         });
       },
       { threshold: groupObserve ? 0.28 : 0.4, rootMargin: '0px 0px -6% 0px' }
@@ -1540,6 +1579,105 @@ function initClientsMarquee() {
 }
 
 /**
+ * Our Material — play the layer sequence as the image is scrolled through.
+ */
+function initMaterialSequence() {
+  const stage = document.querySelector('[data-material-sequence]');
+  const canvas = stage?.querySelector('canvas');
+  const base = stage?.dataset.frameBase;
+  const count = Number(stage?.dataset.frameCount);
+  if (!stage || !canvas || !base || !count) return;
+
+  const context = canvas.getContext('2d');
+  if (!context) return;
+
+  const frames = new Array(count);
+  const state = { frame: 0 };
+  let drawn = -1;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resizeCanvas() {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (!width || !height) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const nextWidth = Math.round(width * dpr);
+    const nextHeight = Math.round(height * dpr);
+    if (canvas.width === nextWidth && canvas.height === nextHeight) return;
+    canvas.width = nextWidth;
+    canvas.height = nextHeight;
+    drawn = -1;
+  }
+
+  function draw(index) {
+    const image = frames[index];
+    if (!image?.complete || !image.naturalWidth) return;
+    resizeCanvas();
+    if (!canvas.width || drawn === index) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    drawn = index;
+  }
+
+  function loadFrame(index) {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.onload = () => {
+        frames[index] = image;
+        if (index === 0) draw(0);
+        resolve();
+      };
+      image.onerror = () => resolve();
+      image.src = `${base}${index + 1}.webp`;
+    });
+  }
+
+  Promise.all(Array.from({ length: count }, (_, index) => loadFrame(index))).then(() => {
+    if (prefersReducedMotion) {
+      draw(count - 1);
+      stage.classList.add('is-labeled');
+      return;
+    }
+
+    const header = document.querySelector('.site-header');
+    const section = stage.closest('.rnd-material') || stage;
+    const pin = section.querySelector('.rnd-material__pin') || stage;
+
+    gsap.to(state, {
+      frame: count - 1,
+      snap: 'frame',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: pin,
+        start: () => `top ${header?.getBoundingClientRect().height + 100?? 0}px`,
+        end: () => `+=${Math.round(window.innerHeight * 1.8)}`,
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.45,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        markers: true,
+      },
+      onUpdate: () => {
+        const frame = Math.round(state.frame);
+        draw(frame);
+        stage.classList.toggle('is-labeled', frame >= count - 1);
+      },
+    });
+
+    draw(0);
+
+    window.addEventListener('resize', () => {
+      drawn = -1;
+      draw(Math.round(state.frame));
+    });
+
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  });
+}
+
+/**
  * History section — GSAP horizontal scroll (desktop, min-width 1025px).
  * Title + intro stay pinned below the site header. Timeline cards sit in
  * a single row (three visible) and translate on X as the user scrolls.
@@ -2167,21 +2305,19 @@ function initMarketSegments(lenis) {
     if (needsRender) {
       listEl.dataset.appsKey = appsKey;
       listEl.innerHTML = options
-        .map((option, index) => {
-          const isActive = index === 0;
-          return `
+        .map(
+          (option, index) => `
             <li>
               <button
                 type="button"
-                class="perf-attrs__apps-item${isActive ? ' is-active' : ''}"
+                class="perf-attrs__apps-item"
                 data-apps-index="${index}"
-                aria-pressed="${isActive ? 'true' : 'false'}"
               >
                 ${escapeHtml(option.label)}
               </button>
             </li>
-          `;
-        })
+          `
+        )
         .join('');
 
       listEl.querySelectorAll('[data-apps-index]').forEach((button) => {
@@ -2189,12 +2325,6 @@ function initMarketSegments(lenis) {
           const index = Number(button.dataset.appsIndex);
           const option = options[index];
           if (!option) return;
-
-          listEl.querySelectorAll('.perf-attrs__apps-item').forEach((item, itemIndex) => {
-            const isActive = itemIndex === index;
-            item.classList.toggle('is-active', isActive);
-            item.setAttribute('aria-pressed', String(isActive));
-          });
 
           const images = String(option.images || '')
             .split('|')
@@ -2241,6 +2371,8 @@ function initMarketSegments(lenis) {
 
     categoriesEl.querySelectorAll('.segment-panel__item').forEach((button) => {
       button.addEventListener('click', () => {
+        const hasApps = parseItemApps(button).length > 0;
+
         if (!button.classList.contains('is-active')) {
           clearCategoryActiveState();
           button.classList.add('is-active');
@@ -2254,7 +2386,7 @@ function initMarketSegments(lenis) {
           syncAppsPanel(segment);
         }
 
-        scrollToAppsSection();
+        if (hasApps) scrollToAppsSection();
       });
     });
 

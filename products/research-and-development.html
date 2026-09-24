@@ -274,18 +274,32 @@
         </div>
       </section>
 
-      <section class="rnd-material" aria-labelledby="rnd-material-title" data-aos="fade-up">
+      <section class="rnd-material" aria-labelledby="rnd-material-title">
         <div class="rnd-material__inner container">
-          <h2 id="rnd-material-title" class="rnd-material__title">Our Material</h2>
-          <p class="rnd-material__subtitle">Understanding What Goes Into Every Layer</p>
-          <img
-            src="../assets/images/products/rnd/our-material.webp"
-            alt="Exploded view of material layers: skin, foam, adhesive and fabric"
-            class="rnd-material__image"
-            width="1324"
-            height="764"
-            loading="lazy"
-          />
+          <div class="rnd-material__pin">
+            <h2 id="rnd-material-title" class="rnd-material__title">Our Material</h2>
+            <p class="rnd-material__subtitle">Understanding What Goes Into Every Layer</p>
+            <div
+              class="rnd-material__stage"
+              data-material-sequence
+              data-frame-base="../assets/images/products/rnd/material/"
+              data-frame-count="16"
+            >
+              <canvas
+                class="rnd-material__canvas"
+                width="3840"
+                height="2160"
+                role="img"
+                aria-label="Exploded view of material layers: skin, foam, adhesive and fabric"
+              ></canvas>
+              <ul class="rnd-material__labels">
+                <li class="rnd-material__label rnd-material__label--skin">Skin</li>
+                <li class="rnd-material__label rnd-material__label--foam">Foam</li>
+                <li class="rnd-material__label rnd-material__label--adhesive">Adhesive</li>
+                <li class="rnd-material__label rnd-material__label--fabric">Fabric</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
