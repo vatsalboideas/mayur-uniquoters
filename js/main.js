@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   initAOS();
   initSustFramework();
+  initNewsMotion();
 });
 
 /**
@@ -343,6 +344,83 @@ function initSustFramework() {
     }, '+=0.08');
     tl.to(segments[index], { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, '-=0.22');
   });
+}
+
+/**
+ * News page — arrow reveals downward, then the title and panel.
+ * Latest cards fade in from above or below to match their stagger.
+ */
+function initNewsMotion() {
+  const feature = document.querySelector('.news-feature');
+  const latest = document.querySelector('.news-latest');
+  if (!feature && !latest) return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    feature?.classList.remove('news-feature--play');
+    latest?.classList.remove('news-latest--play');
+    return;
+  }
+
+  if (feature) {
+    const arrow = feature.querySelector('.news-feature__arrow');
+    const title = feature.querySelector('.news-feature__title');
+    const panel = feature.querySelector('.news-feature__panel');
+
+    gsap.set(arrow, { autoAlpha: 0, clipPath: 'inset(0% 0% 100% 0%)' });
+    gsap.set([title, panel], { autoAlpha: 0, y: 28 });
+
+    const intro = gsap.timeline({ paused: true });
+
+    intro
+      .to(arrow, {
+        autoAlpha: 1,
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 1.05,
+        ease: 'power2.out',
+      })
+      .to(title, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.28')
+      .to(panel, { autoAlpha: 1, y: 0, duration: 0.85, ease: 'power2.out' }, '-=0.4');
+
+    whenNewsInView(feature, 0.9, () => intro.play());
+  }
+
+  if (!latest) return;
+
+  const items = Array.from(latest.querySelectorAll('.news-latest__item'));
+  if (items.length === 0) return;
+
+  items.forEach((item, index) => {
+    const fromTop = index % 2 === 0;
+    gsap.set(item, { autoAlpha: 0, y: fromTop ? -42 : 42 });
+
+    const reveal = gsap.timeline({ paused: true });
+
+    reveal.to(item, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 1.45,
+      ease: 'power2.out',
+    });
+
+    whenNewsInView(item, 0.92, () => reveal.play());
+  });
+
+  latest.classList.remove('news-latest--play');
+}
+
+function whenNewsInView(target, start, play) {
+  let played = false;
+  const tryPlay = () => {
+    if (played) return;
+    if (target.getBoundingClientRect().top > window.innerHeight * start) return;
+    played = true;
+    window.removeEventListener('scroll', tryPlay);
+    play();
+  };
+
+  tryPlay();
+  window.addEventListener('scroll', tryPlay, { passive: true });
+  requestAnimationFrame(tryPlay);
 }
 
 /**
