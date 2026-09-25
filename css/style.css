@@ -6567,7 +6567,7 @@ h6 {
 .rnd-material__label::before {
   content: '';
   position: absolute;
-  top: 0.45rem;
+  bottom: 0.45rem;
   height: 1.5px;
   background: currentColor;
 }
@@ -6575,7 +6575,7 @@ h6 {
 .rnd-material__label::after {
   content: '';
   position: absolute;
-  top: 0.28rem;
+  bottom: 0.28rem;
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
@@ -6585,7 +6585,7 @@ h6 {
 .rnd-material__label--skin,
 .rnd-material__label--adhesive {
   right: 1%;
-  padding-top: 1.15rem;
+  padding-bottom: 1.15rem;
   text-align: right;
 }
 
@@ -6603,7 +6603,7 @@ h6 {
 .rnd-material__label--foam,
 .rnd-material__label--fabric {
   left: 1%;
-  padding-top: 1.15rem;
+  padding-bottom: 1.15rem;
 }
 
 .rnd-material__label--foam::before,
@@ -6618,15 +6618,15 @@ h6 {
 }
 
 .rnd-material__label--skin {
-  top: 10%;
+  top: 14%;
 }
 
 .rnd-material__label--foam {
-  top: 42%;
+  top: 40%;
 }
 
 .rnd-material__label--adhesive {
-  top: 52%;
+  top: 48%;
 }
 
 .rnd-material__label--fabric {
@@ -9003,7 +9003,7 @@ h6 {
 }
 
 .news-latest__index {
-  margin: 0 0 0.9rem;
+  margin: 0 0 1.15rem;
   font-family: var(--font-abril);
   font-size: 50px;
   font-weight: 700;
@@ -9013,6 +9013,7 @@ h6 {
 
 .news-latest__media {
   overflow: hidden;
+  will-change: transform;
 }
 
 .news-latest__image {
@@ -9032,7 +9033,7 @@ h6 {
 }
 
 .news-latest__caption {
-  margin: 0.9rem 0 0;
+  margin: 1.15rem 0 0;
   font-family: var(--font-body);
   font-size: var(--text-body-size);
   font-weight: var(--text-body-weight);
@@ -9089,6 +9090,10 @@ h6 {
 
   .news-latest__image {
     transition: none;
+  }
+
+  .news-latest__media {
+    transform: none !important;
   }
 
   .news-latest__media:hover .news-latest__image {

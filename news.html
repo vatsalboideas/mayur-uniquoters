@@ -40,8 +40,20 @@
               },
             },
             fontFamily: {
-              sans: ['SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-              display: ['SF Pro Display', 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              sans: [
+                'SF Pro Text',
+                '-apple-system',
+                'BlinkMacSystemFont',
+                'Segoe UI',
+                'sans-serif',
+              ],
+              display: [
+                'SF Pro Display',
+                'SF Pro Text',
+                '-apple-system',
+                'BlinkMacSystemFont',
+                'sans-serif',
+              ],
               abril: ['Abril Display', 'Georgia', 'Times New Roman', 'serif'],
             },
           },
@@ -51,10 +63,7 @@
 
     <!-- Fonts & custom styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link rel="stylesheet" href="css/fonts.css" />
     <link rel="stylesheet" href="css/style.css" />
@@ -80,12 +89,16 @@
           <ul class="site-header__nav-list">
             <li><a href="./" class="site-header__nav-link">About</a></li>
             <li>
-              <a href="market-segment/furnishing.html" class="site-header__nav-link">Market Segment</a>
+              <a href="market-segment/furnishing.html" class="site-header__nav-link"
+                >Market Segment</a
+              >
             </li>
             <li><a href="plants.html" class="site-header__nav-link">Plants</a></li>
             <li><a href="products/our-products.html" class="site-header__nav-link">Products</a></li>
             <li><a href="sustainability.html" class="site-header__nav-link">Sustainability</a></li>
-            <li><a href="global-presence.html" class="site-header__nav-link">Global Presence</a></li>
+            <li>
+              <a href="global-presence.html" class="site-header__nav-link">Global Presence</a>
+            </li>
             <li>
               <a href="news.html" class="site-header__nav-link is-active" aria-current="page"
                 >News &amp; Media</a
@@ -111,10 +124,12 @@
             <article class="news-feature__story">
               <h2 class="news-feature__headline">
                 <span class="news-feature__line"
-                  ><span class="news-feature__on">T</span><span class="news-feature__off">oday’s</span></span
+                  ><span class="news-feature__on">T</span
+                  ><span class="news-feature__off">oday’s</span></span
                 >
                 <span class="news-feature__line"
-                  ><span class="news-feature__on">N</span><span class="news-feature__off">ews</span></span
+                  ><span class="news-feature__on">N</span
+                  ><span class="news-feature__off">ews</span></span
                 >
               </h2>
               <figure class="news-feature__photo">
@@ -159,7 +174,7 @@
           <ol class="news-latest__list">
             <li class="news-latest__item">
               <p class="news-latest__index">01</p>
-              <div class="news-latest__media">
+              <div class="news-latest__media" data-parallax data-parallax-speed="-0.03">
                 <img
                   class="news-latest__image"
                   src="assets/images/news/01.webp"
@@ -175,7 +190,7 @@
             </li>
             <li class="news-latest__item">
               <p class="news-latest__index">02</p>
-              <div class="news-latest__media">
+              <div class="news-latest__media" data-parallax data-parallax-speed="0.03">
                 <img
                   class="news-latest__image"
                   src="assets/images/news/02.webp"
@@ -191,7 +206,7 @@
             </li>
             <li class="news-latest__item">
               <p class="news-latest__index">03</p>
-              <div class="news-latest__media">
+              <div class="news-latest__media" data-parallax data-parallax-speed="-0.03">
                 <img
                   class="news-latest__image"
                   src="assets/images/news/03.webp"
@@ -207,7 +222,7 @@
             </li>
             <li class="news-latest__item">
               <p class="news-latest__index">04</p>
-              <div class="news-latest__media">
+              <div class="news-latest__media" data-parallax data-parallax-speed="0.03">
                 <img
                   class="news-latest__image"
                   src="assets/images/news/04.webp"
@@ -233,7 +248,9 @@
             <div class="site-footer__group">
               <a href="careers.html" class="site-footer__link site-footer__link--heading">Career</a>
               <ul class="site-footer__sublist">
-                <li><a href="careers.html#life-at-mayur" class="site-footer__link">Life at Mayur</a></li>
+                <li>
+                  <a href="careers.html#life-at-mayur" class="site-footer__link">Life at Mayur</a>
+                </li>
                 <li><a href="#" class="site-footer__link">Student Programmes</a></li>
                 <li>
                   <a href="careers.html#current-openings" class="site-footer__link">Vacancies</a>
@@ -241,12 +258,21 @@
               </ul>
             </div>
             <a href="#" class="site-footer__link site-footer__link--heading">FAQ</a>
-            <a href="contact.html" class="site-footer__link site-footer__link--heading">Contact Us</a>
+            <a href="contact.html" class="site-footer__link site-footer__link--heading"
+              >Contact Us</a
+            >
           </nav>
 
           <div class="site-footer__contact">
             <a href="tel:+911423224001" class="site-footer__contact-item">
-              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <svg
+                class="site-footer__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path
                   d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328z"
                   fill="currentColor"
@@ -255,7 +281,14 @@
               +91-1423-224001
             </a>
             <a href="mailto:info@mayur.biz" class="site-footer__contact-item">
-              <svg class="site-footer__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <svg
+                class="site-footer__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path
                   d="M2 2a2 2 0 0 0-2 2v.01l8 4.667 8-4.667V4a2 2 0 0 0-2-2H2zm14 5.333L8.667 11.5 2 7.333V12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7.333z"
                   fill="currentColor"

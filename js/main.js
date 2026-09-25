@@ -1224,9 +1224,11 @@ function initBoardSlider() {
 }
 
 /**
- * Scroll parallax for About collage and product-feature images.
- * About: disabled when the about stage is stacked (max-width: 75rem).
- * Products: disabled when product rows stack (max-width: 64rem).
+ * Scroll parallax for About collage, product-feature images, and news latest media.
+ * - About: disabled when the about stage is stacked (max-width: 75rem).
+ * - Products: disabled when product rows stack (max-width: 64rem).
+ * - News: disabled on mobile stacked view (max-width: 40rem).
+ * - Disabled for users who prefer reduced motion.
  */
 function initAboutParallax(lenis) {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1238,21 +1240,39 @@ function initAboutParallax(lenis) {
   const productFigures = Array.from(
     document.querySelectorAll('.product-feature [data-parallax]')
   );
+  const newsFigures = Array.from(
+    document.querySelectorAll('.news-latest [data-parallax]')
+  );
 
-  if (aboutFigures.length === 0 && productFigures.length === 0) return;
+  if (aboutFigures.length === 0 && productFigures.length === 0 && newsFigures.length === 0) return;
 
   const aboutStacked = window.matchMedia('(max-width: 75rem)');
   const productStacked = window.matchMedia('(max-width: 64rem)');
+  const newsStacked = window.matchMedia('(max-width: 40rem)');
 
-  const aboutItems = aboutFigures.map((figure) => ({
-    figure,
-    speed: Number.parseFloat(figure.dataset.parallaxSpeed) || 0.08,
-  }));
-  const productItems = productFigures.map((figure) => ({
-    figure,
-    speed: Number.parseFloat(figure.dataset.parallaxSpeed) || 0.08,
-    article: figure.closest('.product-feature'),
-  }));
+  const aboutItems = aboutFigures.map((figure) => {
+    const raw = Number.parseFloat(figure.dataset.parallaxSpeed);
+    return {
+      figure,
+      speed: Number.isNaN(raw) ? 0.08 : raw,
+    };
+  });
+  const productItems = productFigures.map((figure) => {
+    const raw = Number.parseFloat(figure.dataset.parallaxSpeed);
+    return {
+      figure,
+      speed: Number.isNaN(raw) ? 0.08 : raw,
+      article: figure.closest('.product-feature'),
+    };
+  });
+  const newsItems = newsFigures.map((figure) => {
+    const raw = Number.parseFloat(figure.dataset.parallaxSpeed);
+    return {
+      figure,
+      speed: Number.isNaN(raw) ? 0.08 : raw,
+      article: figure.closest('.news-latest__item'),
+    };
+  });
 
   function clearTransforms(items) {
     items.forEach(({ figure }) => {
@@ -1282,6 +1302,17 @@ function initAboutParallax(lenis) {
         });
       }
     }
+
+    if (newsItems.length) {
+      if (newsStacked.matches) {
+        clearTransforms(newsItems);
+      } else {
+        newsItems.forEach(({ figure, speed, article }) => {
+          const top = (article || figure).getBoundingClientRect().top;
+          figure.style.transform = `translate3d(0, ${top * speed}px, 0)`;
+        });
+      }
+    }
   }
 
   if (lenis) {
@@ -1293,6 +1324,7 @@ function initAboutParallax(lenis) {
   window.addEventListener('resize', updateParallax, { passive: true });
   aboutStacked.addEventListener('change', updateParallax);
   productStacked.addEventListener('change', updateParallax);
+  newsStacked.addEventListener('change', updateParallax);
   updateParallax();
 }
 
@@ -1619,6 +1651,11 @@ function initMaterialSequence() {
     drawn = index;
   }
 
+  function frameSrc(index) {
+    // Files are named 01.webp … 042.webp. Playback starts at 042 and ends at 01.
+    return `${base}0${count - index}.webp`;
+  }
+
   function loadFrame(index) {
     return new Promise((resolve) => {
       const image = new Image();
@@ -1629,7 +1666,7 @@ function initMaterialSequence() {
         resolve();
       };
       image.onerror = () => resolve();
-      image.src = `${base}${index + 1}.webp`;
+      image.src = frameSrc(index);
     });
   }
 
