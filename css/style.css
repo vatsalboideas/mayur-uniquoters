@@ -1199,7 +1199,9 @@ h6 {
   text-align: left;
   color: var(--color-brand-red-active);
   cursor: pointer;
-  transition: font-weight 0.2s ease, opacity 0.2s ease;
+  transition:
+    font-weight 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .perf-attrs__apps-item:hover,
@@ -1447,12 +1449,12 @@ h6 {
   max-width: 14rem;
 }
 
-[data-segment-attrs="automotive"] .perf-attrs__rows {
+[data-segment-attrs='automotive'] .perf-attrs__rows {
   align-items: stretch;
   gap: 3rem;
 }
 
-[data-segment-attrs="automotive"] .perf-attrs__row {
+[data-segment-attrs='automotive'] .perf-attrs__row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   justify-items: center;
@@ -1460,7 +1462,7 @@ h6 {
   gap: 2.25rem 1.25rem;
 }
 
-[data-segment-attrs="automotive"] .perf-attrs__item {
+[data-segment-attrs='automotive'] .perf-attrs__item {
   flex: none;
   width: 100%;
   min-width: 0;
@@ -1588,7 +1590,7 @@ h6 {
     gap: 1.75rem 0.5rem;
   }
 
-  [data-segment-attrs="automotive"] .perf-attrs__row {
+  [data-segment-attrs='automotive'] .perf-attrs__row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.75rem 1rem;
   }
@@ -1671,7 +1673,7 @@ h6 {
     max-width: 9rem;
   }
 
-  [data-segment-attrs="automotive"] .perf-attrs__row {
+  [data-segment-attrs='automotive'] .perf-attrs__row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem 0.75rem;
   }
@@ -1928,22 +1930,22 @@ h6 {
   min-width: 0;
 }
 
-[data-aos="vision-in-top"] {
+[data-aos='vision-in-top'] {
   opacity: 0;
   transform: translate3d(0, -4.5rem, 0);
 }
 
-[data-aos="vision-in-top"].aos-animate {
+[data-aos='vision-in-top'].aos-animate {
   opacity: 1;
   transform: none;
 }
 
-[data-aos="vision-in-bottom"] {
+[data-aos='vision-in-bottom'] {
   opacity: 0;
   transform: translate3d(0, 4.5rem, 0);
 }
 
-[data-aos="vision-in-bottom"].aos-animate {
+[data-aos='vision-in-bottom'].aos-animate {
   opacity: 1;
   transform: none;
 }
@@ -2926,7 +2928,7 @@ h6 {
   height: 100%;
   object-fit: fill;
   object-position: center top;
-  transform:  scaleY(1.1);
+  transform: scaleY(1.1);
   transform-origin: center bottom;
 }
 
@@ -5396,7 +5398,9 @@ h6 {
   color: var(--color-brand-red-active);
   cursor: pointer;
   appearance: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .presence-map__full:hover,
@@ -5459,7 +5463,9 @@ h6 {
   color: #fff;
   cursor: pointer;
   appearance: none;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .presence-map__go:hover,
@@ -7325,7 +7331,7 @@ h6 {
 }
 
 .sust-approach {
-  padding: 1.5rem 0 6.5rem;
+  padding: 1.5rem 0 0;
 }
 
 .sust-approach__inner {
@@ -7377,23 +7383,25 @@ h6 {
 }
 
 .sust-approach__copy {
+  width: 450px;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  margin-top: auto; /* sit at the bottom of the image */
+  /* margin-top: auto;  */
   padding-left: 3.125rem; /* 50px gap from the image */
 }
 
 .sust-approach__subtitle {
   margin: 0;
   font-family: var(--font-abril);
-  font-size: 3.75rem; /* 60px */
+  font-size: 4.37rem; /* 70px */
   font-weight: 500;
   line-height: 1.2;
   color: var(--color-brand-red-active);
 }
 
 .sust-approach__copy p {
+  text-align: justify;
   margin: 0;
   font-family: var(--font-body);
   font-size: var(--text-body-size);
@@ -7433,6 +7441,7 @@ h6 {
 
 /* 5P circular framework */
 .sust-5p {
+  margin-top: 100px;
   --fw-size: min(50rem, 86vw); /* 800px @ 1920 */
   --fw-hub: 35%; /* 30% smaller than 50% */
   --fw-radius: 0.338;
@@ -7485,10 +7494,18 @@ h6 {
   text-align: center;
 }
 
-.sust-5p__segment--planet { z-index: 5; }
-.sust-5p__segment--purpose { z-index: 4; }
-.sust-5p__segment--product { z-index: 3; }
-.sust-5p__segment--prosperity { z-index: 2; }
+.sust-5p__segment--planet {
+  z-index: 5;
+}
+.sust-5p__segment--purpose {
+  z-index: 4;
+}
+.sust-5p__segment--product {
+  z-index: 3;
+}
+.sust-5p__segment--prosperity {
+  z-index: 2;
+}
 
 .sust-5p__content {
   display: flex;
@@ -7798,7 +7815,9 @@ h6 {
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
 }
 
 .sust-dialog.is-open {
@@ -8192,7 +8211,9 @@ h6 {
   white-space: nowrap;
   color: var(--color-brand-red-active);
   transform: translate(-50%, -50%);
-  transition: background-color 200ms ease, color 200ms ease;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 .sust-ctas__card:hover .sust-ctas__btn,
@@ -8948,7 +8969,6 @@ h6 {
   .news-feature__excerpt {
     max-width: none;
   }
-
 }
 
 @media (max-width: 40rem) {
