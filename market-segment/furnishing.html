@@ -19,15 +19,15 @@
     <script>
       tailwind.config = {
         theme: {
-          /* 1720px @ 1920 design — site content max width */
+          /* 1600px — site content max width (matches --container-max in style.css) */
           container: {
             center: true,
             screens: {
-              sm: '107.5rem',
-              md: '107.5rem',
-              lg: '107.5rem',
-              xl: '107.5rem',
-              '2xl': '107.5rem',
+              sm: '100rem',
+              md: '100rem',
+              lg: '100rem',
+              xl: '100rem',
+              '2xl': '100rem',
             },
           },
           extend: {
@@ -110,7 +110,7 @@
       </section>
 
       <!-- Segment intro — copy swaps with the active category tab -->
-      <p class="segment-intro" data-segment-intro data-aos="fade-up">
+      <p class="segment-intro container" data-segment-intro data-aos="fade-up">
         Material solutions designed for indoor and outdoor spaces, bringing together comfort, performance and design versatility across residential, commercial and recreational environments.
       </p>
 
@@ -232,175 +232,251 @@
         </div>
       </section>
 
-      <section
-        class="perf-attrs"
-        aria-labelledby="perf-attrs-apps-title-furnishing perf-attrs-furnishing-title"
-        data-segment-attrs="furnishing"
-        data-aos="fade-up"
-      >
-        <div class="perf-attrs__inner container">
-          <div class="perf-attrs__layout">
-            <div class="perf-attrs__apps-slot">
-              <aside
-                class="perf-attrs__apps"
-                data-segment-apps
-                aria-labelledby="perf-attrs-apps-title-furnishing"
-                aria-hidden="true"
-              >
-                <h2 id="perf-attrs-apps-title-furnishing" class="perf-attrs__apps-title">
-                  Area of Application
-                </h2>
-                <ul class="perf-attrs__apps-list" data-segment-apps-list></ul>
-              </aside>
-            </div>
-            <div class="perf-attrs__main">
-              <h2 id="perf-attrs-furnishing-title" class="perf-attrs__title">Performance Attributes</h2>
-
-          <div class="perf-attrs__grid">
-            <article class="perf-attrs__group">
-              <h3 class="perf-attrs__heading">Performance</h3>
-              <ul class="perf-attrs__items">
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-1.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="71"
-                    height="65"
-                  />
-                  <span class="perf-attrs__label">Stain Protection</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Group-3.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="75"
-                    height="69"
-                  />
-                  <span class="perf-attrs__label">Hydrolysis Resistance</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-2.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="68"
-                    height="65"
-                  />
-                  <span class="perf-attrs__label">Dye-Resistant Options</span>
-                </li>
-              </ul>
-            </article>
-
-            <article class="perf-attrs__group">
-              <h3 class="perf-attrs__heading">Comfort</h3>
-              <ul class="perf-attrs__items perf-attrs__items--grid-2">
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Group-1.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="66"
-                    height="69"
-                  />
-                  <span class="perf-attrs__label">Wear Resistance</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-3.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="75"
-                    height="67"
-                  />
-                  <span class="perf-attrs__label">Skin Friendly</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Group-2.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="68"
-                    height="72"
-                  />
-                  <span class="perf-attrs__label">Non Allergenic</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="69"
-                    height="70"
-                  />
-                  <span class="perf-attrs__label">Odourless</span>
-                </li>
-              </ul>
-            </article>
-
-            <article class="perf-attrs__group">
-              <h3 class="perf-attrs__heading">Functionality</h3>
-              <ul class="perf-attrs__items">
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Group.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="69"
-                    height="76"
-                  />
-                  <span class="perf-attrs__label">UV Resistance</span>
-                </li>
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-4.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="56"
-                    height="56"
-                  />
-                  <span class="perf-attrs__label"
-                    >Antimicrobial Protection
-                    <span class="perf-attrs__note">(in Select Styles)</span></span
-                  >
-                </li>
-              </ul>
-            </article>
-
-            <article class="perf-attrs__group perf-attrs__group--single">
-              <h3 class="perf-attrs__heading">Design</h3>
-              <ul class="perf-attrs__items">
-                <li class="perf-attrs__item">
-                  <img
-                    src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-5.svg"
-                    alt=""
-                    class="perf-attrs__icon"
-                    loading="lazy"
-                    width="65"
-                    height="57"
-                  />
-                  <span class="perf-attrs__label">Design-Forward Selections</span>
-                </li>
-              </ul>
-            </article>
+      <section class="area-apps" aria-labelledby="area-apps-title" data-aos="fade-up">
+        <div class="area-apps__inner container">
+          <div class="area-apps__copy">
+            <h2 id="area-apps-title" class="area-apps__title">Area of Application</h2>
+            <p class="area-apps__text">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industry's standard dummy text ever since 1966, when designers att. Lorem
+              Ipsum has been the industry's standard dummy text ever since 1966, when designers
+              attLorem Ipsum has been the industry's standard dummy text ever since 1966, when
+            </p>
           </div>
+
+          <div class="area-apps__carousel" data-area-carousel>
+            <div class="area-apps__viewport">
+              <article class="area-apps__slide is-active" data-area-slide="0" aria-hidden="false">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/upholstery.png"
+                  alt="Upholstery"
+                  class="area-apps__image"
+                  width="960"
+                  height="600"
+                />
+                <p class="area-apps__label">Upholstery</p>
+              </article>
+              <article class="area-apps__slide" data-area-slide="1" aria-hidden="true">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/chairs.png"
+                  alt="Chairs"
+                  class="area-apps__image"
+                  width="960"
+                  height="600"
+                  loading="lazy"
+                />
+                <p class="area-apps__label">Chairs</p>
+              </article>
+              <article class="area-apps__slide" data-area-slide="2" aria-hidden="true">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/couches.png"
+                  alt="Couches"
+                  class="area-apps__image"
+                  width="960"
+                  height="600"
+                  loading="lazy"
+                />
+                <p class="area-apps__label">Couches</p>
+              </article>
+              <article class="area-apps__slide" data-area-slide="3" aria-hidden="true">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/bar-stools.png"
+                  alt="Bar Stools"
+                  class="area-apps__image"
+                  width="960"
+                  height="600"
+                  loading="lazy"
+                />
+                <p class="area-apps__label">Bar Stools</p>
+              </article>
+              <article class="area-apps__slide" data-area-slide="4" aria-hidden="true">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/more-applications.png"
+                  alt="More Applications"
+                  class="area-apps__image"
+                  width="960"
+                  height="600"
+                  loading="lazy"
+                />
+                <p class="area-apps__label">More Applications</p>
+              </article>
+
+              <button type="button" class="area-apps__arrow area-apps__arrow--prev" data-area-prev aria-label="Previous application">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/arrow.svg"
+                  alt=""
+                  width="9"
+                  height="15"
+                />
+              </button>
+              <button type="button" class="area-apps__arrow area-apps__arrow--next" data-area-next aria-label="Next application">
+                <img
+                  src="../assets/images/market-segment/furnishing/areas-of-application/arrow.svg"
+                  alt=""
+                  width="9"
+                  height="15"
+                />
+              </button>
+
+              <div class="area-apps__dots" role="tablist" aria-label="Application images">
+                <button type="button" class="area-apps__dot is-active" data-area-dot="0" aria-label="Upholstery" aria-current="true"></button>
+                <button type="button" class="area-apps__dot" data-area-dot="1" aria-label="Chairs"></button>
+                <button type="button" class="area-apps__dot" data-area-dot="2" aria-label="Couches"></button>
+                <button type="button" class="area-apps__dot" data-area-dot="3" aria-label="Bar Stools"></button>
+                <button type="button" class="area-apps__dot" data-area-dot="4" aria-label="More Applications"></button>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="perf-cards" aria-labelledby="perf-cards-title" data-aos="fade-up">
+        <div class="perf-cards__inner container">
+          <h2 id="perf-cards-title" class="perf-cards__title">Performance Attributes</h2>
+
+          <div class="perf-cards__grid">
+            <article class="perf-card perf-card--performance">
+              <h3 class="perf-card__heading">Performance</h3>
+              <ul class="perf-card__list">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-2.svg"
+                      alt=""
+                      width="68"
+                      height="65"
+                    />
+                  </span>
+                  <p class="perf-card__label">Hydrolysis<br />Resistance</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-1.svg"
+                      alt=""
+                      width="71"
+                      height="65"
+                    />
+                  </span>
+                  <p class="perf-card__label">Stain<br />Protection</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Group-1.svg"
+                      alt=""
+                      width="66"
+                      height="69"
+                    />
+                  </span>
+                  <p class="perf-card__label">Dye-Resistant<br />Options</p>
+                </li>
+              </ul>
+            </article>
+
+            <article class="perf-card perf-card--comfort">
+              <h3 class="perf-card__heading">Comfort</h3>
+              <ul class="perf-card__list">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Group-3.svg"
+                      alt=""
+                      width="75"
+                      height="69"
+                    />
+                  </span>
+                  <p class="perf-card__label">Water<br />Resistance</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-3.svg"
+                      alt=""
+                      width="75"
+                      height="67"
+                    />
+                  </span>
+                  <p class="perf-card__label">Skin<br />Friendly</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Group-2.svg"
+                      alt=""
+                      width="68"
+                      height="72"
+                    />
+                  </span>
+                  <p class="perf-card__label">Non<br />Allergenic</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1.svg"
+                      alt=""
+                      width="69"
+                      height="70"
+                    />
+                  </span>
+                  <p class="perf-card__label">Odourless</p>
+                </li>
+              </ul>
+            </article>
+
+            <article class="perf-card perf-card--functionality">
+              <h3 class="perf-card__heading">Functionality</h3>
+              <ul class="perf-card__list">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Group.svg"
+                      alt=""
+                      width="69"
+                      height="76"
+                    />
+                  </span>
+                  <p class="perf-card__label">UV<br />Resistance</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-4.svg"
+                      alt=""
+                      width="56"
+                      height="56"
+                    />
+                  </span>
+                  <p class="perf-card__label">
+                    Antimicrobial<br />Protection
+                    <span class="perf-card__note">(in select styles)</span>
+                  </p>
+                </li>
+              </ul>
+            </article>
+
+            <article class="perf-card perf-card--design">
+              <h3 class="perf-card__heading">Design</h3>
+              <ul class="perf-card__list">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/furnishing/performance-attributes/Layer_1-5.svg"
+                      alt=""
+                      width="65"
+                      height="57"
+                    />
+                  </span>
+                  <p class="perf-card__label">Design-Forward<br />Selections</p>
+                </li>
+              </ul>
+            </article>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+    <footer class="site-footer site-footer--furnishing bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">

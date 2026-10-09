@@ -19,15 +19,15 @@
     <script>
       tailwind.config = {
         theme: {
-          /* 1720px @ 1920 design — site content max width */
+          /* 1600px — site content max width (matches --container-max in style.css) */
           container: {
             center: true,
             screens: {
-              sm: '107.5rem',
-              md: '107.5rem',
-              lg: '107.5rem',
-              xl: '107.5rem',
-              '2xl': '107.5rem',
+              sm: '100rem',
+              md: '100rem',
+              lg: '100rem',
+              xl: '100rem',
+              '2xl': '100rem',
             },
           },
           extend: {
@@ -110,7 +110,7 @@
       </section>
 
       <!-- Segment intro — copy swaps with the active category tab -->
-      <p class="segment-intro" data-segment-intro data-aos="fade-up">
+      <p class="segment-intro container" data-segment-intro data-aos="fade-up">
         Versatile PVC and PU material solutions developed for different parts of footwear, balancing everyday performance with the flexibility to respond to changing design and market requirements.
       </p>
 
@@ -231,139 +231,125 @@
         </div>
       </section>
 
-      <section
-        class="perf-attrs perf-attrs--rows"
-        aria-labelledby="perf-attrs-apps-title-footwear perf-attrs-footwear-title"
-        data-segment-attrs="footwear"
-      >
-        <div class="perf-attrs__inner container">
-          <div class="perf-attrs__layout">
-            <div class="perf-attrs__apps-slot">
-              <aside
-                class="perf-attrs__apps"
-                data-segment-apps
-                aria-labelledby="perf-attrs-apps-title-footwear"
-                aria-hidden="true"
-              >
-                <h2 id="perf-attrs-apps-title-footwear" class="perf-attrs__apps-title">
-                  Area of Application
-                </h2>
-                <ul class="perf-attrs__apps-list" data-segment-apps-list></ul>
-              </aside>
-            </div>
-            <div class="perf-attrs__main">
-              <h2 id="perf-attrs-footwear-title" class="perf-attrs__title">Performance Attributes</h2>
+      <section class="perf-cards perf-cards--bars" aria-labelledby="footwear-perf-title" data-aos="fade-up">
+        <div class="perf-cards__inner container">
+          <h2 id="footwear-perf-title" class="perf-cards__title">Performance Attributes</h2>
 
-          <div class="perf-attrs__rows">
-            <ul class="perf-attrs__row">
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-3.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="59"
-                  height="68"
-                />
-                <span class="perf-attrs__label">Abrasion Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-5.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="75"
-                  height="67"
-                />
-                <span class="perf-attrs__label">Easy to Clean</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-2.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="66"
-                  height="69"
-                />
-                <span class="perf-attrs__label">Flexible Fitting</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-4.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="56"
-                  height="68"
-                />
-                <span class="perf-attrs__label">Colour Fastness</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Layer_1.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="70"
-                  height="66"
-                />
-                <span class="perf-attrs__label">Stain Protection</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-6.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="54"
-                  height="67"
-                />
-                <span class="perf-attrs__label">Flame Retardant</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="57"
-                  height="57"
-                />
-                <span class="perf-attrs__label">Optimised Backing Fabric</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Group-1.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="69"
-                  height="61"
-                />
-                <span class="perf-attrs__label">Scratch Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/footwear/performance-attributes/Layer_1-1.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="79"
-                  height="69"
-                />
-                <span class="perf-attrs__label">Rapid Design Development</span>
-              </li>
-            </ul>
-          </div>
-            </div>
+          <div class="perf-cards__grid">
+            <article class="perf-card">
+              <ul class="perf-card__list">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-3.svg"
+                      alt=""
+                      width="59"
+                      height="68"
+                    />
+                  </span>
+                  <p class="perf-card__label">Abrasion<br />Resistance</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-5.svg"
+                      alt=""
+                      width="75"
+                      height="67"
+                    />
+                  </span>
+                  <p class="perf-card__label">Easy to<br />Clean</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-2.svg"
+                      alt=""
+                      width="66"
+                      height="69"
+                    />
+                  </span>
+                  <p class="perf-card__label">Flexible<br />Fitting</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-4.svg"
+                      alt=""
+                      width="56"
+                      height="68"
+                    />
+                  </span>
+                  <p class="perf-card__label">Colour<br />Fastness</p>
+                </li>
+              </ul>
+            </article>
+
+            <article class="perf-card">
+              <ul class="perf-card__list perf-card__list--five">
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Layer_1.svg"
+                      alt=""
+                      width="70"
+                      height="66"
+                    />
+                  </span>
+                  <p class="perf-card__label">Stain<br />Protection</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-6.svg"
+                      alt=""
+                      width="54"
+                      height="67"
+                    />
+                  </span>
+                  <p class="perf-card__label">Flame<br />Retardant</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group-1.svg"
+                      alt=""
+                      width="69"
+                      height="61"
+                    />
+                  </span>
+                  <p class="perf-card__label">Scratch<br />Resistance</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Group.svg"
+                      alt=""
+                      width="57"
+                      height="57"
+                    />
+                  </span>
+                  <p class="perf-card__label">Optimised<br />Backing Fabric</p>
+                </li>
+                <li class="perf-card__item">
+                  <span class="perf-card__icon">
+                    <img
+                      src="../assets/images/market-segment/footwear/performance-attributes/Layer_1-1.svg"
+                      alt=""
+                      width="79"
+                      height="69"
+                    />
+                  </span>
+                  <p class="perf-card__label">Rapid Design<br />Development</p>
+                </li>
+              </ul>
+            </article>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+    <footer class="site-footer site-footer--furnishing bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">

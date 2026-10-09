@@ -7,7 +7,7 @@ import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs
 import { gsap } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/index.js';
 import { ScrollTrigger } from 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/ScrollTrigger.js';
 import { SEGMENT_DATA } from './segment-data.js';
-import { PLANT_DATA, PLANT_ORDER } from './plant-data.js';
+import { PLANT_DATA } from './plant-data.js';
 import { PRESENCE_ADDRESSES, PRESENCE_LOCATIONS, PRESENCE_TYPES } from './presence-data.js';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     drawVar: '--pillar-draw',
   });
   initMarketSegments(lenis);
-  initPlants();
+  initAreaCarousel();
+  initPerfCardsCarousel();
+  initPlants(lenis);
   initBoardSlider();
   initLifeSlider();
   initOpeningsForm();
@@ -78,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     delayStep: 0.45,
   });
   initAOS();
-  initSustFramework();
   initNewsMotion();
 });
 
@@ -295,94 +296,6 @@ function initAOS() {
   });
 
   requestAnimationFrame(() => aos.refresh());
-}
-
-/**
- * 5P wheel — hub first, then one card at a time clockwise.
- * Labels stay in their final place so they do not travel with the wedge.
- */
-function initSustFramework() {
-  const root = document.querySelector('.sust-5p');
-  if (!root) return;
-
-  const wheel = root.querySelector('.sust-5p__wheel');
-  const hub = root.querySelector('.sust-5p__hub');
-  const deckEl = root.querySelector('.sust-5p__deck');
-  const segments = Array.from(root.querySelectorAll('.sust-5p__segment'));
-  const cardNames = ['planet', 'purpose', 'product', 'prosperity', 'people'];
-  const cards = cardNames.map((name) => root.querySelector(`.sust-5p__card--${name}`));
-  if (!wheel || !hub || !deckEl || segments.length !== cards.length || cards.some((card) => !card)) return;
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    root.classList.remove('sust-5p--play');
-    return;
-  }
-
-  function placeCard(index, deal) {
-    cards[index].setAttribute(
-      'transform',
-      `translate(200 200) rotate(${deal.toFixed(3)}) translate(-200 -200)`,
-    );
-  }
-
-  gsap.set(hub, { autoAlpha: 0, scale: 0.72, xPercent: -50, yPercent: -50, transformOrigin: '50% 50%' });
-  gsap.set(segments, { autoAlpha: 0 });
-  cards.forEach((card, index) => {
-    card.style.opacity = '0';
-    if (index > 0) placeCard(index, -72);
-  });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: wheel,
-      start: 'top 78%',
-      once: true,
-    },
-    onComplete() {
-      root.classList.remove('sust-5p--play');
-      deckEl.style.removeProperty('visibility');
-      cards.forEach((card) => {
-        card.removeAttribute('transform');
-        card.style.removeProperty('opacity');
-      });
-    },
-  });
-
-  tl.to(hub, {
-    autoAlpha: 1,
-    scale: 1,
-    xPercent: -50,
-    yPercent: -50,
-    duration: 0.62,
-    ease: 'power2.out',
-  });
-
-  tl.call(() => {
-    deckEl.style.visibility = 'visible';
-    cards[0].style.opacity = '1';
-  }, null, '+=0.1');
-  tl.to(segments[0], { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, '<');
-
-  cards.forEach((card, index) => {
-    if (index === 0) return;
-    const motion = { deal: -72 };
-    tl.to(motion, {
-      deal: 0,
-      duration: 0.82,
-      ease: 'power2.inOut',
-      onStart() {
-        card.style.opacity = '1';
-        card.parentNode.appendChild(card);
-      },
-      onUpdate() {
-        placeCard(index, motion.deal);
-      },
-      onComplete() {
-        card.removeAttribute('transform');
-      },
-    }, '+=0.08');
-    tl.to(segments[index], { autoAlpha: 1, duration: 0.35, ease: 'power1.out' }, '-=0.22');
-  });
 }
 
 /**
@@ -650,7 +563,7 @@ function initPresenceCounters() {
   values.forEach((el) => {
     formatValue(el, 0);
     const root =
-      el.closest('.sust-csr__feature, .sust-csr__stats, .presence-hero__stats') || el;
+      el.closest('.sust-csr__card, .sust-csr__stats, .presence-hero__stats') || el;
     if (!groups.has(root)) groups.set(root, []);
     groups.get(root).push(el);
   });
@@ -1793,15 +1706,22 @@ function initHistoryScroll() {
  * Founder message — reveal the second paragraph on Read More / hide on toggle.
  */
 function initFounderReadMore() {
-  const button = document.querySelector('.founder-section__button');
-  const extra = document.getElementById('founder-message-more');
-  if (!button || !extra) return;
+  const pairs = [
+    ['.founder-section__button', 'founder-message-more'],
+    ['.sust-approach__btn', 'sust-approach-more'],
+  ];
 
-  button.addEventListener('click', () => {
-    const isOpen = extra.classList.toggle('is-open');
-    extra.setAttribute('aria-hidden', String(!isOpen));
-    button.setAttribute('aria-expanded', String(isOpen));
-    button.textContent = isOpen ? 'Read Less' : 'Read More';
+  pairs.forEach(([buttonSel, extraId]) => {
+    const button = document.querySelector(buttonSel);
+    const extra = document.getElementById(extraId);
+    if (!button || !extra) return;
+
+    button.addEventListener('click', () => {
+      const isOpen = extra.classList.toggle('is-open');
+      extra.setAttribute('aria-hidden', String(!isOpen));
+      button.setAttribute('aria-expanded', String(isOpen));
+      button.textContent = isOpen ? 'Read Less' : 'Read More';
+    });
   });
 }
 
@@ -1862,7 +1782,8 @@ function initPillarDialog(lenis) {
 
     titleEl.textContent = content.title;
     leadEl.textContent = content.lead;
-    actionEl.textContent = content.action;
+    actionEl.textContent = content.action || '';
+    actionEl.hidden = !content.action;
 
     lastFocus = document.activeElement;
     root.classList.add('is-open');
@@ -2502,83 +2423,280 @@ function initMarketSegments(lenis) {
   showSegment(initialKey);
 }
 
+function initPerfCardsCarousel() {
+  document.querySelectorAll('[data-perf-carousel]').forEach(setupPerfCarousel);
+}
+
+function setupPerfCarousel(root) {
+  const track = root.querySelector('[data-perf-track]');
+  const slides = Array.from(root.querySelectorAll('[data-perf-slide]'));
+  const dots = Array.from(root.querySelectorAll('[data-perf-dot]'));
+  if (!track || slides.length < 2) return;
+
+  const realCount = slides.length;
+  const visible = Math.max(1, Number(root.dataset.perfVisible) || 1);
+
+  for (let copy = 0; copy < visible; copy += 1) {
+    const clone = slides[copy % realCount].cloneNode(true);
+    clone.setAttribute('data-perf-clone', '');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.classList.remove('is-active');
+    track.appendChild(clone);
+  }
+
+  let index = 0;
+  let timer = null;
+  let snapTimer = null;
+  let pointerId = null;
+  let startX = 0;
+  let delta = 0;
+  const holdMs = 10000;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updateState(position) {
+    const dotIndex = position % realCount;
+    slides.forEach((slide, slideIndex) => {
+      const on = slideIndex === dotIndex;
+      slide.classList.toggle('is-active', on);
+      slide.setAttribute('aria-hidden', String(!on));
+    });
+    dots.forEach((dot, dotIndexOnDot) => {
+      const on = dotIndexOnDot === dotIndex;
+      dot.classList.toggle('is-active', on);
+      if (on) dot.setAttribute('aria-current', 'true');
+      else dot.removeAttribute('aria-current');
+    });
+  }
+
+  function stepSize() {
+    const gapRaw = getComputedStyle(track).columnGap;
+    const gap = gapRaw === 'normal' ? 0 : parseFloat(gapRaw);
+    return slides[0].getBoundingClientRect().width + (Number.isFinite(gap) ? gap : 0);
+  }
+
+  function place(animate) {
+    track.style.transition = animate && !reduced ? '' : 'none';
+    track.style.transform = `translateX(-${stepSize() * index}px)`;
+    if (!animate || reduced) {
+      track.offsetHeight;
+      track.style.transition = '';
+    }
+  }
+
+  function snapToStart() {
+    index = 0;
+    place(false);
+    updateState(0);
+  }
+
+  function go(next) {
+    if (next < 0) next = realCount - 1;
+    if (index === realCount && next > realCount) {
+      snapToStart();
+      next = 1;
+    } else if (next > realCount) {
+      next = 1;
+    }
+    index = next;
+    place(!reduced);
+    updateState(index);
+    if (snapTimer) window.clearTimeout(snapTimer);
+    if (index === realCount) {
+      snapTimer = window.setTimeout(() => {
+        if (index === realCount) snapToStart();
+      }, reduced ? 0 : 600);
+    }
+  }
+
+  track.addEventListener('transitionend', (event) => {
+    if (event.target !== track || event.propertyName !== 'transform') return;
+    if (index === realCount) snapToStart();
+  });
+
+  function start() {
+    stop();
+    if (reduced) return;
+    timer = window.setInterval(() => go(index + 1), holdMs);
+  }
+
+  function stop() {
+    if (timer) window.clearInterval(timer);
+    timer = null;
+  }
+
+  dots.forEach((dot, dotIndex) => {
+    dot.addEventListener('click', () => {
+      go(dotIndex);
+      start();
+    });
+  });
+
+  root.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      go(index + 1);
+      start();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      go(index - 1);
+      start();
+    }
+  });
+
+  root.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || event.target.closest('.perf-cards__dot')) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    delta = 0;
+    root.setPointerCapture(event.pointerId);
+    stop();
+  });
+
+  root.addEventListener('pointermove', (event) => {
+    if (pointerId !== event.pointerId) return;
+    delta = event.clientX - startX;
+  });
+
+  function endDrag(event) {
+    if (pointerId !== event.pointerId) return;
+    pointerId = null;
+    if (delta <= -48) go(index + 1);
+    else if (delta >= 48) go(index - 1);
+    delta = 0;
+    start();
+  }
+
+  root.addEventListener('pointerup', endDrag);
+  root.addEventListener('pointercancel', endDrag);
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', (event) => {
+    if (!root.contains(event.relatedTarget)) start();
+  });
+
+  go(0);
+  start();
+  window.addEventListener('resize', () => place(false));
+}
+
+function initAreaCarousel() {
+  const root = document.querySelector('[data-area-carousel]');
+  if (!root) return;
+
+  const slides = Array.from(root.querySelectorAll('[data-area-slide]'));
+  const dots = Array.from(root.querySelectorAll('[data-area-dot]'));
+  if (slides.length < 2) return;
+
+  root.querySelectorAll('.area-apps__label').forEach((label) => {
+    const style = getComputedStyle(label);
+    const available = label.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const range = document.createRange();
+    range.selectNodeContents(label);
+    const textWidth = range.getBoundingClientRect().width;
+    if (textWidth <= available) return;
+
+    const rootSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const fitted = parseFloat(style.fontSize) * (available / textWidth);
+    label.style.fontSize = `${fitted / rootSize}rem`;
+  });
+
+  let index = slides.findIndex((slide) => slide.classList.contains('is-active'));
+  if (index < 0) index = 0;
+
+  function go(next) {
+    const incoming = (next + slides.length) % slides.length;
+    if (incoming === index) return;
+
+    slides[index].classList.remove('is-active');
+    slides[index].setAttribute('aria-hidden', 'true');
+    dots[index]?.classList.remove('is-active');
+    dots[index]?.removeAttribute('aria-current');
+
+    index = incoming;
+
+    slides[index].classList.add('is-active');
+    slides[index].setAttribute('aria-hidden', 'false');
+    dots[index]?.classList.add('is-active');
+    dots[index]?.setAttribute('aria-current', 'true');
+  }
+
+  root.querySelector('[data-area-prev]')?.addEventListener('click', () => go(index - 1));
+  root.querySelector('[data-area-next]')?.addEventListener('click', () => go(index + 1));
+  dots.forEach((dot, dotIndex) => {
+    dot.addEventListener('click', () => go(dotIndex));
+  });
+}
+
 /**
- * Plants page — Jaitpura is featured by default; other two plants render as cards.
+ * Plants page — three facility cards. Read More opens plant details in a dialog.
  */
-function initPlants() {
-  const page = document.querySelector('[data-plants-page]');
-  if (!page) return;
+function initPlants(lenis) {
+  const root = document.querySelector('[data-plant-dialog]');
+  if (!root) return;
 
-  const featured = page.querySelector('[data-plants-featured]');
-  const grid = page.querySelector('[data-plants-grid]');
-  if (!featured || !grid) return;
+  const titleEl = root.querySelector('[data-plant-dialog-title]');
+  const locationEl = root.querySelector('[data-plant-dialog-location]');
+  const copyEl = root.querySelector('[data-plant-dialog-copy]');
+  const closeBtn = root.querySelector('[data-plant-close]');
+  const triggers = document.querySelectorAll('[data-plant-open]');
+  if (!titleEl || !locationEl || !copyEl || triggers.length === 0) return;
 
-  const imageEl = featured.querySelector('[data-plant-image]');
-  const nameEl = featured.querySelector('[data-plant-name]');
-  const locationEl = featured.querySelector('[data-plant-location]');
-  const copyEl = featured.querySelector('[data-plant-copy]');
-  const DEFAULT_PLANT = 'jaitpura';
+  let lastFocus = null;
 
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;');
+  function isOpen() {
+    return root.classList.contains('is-open');
   }
 
-  function activePlantId() {
-    const plantId = new URLSearchParams(window.location.search).get('plant');
-    return PLANT_DATA[plantId] ? plantId : DEFAULT_PLANT;
-  }
+  function openPlant(key) {
+    const plant = PLANT_DATA[key];
+    if (!plant) return;
 
-  function renderFeatured(plant) {
-    if (imageEl) {
-      imageEl.src = plant.main;
-      imageEl.alt = plant.name;
-      imageEl.style.objectPosition = plant.objectPosition || 'center';
-    }
-    if (nameEl) nameEl.textContent = plant.name;
-    if (locationEl) locationEl.textContent = plant.location;
-    if (copyEl) {
-      copyEl.innerHTML = plant.paragraphs
-        .map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`)
-        .join('');
-    }
-
-    featured.setAttribute('aria-labelledby', 'plants-featured-title');
-    document.title = `${plant.name} — Mayur Uniquoters`;
-  }
-
-  function renderCards(activeId) {
-    const others = PLANT_ORDER.map((id) => PLANT_DATA[id]).filter(
-      (plant) => plant && plant.id !== activeId
+    titleEl.textContent = plant.name;
+    locationEl.textContent = plant.location;
+    copyEl.replaceChildren(
+      ...plant.paragraphs.map((paragraph) => {
+        const p = document.createElement('p');
+        p.textContent = paragraph;
+        return p;
+      })
     );
 
-    grid.innerHTML = others
-      .map(
-        (plant) => `
-          <article class="plants-card">
-            <div class="plants-card__media">
-              <img
-                src="${escapeHtml(plant.thumb)}"
-                alt="${escapeHtml(plant.name)} exterior"
-                class="plants-card__image"
-                width="820"
-                height="480"
-                loading="lazy"
-              />
-            </div>
-            <h2 class="plants-card__title">${escapeHtml(plant.name)}</h2>
-            <a href="plants.html?plant=${escapeHtml(plant.id)}#plant" class="plants-card__button">Read More</a>
-          </article>
-        `
-      )
-      .join('');
+    lastFocus = document.activeElement;
+    root.classList.add('is-open');
+    root.setAttribute('aria-hidden', 'false');
+    root.inert = false;
+    lenis?.stop();
+    closeBtn?.focus();
   }
 
-  const plantId = activePlantId();
-  renderFeatured(PLANT_DATA[plantId]);
-  renderCards(plantId);
+  function closeDialog() {
+    if (!isOpen()) return;
+
+    root.classList.remove('is-open');
+    root.setAttribute('aria-hidden', 'true');
+    root.inert = true;
+    lenis?.start();
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  root.inert = true;
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      openPlant(trigger.dataset.plantOpen);
+    });
+  });
+
+  root.querySelectorAll('[data-plant-dismiss], [data-plant-close]').forEach((el) => {
+    el.addEventListener('click', closeDialog);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && isOpen()) {
+      event.preventDefault();
+      closeDialog();
+    }
+  });
 }
 

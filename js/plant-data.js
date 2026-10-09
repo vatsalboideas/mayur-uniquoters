@@ -5,8 +5,8 @@
 export const PLANTS_INTRO = {
   title: 'Manufacturing Excellence, Built Across Three Facilities',
   paragraphs: [
-    'Our manufacturing facilities are purpose-built to support the development and production of high-performance material solutions. Each plant is designed to meet the exacting standards of customers across industries and geographies.',
-    'Together, they combine advanced manufacturing capabilities with dedicated research, quality assurance and operational excellence — enabling consistent quality, scalable production and innovation with global reach.',
+    'Every Mayur manufacturing facility is purpose-built to strengthen our capabilities, expand innovation and consistently deliver high-performance material solutions to customers across the world.',
+    'Together, our plants combine advanced manufacturing, integrated processes and dedicated research capabilities to support quality, efficiency and responsible growth.',
   ],
 };
 

@@ -19,15 +19,15 @@
     <script>
       tailwind.config = {
         theme: {
-          /* 1720px @ 1920 design — site content max width */
+          /* 1600px — site content max width (matches --container-max in style.css) */
           container: {
             center: true,
             screens: {
-              sm: '107.5rem',
-              md: '107.5rem',
-              lg: '107.5rem',
-              xl: '107.5rem',
-              '2xl': '107.5rem',
+              sm: '100rem',
+              md: '100rem',
+              lg: '100rem',
+              xl: '100rem',
+              '2xl': '100rem',
             },
           },
           extend: {
@@ -612,7 +612,7 @@
       <!-- Board Members -->
       <section class="board-section" aria-labelledby="board-section-title" data-aos="fade-up">
         <h2 id="board-section-title" class="board-section__title">Board Members</h2>
-        <p class="board-section__intro">
+        <p class="board-section__intro container">
           Guided by experienced leadership and strong governance, our Board brings together diverse
           expertise to steer Mayur Uniquoters towards sustainable growth, operational excellence and
           long-term value creation.
@@ -1483,7 +1483,7 @@
       -->
     </main>
 
-    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+    <footer class="site-footer site-footer--furnishing bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">

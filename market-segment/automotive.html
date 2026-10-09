@@ -19,15 +19,15 @@
     <script>
       tailwind.config = {
         theme: {
-          /* 1720px @ 1920 design — site content max width */
+          /* 1600px — site content max width (matches --container-max in style.css) */
           container: {
             center: true,
             screens: {
-              sm: '107.5rem',
-              md: '107.5rem',
-              lg: '107.5rem',
-              xl: '107.5rem',
-              '2xl': '107.5rem',
+              sm: '100rem',
+              md: '100rem',
+              lg: '100rem',
+              xl: '100rem',
+              '2xl': '100rem',
             },
           },
           extend: {
@@ -110,7 +110,7 @@
       </section>
 
       <!-- Segment intro — copy swaps with the active category tab -->
-      <p class="segment-intro" data-segment-intro data-aos="fade-up">
+      <p class="segment-intro container" data-segment-intro data-aos="fade-up">
         Engineered material solutions for automotive interiors and accessories, serving both OEM and aftermarket requirements across a wide range of mobility applications.
       </p>
 
@@ -231,211 +231,218 @@
         </div>
       </section>
 
-      <section
-        class="perf-attrs perf-attrs--rows"
-        aria-labelledby="perf-attrs-apps-title-automotive perf-attrs-automotive-title"
-        data-segment-attrs="automotive"
-      >
-        <div class="perf-attrs__inner container">
-          <div class="perf-attrs__layout">
-            <div class="perf-attrs__apps-slot">
-              <aside
-                class="perf-attrs__apps"
-                data-segment-apps
-                aria-labelledby="perf-attrs-apps-title-automotive"
-                aria-hidden="true"
-              >
-                <h2 id="perf-attrs-apps-title-automotive" class="perf-attrs__apps-title">
-                  Area of Application
-                </h2>
-                <ul class="perf-attrs__apps-list" data-segment-apps-list></ul>
-              </aside>
+      <section class="perf-cards perf-cards--bars" aria-labelledby="auto-perf-title" data-aos="fade-up">
+        <div class="perf-cards__inner container">
+          <h2 id="auto-perf-title" class="perf-cards__title">Performance Attributes</h2>
+
+          <div class="perf-cards__carousel" data-perf-carousel tabindex="0" aria-roledescription="carousel" aria-label="Performance attributes">
+            <div class="perf-cards__viewport">
+              <div class="perf-cards__track" data-perf-track>
+                <div class="perf-cards__slide is-active" data-perf-slide>
+                  <div class="perf-cards__grid">
+                    <article class="perf-card">
+                      <ul class="perf-card__list">
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-5.svg"
+                              alt=""
+                              width="59"
+                              height="68"
+                            />
+                          </span>
+                          <p class="perf-card__label">Abrasion<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-6.svg"
+                              alt=""
+                              width="75"
+                              height="69"
+                            />
+                          </span>
+                          <p class="perf-card__label">Hydrolysis<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group.svg"
+                              alt=""
+                              width="66"
+                              height="69"
+                            />
+                          </span>
+                          <p class="perf-card__label">Flexible<br />Fitting</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-7.svg"
+                              alt=""
+                              width="56"
+                              height="68"
+                            />
+                          </span>
+                          <p class="perf-card__label">Colour<br />Fastness</p>
+                        </li>
+                      </ul>
+                    </article>
+
+                    <article class="perf-card">
+                      <ul class="perf-card__list">
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-1.svg"
+                              alt=""
+                              width="75"
+                              height="67"
+                            />
+                          </span>
+                          <p class="perf-card__label">Crocking<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-4.svg"
+                              alt=""
+                              width="54"
+                              height="67"
+                            />
+                          </span>
+                          <p class="perf-card__label">Flame<br />Retardant</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-2.svg"
+                              alt=""
+                              width="68"
+                              height="65"
+                            />
+                          </span>
+                          <p class="perf-card__label">Low VOC<br />Emission</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-3.svg"
+                              alt=""
+                              width="57"
+                              height="57"
+                            />
+                          </span>
+                          <p class="perf-card__label">Optimised<br />Backing Fabric</p>
+                        </li>
+                      </ul>
+                    </article>
+                  </div>
+                </div>
+
+                <div class="perf-cards__slide" data-perf-slide aria-hidden="true">
+                  <div class="perf-cards__grid">
+                    <article class="perf-card">
+                      <ul class="perf-card__list">
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-13.svg"
+                              alt=""
+                              width="59"
+                              height="67"
+                            />
+                          </span>
+                          <p class="perf-card__label">Heat<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-12.svg"
+                              alt=""
+                              width="69"
+                              height="61"
+                            />
+                          </span>
+                          <p class="perf-card__label">Scratch<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-9.svg"
+                              alt=""
+                              width="77"
+                              height="76"
+                            />
+                          </span>
+                          <p class="perf-card__label">Weather<br />Resistance</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-10.svg"
+                              alt=""
+                              width="81"
+                              height="71"
+                            />
+                          </span>
+                          <p class="perf-card__label">SlipStick</p>
+                        </li>
+                      </ul>
+                    </article>
+
+                    <article class="perf-card">
+                      <ul class="perf-card__list perf-card__list--three">
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-11.svg"
+                              alt=""
+                              width="69"
+                              height="76"
+                            />
+                          </span>
+                          <p class="perf-card__label">UV<br />Protection</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-8.svg"
+                              alt=""
+                              width="68"
+                              height="72"
+                            />
+                          </span>
+                          <p class="perf-card__label">REACH<br />Compliant</p>
+                        </li>
+                        <li class="perf-card__item">
+                          <span class="perf-card__icon">
+                            <img
+                              src="../assets/images/market-segment/automotive/performance-attributes/Group-14.svg"
+                              alt=""
+                              width="59"
+                              height="74"
+                            />
+                          </span>
+                          <p class="perf-card__label">VDA 6.3</p>
+                        </li>
+                      </ul>
+                    </article>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="perf-attrs__main">
-              <h2 id="perf-attrs-automotive-title" class="perf-attrs__title">Performance Attributes</h2>
 
-          <div class="perf-attrs__rows">
-            <ul class="perf-attrs__row">
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-5.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="59"
-                  height="68"
-                />
-                <span class="perf-attrs__label">Abrasion Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-6.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="75"
-                  height="69"
-                />
-                <span class="perf-attrs__label">Hydrolysis Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="66"
-                  height="69"
-                />
-                <span class="perf-attrs__label">Flexible Fitting</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-7.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="56"
-                  height="68"
-                />
-                <span class="perf-attrs__label">Colour Fastness</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-1.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="75"
-                  height="67"
-                />
-                <span class="perf-attrs__label">Crocking Resistance</span>
-              </li>
-            </ul>
-
-            <ul class="perf-attrs__row">
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-4.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="54"
-                  height="67"
-                />
-                <span class="perf-attrs__label">Flame Retardant</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-2.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="68"
-                  height="65"
-                />
-                <span class="perf-attrs__label">Low VOC Emission</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-3.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="57"
-                  height="57"
-                />
-                <span class="perf-attrs__label">Optimised Backing Fabric</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-13.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="59"
-                  height="67"
-                />
-                <span class="perf-attrs__label">Heat Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-12.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="69"
-                  height="61"
-                />
-                <span class="perf-attrs__label">Scratch Resistance</span>
-              </li>
-            </ul>
-
-            <ul class="perf-attrs__row">
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-9.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="77"
-                  height="76"
-                />
-                <span class="perf-attrs__label">Weather Resistance</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-10.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="81"
-                  height="71"
-                />
-                <span class="perf-attrs__label">SlipStick</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-11.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="69"
-                  height="76"
-                />
-                <span class="perf-attrs__label">UV Protection</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-8.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="68"
-                  height="72"
-                />
-                <span class="perf-attrs__label">REACH Compliant</span>
-              </li>
-              <li class="perf-attrs__item">
-                <img
-                  src="../assets/images/market-segment/automotive/performance-attributes/Group-14.svg"
-                  alt=""
-                  class="perf-attrs__icon"
-                  loading="lazy"
-                  width="59"
-                  height="74"
-                />
-                <span class="perf-attrs__label">VDA 6.3</span>
-              </li>
-            </ul>
-          </div>
+            <div class="perf-cards__dots" role="tablist" aria-label="Attribute slides">
+              <button type="button" class="perf-cards__dot is-active" data-perf-dot="0" aria-label="Attribute set 1" aria-current="true"></button>
+              <button type="button" class="perf-cards__dot" data-perf-dot="1" aria-label="Attribute set 2"></button>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer bg-brand-tan" data-aos="fade-up">
+    <footer class="site-footer site-footer--furnishing bg-brand-tan" data-aos="fade-up">
       <div class="site-footer__inner container">
         <div class="site-footer__top">
           <nav class="site-footer__links" aria-label="Footer navigation">
