@@ -1,0 +1,69 @@
+---
+out: global-presence.html
+nav: presence
+title: Global Presence — Mayur Uniquoters
+desc: From India to markets across the world, our growing global presence reflects strong partnerships, consistent quality, and solutions designed to meet diverse industry needs.
+body: page-presence
+---
+<section class="page-intro presence-hero" aria-labelledby="presence-title">
+  <div class="container">
+    <div class="presence-hero__grid">
+      <div class="stack">
+        <p class="eyebrow">Global Presence</p>
+        <h1 id="presence-title">Built Here. <em>Trusted Everywhere.</em></h1>
+        <p class="lead presence-hero__lead">
+          From India to markets across the world, our growing global presence reflects strong
+          partnerships, consistent quality, and solutions designed to meet diverse industry needs.
+        </p>
+      </div>
+      <ul class="presence-stats">
+        <li><span class="presence-stats__value" data-count-to="38" data-count-suffix="+">0</span><span class="presence-stats__label">Global Client Locations</span></li>
+        <li><span class="presence-stats__value" data-count-to="10">0</span><span class="presence-stats__label">Office and Warehouse Facilities</span></li>
+        <li><span class="presence-stats__value" data-count-to="3">0</span><span class="presence-stats__label">Office, Warehouse &amp; Client Hubs</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section--dark presence" aria-labelledby="map-title" data-presence>
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow eyebrow--light reveal">Locations</p>
+      <h2 id="map-title" class="reveal">Our locations around the world</h2>
+    </div>
+
+    <div class="presence__layout">
+      <div class="presence__map">
+        <div class="map" data-map>
+          <div class="map__zoom" data-map-zoom>
+            <img class="map__img" src="{{R}}assets/images/global-presense/map.svg" alt="World map showing Mayur Uniquoters client, office and warehouse locations" width="1823" height="997" />
+            <div class="map__pins" data-map-pins></div>
+          </div>
+          <button class="map__reset is-active" type="button" data-map-full aria-pressed="true">Full view</button>
+        </div>
+
+        <ul class="legend" aria-label="Map legend">
+          <li><span class="legend__dot legend__dot--client"></span>Our Clients</li>
+          <li><span class="legend__dot legend__dot--office"></span>Office / Warehouse</li>
+          <li><span class="legend__dot legend__dot--hub"></span>Office / Warehouse &amp; Clients</li>
+        </ul>
+      </div>
+
+      <aside class="presence__picker" aria-label="Choose a location">
+        <p class="presence__picker-title">Choose a location</p>
+        <div class="presence__filters" role="group" aria-label="Filter locations" data-map-filters>
+          <button type="button" class="chip is-active" data-filter="all">All</button>
+          <button type="button" class="chip" data-filter="client">Clients</button>
+          <button type="button" class="chip" data-filter="office">Offices</button>
+          <button type="button" class="chip" data-filter="hub">Hubs</button>
+        </div>
+        <ul class="presence__list" data-map-list></ul>
+      </aside>
+    </div>
+
+    <section class="presence__details" data-map-details hidden aria-live="polite">
+      <h3 class="presence__details-title" data-map-details-title></h3>
+      <ul class="addr-grid" data-map-cards></ul>
+    </section>
+  </div>
+</section>

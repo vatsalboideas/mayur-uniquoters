@@ -1,0 +1,69 @@
+<a class="skip-link" href="#main">Skip to content</a>
+
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="site-header {{HEADER_CLASS}}" data-site-header>
+  <div class="site-header__bar">
+    <a class="brand" href="{{R}}index.html" aria-label="Mayur Uniquoters Limited — Home">
+      <img class="brand__dark" src="{{R}}assets/logo-brand.svg" alt="" width="184" height="76" />
+      <img class="brand__light" src="{{R}}assets/logo-white.svg" alt="" width="184" height="76" />
+    </a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation" data-main-nav>
+      <ul class="main-nav__list">
+        <li class="main-nav__item{{ACTIVE_about}}">
+          <a class="main-nav__link" href="{{R}}index.html"{{CURRENT_about}}>About</a>
+        </li>
+        <li class="main-nav__item has-menu{{ACTIVE_segment}}">
+          <a class="main-nav__link" href="{{R}}market-segment/furnishing.html"{{CURRENT_segment}}>Market Segment</a>
+          <button class="main-nav__caret" type="button" aria-expanded="false" aria-label="Show Market Segment pages"><svg width="14" height="14"><use href="#i-chevron"/></svg></button>
+          <ul class="submenu">
+            <li><a href="{{R}}market-segment/furnishing.html">Furnishing</a></li>
+            <li><a href="{{R}}market-segment/automotive.html">Automotive</a></li>
+            <li><a href="{{R}}market-segment/footwear.html">Footwear</a></li>
+            <li><a href="{{R}}market-segment/leather-goods.html">Leather Goods</a></li>
+          </ul>
+        </li>
+        <li class="main-nav__item{{ACTIVE_plants}}">
+          <a class="main-nav__link" href="{{R}}plants.html"{{CURRENT_plants}}>Plants</a>
+        </li>
+        <li class="main-nav__item has-menu{{ACTIVE_products}}">
+          <a class="main-nav__link" href="{{R}}products/our-products.html"{{CURRENT_products}}>Products</a>
+          <button class="main-nav__caret" type="button" aria-expanded="false" aria-label="Show Products pages"><svg width="14" height="14"><use href="#i-chevron"/></svg></button>
+          <ul class="submenu">
+            <li><a href="{{R}}products/our-products.html">Our Products</a></li>
+            <li><a href="{{R}}products/research-and-development.html">R&amp;D</a></li>
+          </ul>
+        </li>
+        <li class="main-nav__item{{ACTIVE_sustainability}}">
+          <a class="main-nav__link" href="{{R}}sustainability.html"{{CURRENT_sustainability}}>Sustainability</a>
+        </li>
+        <li class="main-nav__item{{ACTIVE_presence}}">
+          <a class="main-nav__link" href="{{R}}global-presence.html"{{CURRENT_presence}}>Global Presence</a>
+        </li>
+        <li class="main-nav__item{{ACTIVE_news}}">
+          <a class="main-nav__link" href="{{R}}news.html"{{CURRENT_news}}>News &amp; Media</a>
+        </li>
+        <li class="main-nav__item main-nav__item--cta">
+          <a class="btn btn--sm" href="{{R}}contact.html">Contact Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <button class="burger" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu" data-burger>
+      <span></span><span></span>
+    </button>
+  </div>
+  <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
+</header>

@@ -1,0 +1,88 @@
+---
+out: contact.html
+nav:
+header: over
+cta: none
+title: Contact Us — Mayur Uniquoters
+desc: Whether you're looking for material solutions, business partnerships or career opportunities, our team is here to help. Reach out to us, and we'll connect you with the right team.
+body: page-contact
+---
+<section class="page-hero page-hero--short" aria-labelledby="contact-title">
+  <div class="page-hero__media"><img src="{{R}}assets/images/contact/hero.webp" alt="Leather lounge chair with cushions in a contemporary interior" width="1920" height="911" fetchpriority="high" /></div>
+  <div class="page-hero__shade"></div>
+  <div class="container page-hero__body">
+    <p class="eyebrow eyebrow--light">Contact Us</p>
+    <h1 id="contact-title">Let’s Start <em>a Conversation</em></h1>
+    <p class="page-hero__lead">
+      Whether you're looking for material solutions, business partnerships or career
+      opportunities, our team is here to help. Reach out to us, and we'll connect you with the
+      right team.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="get-in-touch" aria-labelledby="touch-title">
+  <div class="container form-layout">
+    <div class="form-layout__intro stack">
+      <p class="eyebrow reveal">Contact Form</p>
+      <h2 id="touch-title" class="reveal">Get in Touch</h2>
+
+      <ul class="contact-cards">
+        <li class="reveal">
+          <a class="contact-card card card--hover" href="tel:+911423224001">
+            <span class="contact-card__icon"><svg width="22" height="22"><use href="#i-phone"/></svg></span>
+            <span><small>Phone</small>+91-1423-224001</span>
+          </a>
+        </li>
+        <li class="reveal" style="--i: 1">
+          <a class="contact-card card card--hover" href="mailto:info@mayur.biz">
+            <span class="contact-card__icon"><svg width="22" height="22"><use href="#i-mail"/></svg></span>
+            <span><small>Email</small>info@mayur.biz</span>
+          </a>
+        </li>
+        <li class="reveal" style="--i: 2">
+          <a class="contact-card card card--hover" href="global-presence.html">
+            <span class="contact-card__icon"><svg width="22" height="22"><use href="#i-pin"/></svg></span>
+            <span><small>Factory &amp; Registered Office</small>Village Jaitpura, Jaipur–Sikar Road, Jaipur 303704, Rajasthan, India</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <form class="form card form-layout__form reveal" data-form>
+      <div class="form__row form__row--2">
+        <div class="field"><label for="f-first">First Name <span class="req">*</span></label><input id="f-first" name="firstName" type="text" autocomplete="given-name" required /></div>
+        <div class="field"><label for="f-last">Last Name <span class="req">*</span></label><input id="f-last" name="lastName" type="text" autocomplete="family-name" required /></div>
+      </div>
+      <div class="form__row form__row--2">
+        <div class="field"><label for="f-company">Company Name</label><input id="f-company" name="company" type="text" autocomplete="organization" /></div>
+        <div class="field"><label for="f-email">Email Address <span class="req">*</span></label><input id="f-email" name="email" type="email" autocomplete="email" required /></div>
+      </div>
+      <div class="form__row form__row--2">
+        <div class="field"><label for="f-phone">Phone Number</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" /></div>
+        <div class="field">
+          <label for="f-country">Country <span class="req">*</span></label>
+          <select id="f-country" name="country" required>
+            <option value="" selected disabled>Select a country</option>
+            <option>India</option><option>United States</option><option>United Kingdom</option><option>Germany</option><option>United Arab Emirates</option><option>Japan</option><option>China</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="f-industry">Industry <span class="req">*</span></label>
+          <select id="f-industry" name="industry" required>
+            <option value="" selected disabled>Select an industry</option>
+            <option>Furnishing</option><option>Automotive</option><option>Footwear</option><option>Leather Goods</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-subject">Subject <span class="req">*</span></label><input id="f-subject" name="subject" type="text" required /></div>
+      </div>
+      <div class="field"><label for="f-message">Message <span class="req">*</span></label><textarea id="f-message" name="message" required></textarea></div>
+      <div class="form__actions">
+        <button class="btn" type="submit">Send Enquiry <svg><use href="#i-arrow"/></svg></button>
+      </div>
+      <p class="form__status" data-form-status role="status" hidden>Thank you. Your message has been sent.</p>
+    </form>
+  </div>
+</section>

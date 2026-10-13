@@ -65,3 +65,18 @@ npx prettier --write .
 
 - Phone: +91-1423-224001
 - Email: info@mayur.biz
+
+## Redesign (v2)
+
+A redesigned version of the whole site lives in [`v2/`](v2/) and is served at `/v2/`
+(e.g. `https://<your-domain>/v2/`). The original site above is unchanged; both share the
+`assets/` folder.
+
+- `v2/` — generated static pages, `css/site.css`, `js/site.js`
+- `tools/` — sources for v2 (page templates, shared header/footer, CSS parts, build script)
+
+To edit v2, change the files in `tools/` and regenerate:
+
+```bash
+python3 tools/build.py
+```
